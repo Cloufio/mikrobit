@@ -1,0 +1,1378 @@
+fileFormatVersion: 2
+guid: ab6b65b23d5314b23afbe349f200564b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6544068396737156450
+    second: steamboat_purple_0001-sheet_0
+  - first:
+      213: -4313185930687425906
+    second: steamboat_purple_0001-sheet_1
+  - first:
+      213: 7520617901939548881
+    second: steamboat_purple_0001-sheet_2
+  - first:
+      213: -1720992765041750848
+    second: steamboat_purple_0001-sheet_3
+  - first:
+      213: -6790798088984032717
+    second: steamboat_purple_0001-sheet_4
+  - first:
+      213: 7824620839920609321
+    second: steamboat_purple_0001-sheet_5
+  - first:
+      213: 3943368614849936522
+    second: steamboat_purple_0001-sheet_6
+  - first:
+      213: 5330527696222798480
+    second: steamboat_purple_0001-sheet_7
+  - first:
+      213: -278971313542633870
+    second: steamboat_purple_0001-sheet_8
+  - first:
+      213: 4939797770490829475
+    second: steamboat_purple_0001-sheet_9
+  - first:
+      213: -2732766901521934711
+    second: steamboat_purple_0001-sheet_10
+  - first:
+      213: 6169685882368022304
+    second: steamboat_purple_0001-sheet_11
+  - first:
+      213: -1865010376632067763
+    second: steamboat_purple_0001-sheet_12
+  - first:
+      213: 7607672304978524178
+    second: steamboat_purple_0001-sheet_13
+  - first:
+      213: 7678374367586419584
+    second: steamboat_purple_0001-sheet_14
+  - first:
+      213: 770468307681700935
+    second: steamboat_purple_0001-sheet_15
+  - first:
+      213: 5492036805578220466
+    second: steamboat_purple_0001-sheet_16
+  - first:
+      213: 3346695228225823546
+    second: steamboat_purple_0001-sheet_17
+  - first:
+      213: 6549008755929893670
+    second: steamboat_purple_0001-sheet_18
+  - first:
+      213: 2398104392873985968
+    second: steamboat_purple_0001-sheet_19
+  - first:
+      213: 6303539419483980636
+    second: steamboat_purple_0001-sheet_20
+  - first:
+      213: 2398471092798602283
+    second: steamboat_purple_0001-sheet_21
+  - first:
+      213: 9141922164711944992
+    second: steamboat_purple_0001-sheet_22
+  - first:
+      213: -452104978991731233
+    second: steamboat_purple_0001-sheet_23
+  - first:
+      213: -5208139752490607817
+    second: steamboat_purple_0001-sheet_24
+  - first:
+      213: 2934522824882911388
+    second: steamboat_purple_0001-sheet_25
+  - first:
+      213: -5922805346610839070
+    second: steamboat_purple_0001-sheet_26
+  - first:
+      213: -658774763161001213
+    second: steamboat_purple_0001-sheet_27
+  - first:
+      213: -1117434807502230799
+    second: steamboat_purple_0001-sheet_28
+  - first:
+      213: -7878471936214704106
+    second: steamboat_purple_0001-sheet_29
+  - first:
+      213: -7302028125800106048
+    second: steamboat_purple_0001-sheet_30
+  - first:
+      213: -6516322923925960103
+    second: steamboat_purple_0001-sheet_31
+  - first:
+      213: -3275135401806969957
+    second: steamboat_purple_0001-sheet_32
+  - first:
+      213: 2309994360096052356
+    second: steamboat_purple_0001-sheet_33
+  - first:
+      213: 3719986265475998010
+    second: steamboat_purple_0001-sheet_34
+  - first:
+      213: 6471817271857959789
+    second: steamboat_purple_0001-sheet_35
+  - first:
+      213: -5682466501329934622
+    second: steamboat_purple_0001-sheet_36
+  - first:
+      213: -2539738290528669436
+    second: steamboat_purple_0001-sheet_37
+  - first:
+      213: -5181947949604848712
+    second: steamboat_purple_0001-sheet_38
+  - first:
+      213: 1091847288632384767
+    second: steamboat_purple_0001-sheet_39
+  - first:
+      213: -2900425136893336521
+    second: steamboat_purple_0001-sheet_40
+  - first:
+      213: 768142608760939905
+    second: steamboat_purple_0001-sheet_41
+  - first:
+      213: -7990202284467196907
+    second: steamboat_purple_0001-sheet_42
+  - first:
+      213: 164945341586415396
+    second: steamboat_purple_0001-sheet_43
+  - first:
+      213: 6926198622155742665
+    second: steamboat_purple_0001-sheet_44
+  - first:
+      213: -5077722001579736945
+    second: steamboat_purple_0001-sheet_45
+  - first:
+      213: -4422086887337192282
+    second: steamboat_purple_0001-sheet_46
+  - first:
+      213: -2618741192803662623
+    second: steamboat_purple_0001-sheet_47
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_0
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 794
+        width: 44
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9a2f92177cce25a0800000000000000
+      internalID: -6544068396737156450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_1
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 794
+        width: 48
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e82d92f8f3c7424c0800000000000000
+      internalID: -4313185930687425906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_2
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 795
+        width: 55
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d2ec88c22a9e5860800000000000000
+      internalID: 7520617901939548881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_3
+      rect:
+        serializedVersion: 2
+        x: 417
+        y: 795
+        width: 65
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cc4baac23ecd18e0800000000000000
+      internalID: -1720992765041750848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_4
+      rect:
+        serializedVersion: 2
+        x: 542
+        y: 796
+        width: 73
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33a84b40e1d32c1a0800000000000000
+      internalID: -6790798088984032717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_5
+      rect:
+        serializedVersion: 2
+        x: 666
+        y: 797
+        width: 82
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92826918233a69c60800000000000000
+      internalID: 7824620839920609321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_6
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 799
+        width: 88
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8cfd82ccd8a9b630800000000000000
+      internalID: 3943368614849936522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_7
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 673
+        width: 93
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 092cdb682b6d9f940800000000000000
+      internalID: 5330527696222798480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_8
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 675
+        width: 96
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27664c18115e02cf0800000000000000
+      internalID: -278971313542633870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_9
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 678
+        width: 99
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3aa5f5c66efad8440800000000000000
+      internalID: 4939797770490829475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_10
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 681
+        width: 101
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98617dc5bf2431ad0800000000000000
+      internalID: -2732766901521934711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_11
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 682
+        width: 102
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 027d9422f902f9550800000000000000
+      internalID: 6169685882368022304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_12
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 679
+        width: 101
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d499d6691f62e16e0800000000000000
+      internalID: -1865010376632067763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_13
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 677
+        width: 100
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21872d977a1e39960800000000000000
+      internalID: 7607672304978524178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_14
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 545
+        width: 98
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08304783ec01f8a60800000000000000
+      internalID: 7678374367586419584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_15
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 542
+        width: 95
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74c601ef7d041ba00800000000000000
+      internalID: 770468307681700935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_16
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 539
+        width: 90
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b36cd96062a73c40800000000000000
+      internalID: 5492036805578220466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_17
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 536
+        width: 85
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3325e91499d17e20800000000000000
+      internalID: 3346695228225823546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_18
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 534
+        width: 78
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62bcf10f3c0c2ea50800000000000000
+      internalID: 6549008755929893670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_19
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 532
+        width: 71
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b7ce875d37c74120800000000000000
+      internalID: 2398104392873985968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_20
+      rect:
+        serializedVersion: 2
+        x: 802
+        y: 530
+        width: 63
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c53c30654bbaa7750800000000000000
+      internalID: 6303539419483980636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_21
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 401
+        width: 54
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2cbd4250c4194120800000000000000
+      internalID: 2398471092798602283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_22
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 400
+        width: 47
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 023fce7d5c1aede70800000000000000
+      internalID: 9141922164711944992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_23
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 400
+        width: 44
+        height: 77
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdd230ebaecc9b9f0800000000000000
+      internalID: -452104978991731233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_24
+      rect:
+        serializedVersion: 2
+        x: 423
+        y: 400
+        width: 47
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73bd4303d78f8b7b0800000000000000
+      internalID: -5208139752490607817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_25
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 401
+        width: 54
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c98fb6226f489b820800000000000000
+      internalID: 2934522824882911388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_26
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 402
+        width: 63
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e10a79eae7fdcda0800000000000000
+      internalID: -5922805346610839070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_27
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 404
+        width: 71
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 303ebced7df8bd6f0800000000000000
+      internalID: -658774763161001213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_28
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 278
+        width: 78
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fa2c2786f21e70f0800000000000000
+      internalID: -1117434807502230799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_29
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 280
+        width: 85
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 610e905148b0aa290800000000000000
+      internalID: -7878471936214704106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_30
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 283
+        width: 90
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c7f5cd7b1cf9aa90800000000000000
+      internalID: -7302028125800106048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_31
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 286
+        width: 95
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95a88ad53de5195a0800000000000000
+      internalID: -6516322923925960103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_32
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 289
+        width: 98
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b934df754b16c82d0800000000000000
+      internalID: -3275135401806969957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_33
+      rect:
+        serializedVersion: 2
+        x: 648
+        y: 293
+        width: 100
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4845ea2b1afbe0020800000000000000
+      internalID: 2309994360096052356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_34
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 295
+        width: 101
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3167039ccb00a330800000000000000
+      internalID: 3719986265475998010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_35
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 170
+        width: 102
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d63d454058380d950800000000000000
+      internalID: 6471817271857959789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_36
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 169
+        width: 101
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e62c24f2d2d321b0800000000000000
+      internalID: -5682466501329934622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_37
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 167
+        width: 100
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 401b49a1b7901ccd0800000000000000
+      internalID: -2539738290528669436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_38
+      rect:
+        serializedVersion: 2
+        x: 394
+        y: 164
+        width: 98
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bb3d338bc50618b0800000000000000
+      internalID: -5181947949604848712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_39
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 162
+        width: 96
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffc18ebf255072f00800000000000000
+      internalID: 1091847288632384767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_40
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 160
+        width: 92
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 734ebd184be9fb7d0800000000000000
+      internalID: -2900425136893336521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_41
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 159
+        width: 87
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 185a90402adf8aa00800000000000000
+      internalID: 768142608760939905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_42
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 29
+        width: 82
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51c61de2b591d1190800000000000000
+      internalID: -7990202284467196907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_43
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 28
+        width: 75
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42f1d9c0ae00a4200800000000000000
+      internalID: 164945341586415396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_44
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 28
+        width: 68
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cd946543fcce1060800000000000000
+      internalID: 6926198622155742665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_45
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 27
+        width: 61
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8087a31ebe4889b0800000000000000
+      internalID: -5077722001579736945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_46
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 27
+        width: 53
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a49a5ab76791a2c0800000000000000
+      internalID: -4422086887337192282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: steamboat_purple_0001-sheet_47
+      rect:
+        serializedVersion: 2
+        x: 679
+        y: 26
+        width: 46
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e4414482cc58abd0800000000000000
+      internalID: -2618741192803662623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      steamboat_purple_0001-sheet_0: -6544068396737156450
+      steamboat_purple_0001-sheet_1: -4313185930687425906
+      steamboat_purple_0001-sheet_10: -2732766901521934711
+      steamboat_purple_0001-sheet_11: 6169685882368022304
+      steamboat_purple_0001-sheet_12: -1865010376632067763
+      steamboat_purple_0001-sheet_13: 7607672304978524178
+      steamboat_purple_0001-sheet_14: 7678374367586419584
+      steamboat_purple_0001-sheet_15: 770468307681700935
+      steamboat_purple_0001-sheet_16: 5492036805578220466
+      steamboat_purple_0001-sheet_17: 3346695228225823546
+      steamboat_purple_0001-sheet_18: 6549008755929893670
+      steamboat_purple_0001-sheet_19: 2398104392873985968
+      steamboat_purple_0001-sheet_2: 7520617901939548881
+      steamboat_purple_0001-sheet_20: 6303539419483980636
+      steamboat_purple_0001-sheet_21: 2398471092798602283
+      steamboat_purple_0001-sheet_22: 9141922164711944992
+      steamboat_purple_0001-sheet_23: -452104978991731233
+      steamboat_purple_0001-sheet_24: -5208139752490607817
+      steamboat_purple_0001-sheet_25: 2934522824882911388
+      steamboat_purple_0001-sheet_26: -5922805346610839070
+      steamboat_purple_0001-sheet_27: -658774763161001213
+      steamboat_purple_0001-sheet_28: -1117434807502230799
+      steamboat_purple_0001-sheet_29: -7878471936214704106
+      steamboat_purple_0001-sheet_3: -1720992765041750848
+      steamboat_purple_0001-sheet_30: -7302028125800106048
+      steamboat_purple_0001-sheet_31: -6516322923925960103
+      steamboat_purple_0001-sheet_32: -3275135401806969957
+      steamboat_purple_0001-sheet_33: 2309994360096052356
+      steamboat_purple_0001-sheet_34: 3719986265475998010
+      steamboat_purple_0001-sheet_35: 6471817271857959789
+      steamboat_purple_0001-sheet_36: -5682466501329934622
+      steamboat_purple_0001-sheet_37: -2539738290528669436
+      steamboat_purple_0001-sheet_38: -5181947949604848712
+      steamboat_purple_0001-sheet_39: 1091847288632384767
+      steamboat_purple_0001-sheet_4: -6790798088984032717
+      steamboat_purple_0001-sheet_40: -2900425136893336521
+      steamboat_purple_0001-sheet_41: 768142608760939905
+      steamboat_purple_0001-sheet_42: -7990202284467196907
+      steamboat_purple_0001-sheet_43: 164945341586415396
+      steamboat_purple_0001-sheet_44: 6926198622155742665
+      steamboat_purple_0001-sheet_45: -5077722001579736945
+      steamboat_purple_0001-sheet_46: -4422086887337192282
+      steamboat_purple_0001-sheet_47: -2618741192803662623
+      steamboat_purple_0001-sheet_5: 7824620839920609321
+      steamboat_purple_0001-sheet_6: 3943368614849936522
+      steamboat_purple_0001-sheet_7: 5330527696222798480
+      steamboat_purple_0001-sheet_8: -278971313542633870
+      steamboat_purple_0001-sheet_9: 4939797770490829475
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

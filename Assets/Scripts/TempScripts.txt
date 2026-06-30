@@ -1,0 +1,126 @@
+using UnityEngine;
+using UnityEngine.UI; // <-- IMPORTANT: Add this line to use UI elements like Slider!
+
+public class TreeCut : Tool
+{
+    [Header("Tree Stats")]
+    [SerializeField] int treeHealth = 25;
+    [SerializeField] int damagePerHit = 10;
+
+    [Header("Scoring")]
+    [SerializeField] int pointsForCutting = 1;
+
+    [Header("UI Visuals")]
+    public Slider healthBarSlider; // <-- The reference to our health bar
+
+    private int maxHealth; // To store the starting health
+
+    // Use Awake to set up references and initial values
+    private void Awake()
+    {
+        // Store the maximum health so we can calculate the fill percentage later
+        maxHealth = treeHealth;
+
+        // Optional: Hide the health bar until the first hit
+        // healthBarSlider.gameObject.SetActive(false);
+    }
+
+    public override void Hit()
+    {
+        // Optional: If you hid the health bar, show it on the first hit
+        if (!healthBarSlider.gameObject.activeInHierarchy)
+        {
+            healthBarSlider.gameObject.SetActive(true);
+        }
+
+        treeHealth -= damagePerHit;
+        Debug.Log(gameObject.name + " was hit! Remaining health: " + treeHealth);
+
+        // --- UPDATE THE VISUALIZER ---
+        // We calculate the health percentage and set the slider's value.
+        // We must cast to a 'float' to get a decimal value for the division.
+        healthBarSlider.value = (float)treeHealth / maxHealth;
+
+        // Check if Health is Depleted
+        if (treeHealth <= 0)
+        {
+            Debug.Log(gameObject.name + " has been cut down!");
+
+            // Note: We don't need to destroy the health bar separately.
+            // Since it's a child of the tree, Destroy(gameObject) will remove it too.
+
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.AddScore(pointsForCutting);
+            }
+
+            Destroy(gameObject);
+        }
+    }
+}
+
+using UnityEngine;
+using UnityEngine.UI; // <-- IMPORTANT: Add this line to use UI elements like Slider!
+
+public class TreeCut : Tool // Make sure TreeCut still inherits from Tool
+{
+    [Header("Tree Stats")]
+    [SerializeField] int treeHealth = 25; // The tree's starting health
+    [SerializeField] int damagePerHit = 10; // How much damage each hit does
+
+    [Header("Scoring")]
+    [SerializeField] int pointsForCutting = 1; // How many points this tree gives when cut
+
+    [Header("UI Visuals")]
+    public Slider healthBarSlider; // <-- The reference to our health bar
+
+    private int maxHealth; // To store the starting health
+
+
+    private void Awake()
+    {
+        // Store the maximum health so we can calculate the fill percentage later
+        maxHealth = treeHealth;
+
+        // Optional: Hide the health bar until the first hit
+        healthBarSlider.gameObject.SetActive(false);
+    }
+
+    // This 'Hit' method is called by the ToolController.
+    // It now handles health reduction before destroying the object.
+    public override void Hit()
+    {
+
+        if (!healthBarSlider.gameObject.activeInHierarchy)
+        {
+            healthBarSlider.gameObject.SetActive(true);
+        }
+
+        // --- 1. Reduce Health ---
+        treeHealth -= damagePerHit;
+        Debug.Log(gameObject.name + " was hit! Remaining health: " + treeHealth);
+
+        healthBarSlider.value = (float)treeHealth / maxHealth;
+
+        // --- 2. Check if Health is Depleted ---
+        // The rest of the code only runs if the tree's health is 0 or less.
+        if (treeHealth <= 0)
+        {
+            Debug.Log(gameObject.name + " has been cut down! Adding score and removing object.");
+
+            // --- 3. Add Score ---
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.AddScore(pointsForCutting);
+            }
+            else
+            {
+                Debug.LogError("ScoreManager.Instance is not found in the scene! Cannot add score.");
+            }
+
+            // --- 4. Destroy the Tree GameObject ---
+            // This now only happens when the tree runs out of health.
+            Destroy(gameObject);
+        }
+    }
+}
