@@ -224,7 +224,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &9043219500774030634
 MonoBehaviour:
@@ -331,9 +331,9 @@ Transform:
   m_GameObject: {fileID: 9030839035467105105}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -0.52, y: 0.362, z: 0}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7517302278117858464}
   m_Father: {fileID: 0}
@@ -381,7 +381,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -6967085287580285307, guid: 545c3178d60484436889b38174f36a07, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -454,7 +454,7 @@ MonoBehaviour:
   treeHealth: 30
   damagePerHit: 10
   pointsForCutting: 1
-  healthBarSlider: {fileID: 0}
+  healthBarSlider: {fileID: 1562708044275434728}
 --- !u!114 &8601316270751666449
 MonoBehaviour:
   m_ObjectHideFlags: 0

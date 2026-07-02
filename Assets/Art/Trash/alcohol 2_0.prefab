@@ -154,7 +154,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1477055657714297543, guid: 9ff26b39e7a9e4a1ab2851cd1797ee6f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -227,7 +227,7 @@ MonoBehaviour:
   treeHealth: 30
   damagePerHit: 10
   pointsForCutting: 1
-  healthBarSlider: {fileID: 0}
+  healthBarSlider: {fileID: 5489200196278826265}
 --- !u!114 &3059652169095121044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,7 +466,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &54896357413896732
 MonoBehaviour:
