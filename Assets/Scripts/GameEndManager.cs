@@ -104,6 +104,45 @@ public class GameEndManager : MonoBehaviour
         }
     }
 
+    public void TriggerGameOver()
+    {
+        if (conditionsHaveBeenMet)
+        {
+            return;
+        }
+
+        conditionsHaveBeenMet = true;
+
+        if (scoreManagerInstance != null)
+        {
+            scoreManagerInstance.timerIsRunning = false;
+        }
+
+        int currentScore = scoreManagerInstance != null ? scoreManagerInstance.currentScore : 0;
+        int sceneIndexToLoad;
+
+        if (currentScore > scoreThresholdForGoodEnding)
+        {
+            Debug.Log($"Game Over triggered by health! Score ({currentScore}) > {scoreThresholdForGoodEnding}. Loading 'Good Ending' scene (index {goodEndingSceneIndex}).");
+            sceneIndexToLoad = goodEndingSceneIndex;
+        }
+        else
+        {
+            Debug.Log($"Game Over triggered by health! Score ({currentScore}) <= {scoreThresholdForGoodEnding}. Loading 'Bad Ending' scene (index {badEndingSceneIndex}).");
+            sceneIndexToLoad = badEndingSceneIndex;
+        }
+
+        if (fadePanel != null)
+        {
+            fadePanel.gameObject.SetActive(true);
+            StartCoroutine(PerformFadeAndLoadScene(sceneIndexToLoad));
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneIndexToLoad);
+        }
+    }
+
     IEnumerator PerformFadeAndLoadScene(int targetSceneIndex)
     {
         if (Time.timeScale == 0f)

@@ -165,4 +165,36 @@ public class BoatController : MonoBehaviour
             canBoard = false;
         }
     }
+
+    // Detect when the boat collides with obstacles while being driven
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Only take damage if the player is currently driving the boat
+        if (!isRiding)
+        {
+            return;
+        }
+
+        // Ignore collisions with the player
+        if (collision.gameObject == player)
+        {
+            return;
+        }
+
+        // Ignore trash/trees (which have a Tool component)
+        if (collision.gameObject.GetComponent<Tool>() != null)
+        {
+            return;
+        }
+
+        // Apply damage via PlayerHealth singleton
+        if (PlayerHealth.Instance != null)
+        {
+            PlayerHealth.Instance.TakeDamage(PlayerHealth.Instance.damagePerHit);
+        }
+        else
+        {
+            Debug.LogWarning("BoatController: PlayerHealth.Instance not found!");
+        }
+    }
 }
