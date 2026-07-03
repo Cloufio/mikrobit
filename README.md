@@ -16,7 +16,6 @@
 Open your terminal (Command Prompt, PowerShell, or Git Bash) and execute the following commands:
 
     git clone <repo-url>
-    cd mikrobit
 
 **Option B: Using GitHub Desktop**
 1. Open GitHub Desktop.
