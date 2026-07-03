@@ -773,7 +773,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_12
+      name: 6
       rect:
         serializedVersion: 2
         x: 413
@@ -883,7 +883,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_17
+      name: 7
       rect:
         serializedVersion: 2
         x: 20
@@ -1851,10 +1851,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_61
+      name: 6b
       rect:
         serializedVersion: 2
-        x: 404
+        x: 403
         y: 728
         width: 81
         height: 17
@@ -2533,7 +2533,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_92
+      name: 7c
       rect:
         serializedVersion: 2
         x: 11
@@ -3017,7 +3017,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_114
+      name: 7d
       rect:
         serializedVersion: 2
         x: 12
@@ -3281,7 +3281,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_126
+      name: 6e
       rect:
         serializedVersion: 2
         x: 415
@@ -3391,7 +3391,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: water_detilazation_131
+      name: 7e
       rect:
         serializedVersion: 2
         x: 24
@@ -3918,6 +3918,270 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: water_detilazation_10
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 930
+        width: 74
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 632c4ca541c054e6ca13c0177b8fbdc1
+      internalID: 1721773569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6a
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 936
+        width: 76
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a14389d42f7fc414b8f9e57f389a01f8
+      internalID: 546207916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6c
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 519
+        width: 85
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fadbc5b966ec14ea2a67106a2ac887c6
+      internalID: -541488091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 6d
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 310
+        width: 68
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5892f980926441ef9e37ba7a8c0eead
+      internalID: -1188615555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 7a
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 863
+        width: 211
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f4fe5ce986384d61bd8df90cfedae34
+      internalID: 1072594665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 7b
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 654
+        width: 214
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 707d606b75da84eada9a6f895bc21eee
+      internalID: -1433794872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 8
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 1093
+        width: 106
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c6d69e6f5b634b18b137d12da0abac6
+      internalID: 1005122439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 8a
+      rect:
+        serializedVersion: 2
+        x: 275
+        y: 884
+        width: 114
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b15cac284efb3479cb4ac60be855e699
+      internalID: 223511529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 8b
+      rect:
+        serializedVersion: 2
+        x: 274
+        y: 676
+        width: 115
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41197b79dcae646f58c0c9eae052ebe7
+      internalID: -633050498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 8c
+      rect:
+        serializedVersion: 2
+        x: 271
+        y: 469
+        width: 118
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b5d4c51fed2a4c3db507b2cc6970624
+      internalID: -1060052339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 8d
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 259
+        width: 107
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 767f9a68834d8413da7417730007c1d0
+      internalID: 64529410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 8e
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 54
+        width: 98
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cf284bcadfe44a00a95ce0f610397c2
+      internalID: 347303222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -3962,8 +4226,27 @@ TextureImporter:
       5c: 37228586
       5d: 1183509725
       5e: -3494919048193662941
+      6: -809024814304562442
+      6a: 546207916
+      6b: -8978212191851800655
+      6c: -541488091
+      6d: -1188615555
+      6e: 5449260037828341498
+      7: 2744059009278084657
+      7a: 1072594665
+      7b: -1433794872
+      7c: 6926581091202417570
+      7d: -7849106425271832685
+      7e: -7211270203604046523
+      8: 1005122439
+      8a: 223511529
+      8b: -633050498
+      8c: -1060052339
+      8d: 64529410
+      8e: 347303222
       water_detilazation_0: -7718589083595205820
       water_detilazation_1: -1082013956839360132
+      water_detilazation_10: 1721773569
       water_detilazation_100: 8897718237069720071
       water_detilazation_101: -7744441134521912188
       water_detilazation_102: -2863846624621173908
@@ -3977,29 +4260,24 @@ TextureImporter:
       water_detilazation_111: -8780488425537071500
       water_detilazation_112: 2946212210911224285
       water_detilazation_113: 980267620664753203
-      water_detilazation_114: -7849106425271832685
       water_detilazation_115: 7585149635314772185
       water_detilazation_116: 2431081726318480183
       water_detilazation_117: 6690945363909793124
       water_detilazation_118: 3525693154403143539
       water_detilazation_119: 3805218628874008638
-      water_detilazation_12: -809024814304562442
       water_detilazation_120: -5363950744231000198
       water_detilazation_121: 1631876209420785785
       water_detilazation_122: -7834885182697563491
       water_detilazation_123: 5178036971630800216
-      water_detilazation_126: 5449260037828341498
       water_detilazation_127: 2157981450726033912
       water_detilazation_128: -5713330961802634254
       water_detilazation_129: 9092421308612346340
       water_detilazation_13: -7646885790271846140
       water_detilazation_130: -1048165876922584903
-      water_detilazation_131: -7211270203604046523
       water_detilazation_132: 4944901029821188887
       water_detilazation_14: -2246098830898657095
       water_detilazation_15: -2497817615055141195
       water_detilazation_16: 5567527811077765384
-      water_detilazation_17: 2744059009278084657
       water_detilazation_18: 2185379329353001539
       water_detilazation_19: -3342971861134480213
       water_detilazation_2: 4973532224143275853
@@ -4046,7 +4324,6 @@ TextureImporter:
       water_detilazation_59: 5576330054252662913
       water_detilazation_6: -1915189545817896027
       water_detilazation_60: -8077331580976576357
-      water_detilazation_61: -8978212191851800655
       water_detilazation_62: 2129627366340036406
       water_detilazation_63: -5538459170707596133
       water_detilazation_64: 2196934194027383063
@@ -4079,7 +4356,6 @@ TextureImporter:
       water_detilazation_9: 4853339316524022938
       water_detilazation_90: 2961832566863851493
       water_detilazation_91: -2332440546161496863
-      water_detilazation_92: 6926581091202417570
       water_detilazation_93: 5141447335824456526
       water_detilazation_94: -5792856617467785028
       water_detilazation_95: -6351869428659271815
