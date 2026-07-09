@@ -5,12 +5,12 @@ public class MainMenu : MonoBehaviour
 {
     public void playGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("IntroScene");
     }
 
     public void SkipStory()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene("MainScene2");
     }
 
     public void ExitGame()

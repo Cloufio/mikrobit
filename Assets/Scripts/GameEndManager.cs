@@ -7,7 +7,7 @@ public class GameEndManager : MonoBehaviour
 {
     [Header("Game Conditions")]
     [Tooltip("The score threshold to differentiate between endings.")]
-    public int scoreThresholdForGoodEnding = 40;
+    public int scoreThresholdForGoodEnding = 30;
 
     [Header("Scene Transitions")]
     [Tooltip("Build index for the scene to load if score > scoreThresholdForGoodEnding.")]
