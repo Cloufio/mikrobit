@@ -180,15 +180,15 @@ SpriteRenderer:
   m_SortingLayerID: -1003087995
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5099c2380f34f0e4ea45240ef555b93e, type: 3}
+  m_Sprite: {fileID: 3310002292416464744, guid: 26dc64a76537d434daff790527743717, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 25.6, y: 14.4}
+  m_Size: {x: 7, y: 3.06}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &15212861
@@ -448,15 +448,15 @@ SpriteRenderer:
   m_SortingLayerID: -1003087995
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5007185862152319688, guid: 3616e904275bcce438a2df6f45d9946d, type: 3}
+  m_Sprite: {fileID: -4885298761302449938, guid: e4754a8c381e64daa94c567948d9fe7c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 25.6, y: 14.4}
+  m_Size: {x: 21.007177, y: 13.15}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &658773942
@@ -1031,20 +1031,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bea276d04fdd0b46b08c077976965b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPrefabs:
-  - {fileID: 9085576179170928959, guid: 18119f4fe21146c4d81fc7560394682f, type: 3}
-  - {fileID: 8202133102839631506, guid: 5d7c9245d2545a04fbbbc35d9e6d3708, type: 3}
-  - {fileID: 1933564793123788092, guid: c6872013e5800f94eb26ee959912525d, type: 3}
-  - {fileID: 8823698656452175340, guid: 1c21b42f0aa82e34195066edbfc56cdc, type: 3}
-  - {fileID: 5115547750059042164, guid: 08316df5562e023428c47dcd24fdb6ae, type: 3}
-  - {fileID: 8224201823976627560, guid: 39337347d63eda8499c2031ebb9f29a3, type: 3}
-  - {fileID: 5281757745851233841, guid: cd066033258ee874f836f16cd7b9c8a4, type: 3}
-  spawnInterval: 0.5
-  horizontalSpawnRange: 20
-  minFallSpeed: 2
-  maxFallSpeed: 5
-  minSpinSpeed: -50
-  maxSpinSpeed: 50
 --- !u!4 &1476277171
 Transform:
   m_ObjectHideFlags: 0
