@@ -25,6 +25,9 @@ public class BadEndingSceneController : MonoBehaviour
         // 1. Perform scene flooding to remove land and unify water tiles
         FloodScene();
 
+        // 2. Spawn floating trash on the flooded water
+        SpawnTrash();
+
         if (fadePanel == null)
         {
             Debug.LogError("BadEndingSceneController: Fade Panel is not assigned in the Inspector!");
@@ -127,6 +130,41 @@ public class BadEndingSceneController : MonoBehaviour
         {
             Debug.LogError("BadEndingSceneController: Could not find Water Tilemap in the scene!");
         }
+    }
+
+    void SpawnTrash()
+    {
+        // Load all trash prefabs from Resources/Trash
+        GameObject[] trashPrefabs = Resources.LoadAll<GameObject>("Trash");
+        if (trashPrefabs == null || trashPrefabs.Length == 0)
+        {
+            Debug.LogWarning("BadEndingSceneController: No trash prefabs found in Resources/Trash!");
+            return;
+        }
+
+        // Spawn a random number of trash items at random positions in the scene to represent the flood
+        int trashCount = Random.Range(30, 50); // spawn between 30 and 50 trash items
+        for (int i = 0; i < trashCount; i++)
+        {
+            GameObject prefab = trashPrefabs[Random.Range(0, trashPrefabs.Length)];
+
+            // Random position in range -20 to 20
+            float rx = Random.Range(-20f, 20f);
+            float ry = Random.Range(-20f, 20f);
+            Vector3 spawnPos = new Vector3(rx, ry, 0f);
+
+            GameObject spawned = Instantiate(prefab, spawnPos, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
+
+            // Make sure the trash doesn't fall or get pushed away by physics
+            var rb = spawned.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.bodyType = RigidbodyType2D.Kinematic;
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
+        }
+        Debug.Log($"BadEndingSceneController: Successfully spawned {trashCount} trash items on the flooded water.");
     }
 
     IEnumerator SceneSequenceCoroutine()
