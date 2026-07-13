@@ -69,7 +69,8 @@ public class ScoreManager : MonoBehaviour
     {
         if (scoreTextElement != null)
         {
-            scoreTextElement.text = "Score : " + currentScore;
+            // Instead of adding the word "Score\n", we just convert the number to a string
+            scoreTextElement.text = currentScore.ToString();
         }
         else
         {
