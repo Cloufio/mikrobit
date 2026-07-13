@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;         // Required for UI Image
 using UnityEngine.SceneManagement; // Required for scene management
 using System.Collections;     // Required for Coroutines
+using UnityEngine.Tilemaps;   // Required for Tilemaps
 
 public class BadEndingSceneController : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class BadEndingSceneController : MonoBehaviour
 
     void Start()
     {
+        // 1. Perform scene flooding to remove land and unify water tiles
+        FloodScene();
+
         if (fadePanel == null)
         {
             Debug.LogError("BadEndingSceneController: Fade Panel is not assigned in the Inspector!");
@@ -39,6 +43,90 @@ public class BadEndingSceneController : MonoBehaviour
 
         // Start the sequence
         StartCoroutine(SceneSequenceCoroutine());
+    }
+
+    void FloodScene()
+    {
+        // 1. Find all Tilemaps in the scene
+        var tilemaps = FindObjectsOfType<Tilemap>();
+        Tilemap waterTilemap = null;
+
+        // 2. Identify the water Tilemap and disable land Tilemaps
+        foreach (var tm in tilemaps)
+        {
+            string name = tm.gameObject.name.ToLower();
+            if (name.Contains("water"))
+            {
+                waterTilemap = tm;
+            }
+            else
+            {
+                tm.gameObject.SetActive(false);
+            }
+        }
+
+        // 3. Disable all other land/floor/spawner/tree GameObjects in the scene
+        var allObjects = FindObjectsOfType<GameObject>();
+        foreach (var go in allObjects)
+        {
+            if (go == null) continue;
+
+            string name = go.name.ToLower();
+
+            // Skip critical scene manager components, lights, cameras, and UI canvas elements
+            if (go == gameObject || 
+                name.Contains("manager") || 
+                name.Contains("camera") || 
+                name.Contains("light") || 
+                name.Contains("canvas") || 
+                name.Contains("fade") || 
+                name.Contains("water"))
+            {
+                continue;
+            }
+
+            // Disable objects related to land, spawners, trees, etc.
+            if (name.Contains("floor") || 
+                name.Contains("spawn") || 
+                name.Contains("map") || 
+                name.Contains("tree") || 
+                name.Contains("plant") || 
+                name.Contains("forest") ||
+                name.Contains("bridge") ||
+                name.Contains("grass"))
+            {
+                go.SetActive(false);
+            }
+        }
+
+        // 4. Fill the water tilemap with the gameplay water tile to represent a complete flood
+        if (waterTilemap != null)
+        {
+            var waterTile = Resources.Load<TileBase>("WaterDetail6");
+            if (waterTile != null)
+            {
+                waterTilemap.ClearAllTiles();
+
+                // Define a large grid size to cover the entire screen (e.g. -60 to 60)
+                int size = 60;
+                for (int x = -size; x <= size; x++)
+                {
+                    for (int y = -size; y <= size; y++)
+                    {
+                        waterTilemap.SetTile(new Vector3Int(x, y, 0), waterTile);
+                    }
+                }
+                Debug.Log("BadEndingSceneController: Successfully flooded scene with gameplay water.");
+            }
+            else
+            {
+                Debug.LogError("BadEndingSceneController: Could not find WaterDetail6 in Resources!");
+            }
+        }
+        else
+        {
+            Debug.LogError("BadEndingSceneController: Could not find Water Tilemap in the scene!");
+        }
     }
 
     IEnumerator SceneSequenceCoroutine()
