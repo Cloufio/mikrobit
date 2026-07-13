@@ -36,7 +36,7 @@ public class ScoreManager : MonoBehaviour
         currentScore = 0;
         UpdateScoreDisplay();
 
-        timerIsRunning = true;
+        timerIsRunning = false;
         DisplayTime(timeRemaining);
     }
 

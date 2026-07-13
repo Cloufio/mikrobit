@@ -24,6 +24,12 @@ public class BoatController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
     }
 
     void Update()
@@ -34,10 +40,6 @@ public class BoatController : MonoBehaviour
             if (!isRiding)
             {
                 BoardBoat();
-            }
-            else
-            {
-                ExitBoat();
             }
         }
 
@@ -103,6 +105,16 @@ public class BoatController : MonoBehaviour
     {
         isRiding = true;
 
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.timerIsRunning = true;
+        }
+
         // Disable the player's normal walking script
         playerMovementScript.enabled = false;
 
@@ -127,6 +139,13 @@ public class BoatController : MonoBehaviour
     private void ExitBoat()
     {
         isRiding = false;
+
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
 
         // Re-enable player walking
         playerMovementScript.enabled = true;
