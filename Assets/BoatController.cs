@@ -43,6 +43,7 @@ public class BoatController : MonoBehaviour
     private SpriteRenderer boatRenderer;
     private Coroutine boatFlashCoroutine;
     private float nextWakeTime;
+    private BoatBoardingPrompt boardingPrompt;
 
     void Start()
     {
@@ -59,6 +60,14 @@ public class BoatController : MonoBehaviour
         {
             boatRenderer.sortingOrder = boatSortingOrder;
         }
+
+        boardingPrompt = GetComponent<BoatBoardingPrompt>();
+        if (boardingPrompt == null)
+        {
+            boardingPrompt = gameObject.AddComponent<BoatBoardingPrompt>();
+        }
+
+        RefreshBoardingPrompt();
 
         if (Camera.main != null)
         {
@@ -155,6 +164,7 @@ public class BoatController : MonoBehaviour
     private void BoardBoat()
     {
         isRiding = true;
+        RefreshBoardingPrompt();
 
         // Disable the player's normal walking script
         playerMovementScript.enabled = false;
@@ -199,6 +209,7 @@ public class BoatController : MonoBehaviour
 
         // Turn the player's collider back on
         player.GetComponent<Collider2D>().enabled = true;
+        RefreshBoardingPrompt();
     }
 
     // Detect when the player walks close to the boat
@@ -207,6 +218,7 @@ public class BoatController : MonoBehaviour
         if (collision.gameObject == player)
         {
             canBoard = true;
+            RefreshBoardingPrompt();
         }
     }
 
@@ -216,7 +228,13 @@ public class BoatController : MonoBehaviour
         if (collision.gameObject == player)
         {
             canBoard = false;
+            RefreshBoardingPrompt();
         }
+    }
+
+    private void RefreshBoardingPrompt()
+    {
+        boardingPrompt?.SetVisible(canBoard && !isRiding);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

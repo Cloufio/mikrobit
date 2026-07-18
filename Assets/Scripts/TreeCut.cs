@@ -21,6 +21,12 @@ public class TreeCut : Tool
 
     private void Awake()
     {
+        // Trash must remain selectable by ToolController without becoming a physical wall for the boat.
+        foreach (Collider2D interactionCollider in GetComponents<Collider2D>())
+        {
+            interactionCollider.isTrigger = true;
+        }
+
         healthBarSlider = GetComponentInChildren<Slider>();
 
         if (healthBarSlider == null)

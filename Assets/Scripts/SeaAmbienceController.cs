@@ -9,9 +9,9 @@ using UnityEngine.Tilemaps;
 /// </summary>
 public class SeaAmbienceController : MonoBehaviour
 {
-    private const int SurfacePatchCount = 16;
-    private const int ShorelineFoamCount = 9;
-    private const int GlintClusterCount = 5;
+    private const int SurfacePatchCount = 44;
+    private const int ShorelineFoamCount = 14;
+    private const int GlintClusterCount = 10;
     private const float SpriteRefreshInterval = 0.18f;
     private const int PassiveWaterSortingOrder = 1;
 
@@ -165,9 +165,8 @@ public class SeaAmbienceController : MonoBehaviour
 
     private void CreateSurfacePatches()
     {
-        for (int i = 0; i < SurfacePatchCount; i++)
+        foreach (Vector3Int cell in GetDistinctCells(waterCells, SurfacePatchCount))
         {
-            Vector3Int cell = GetRandomCell(waterCells);
             CreateTilePatch(
                 "Sea Surface Detail",
                 cell,
@@ -183,9 +182,8 @@ public class SeaAmbienceController : MonoBehaviour
     private void CreateShorelineFoam()
     {
         List<Vector3Int> source = shorelineCells.Count > 0 ? shorelineCells : waterCells;
-        for (int i = 0; i < ShorelineFoamCount; i++)
+        foreach (Vector3Int cell in GetDistinctCells(source, ShorelineFoamCount))
         {
-            Vector3Int cell = GetRandomCell(source);
             CreateTilePatch(
                 "Shoreline Foam",
                 cell,
@@ -281,6 +279,22 @@ public class SeaAmbienceController : MonoBehaviour
     private Vector3Int GetRandomCell(List<Vector3Int> cells)
     {
         return cells[random.Next(cells.Count)];
+    }
+
+    private List<Vector3Int> GetDistinctCells(List<Vector3Int> source, int count)
+    {
+        List<Vector3Int> candidates = new List<Vector3Int>(source);
+        int selectionCount = Mathf.Min(count, candidates.Count);
+        List<Vector3Int> selection = new List<Vector3Int>(selectionCount);
+
+        for (int i = 0; i < selectionCount; i++)
+        {
+            int index = random.Next(candidates.Count);
+            selection.Add(candidates[index]);
+            candidates.RemoveAt(index);
+        }
+
+        return selection;
     }
 
     private class AmbientPatch
