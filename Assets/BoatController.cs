@@ -16,14 +16,51 @@ public class BoatController : MonoBehaviour
     public Animator boatAnimator;
     public Animator playerAnimator;
 
+    [Header("Crash Damage")]
+    [SerializeField] private int crashDamage = 1;
+    [SerializeField] private float crashDamageCooldown = 0.75f;
+
+    [Header("Crash Feedback")]
+    [SerializeField] private float cameraShakeDuration = 0.16f;
+    [SerializeField] private float cameraShakeStrength = 0.08f;
+    [SerializeField] private float recoilDistance = 0.28f;
+    [SerializeField] private float boatFlashDuration = 0.12f;
+
+    [Header("Boat Wake")]
+    [SerializeField] private float wakeInterval = 0.12f;
+    [SerializeField] private float wakeOffset = 1.15f;
+
     private bool canBoard = false;
     private bool isRiding = false;
     private Rigidbody2D rb;
     private Vector2 movement;
+    private PlayerHealth playerHealth;
+    private float nextCrashDamageTime;
+    private CameraShake cameraShake;
+    private SpriteRenderer boatRenderer;
+    private Coroutine boatFlashCoroutine;
+    private float nextWakeTime;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
+
+        if (playerHealth == null)
+        {
+            Debug.LogError("BoatController could not find PlayerHealth on the assigned player.", this);
+        }
+
+        boatRenderer = GetComponent<SpriteRenderer>();
+
+        if (Camera.main != null)
+        {
+            cameraShake = Camera.main.GetComponent<CameraShake>();
+            if (cameraShake == null)
+            {
+                cameraShake = Camera.main.gameObject.AddComponent<CameraShake>();
+            }
+        }
     }
 
     void Update()
@@ -95,7 +132,16 @@ public class BoatController : MonoBehaviour
         // Apply movement to the boat's Rigidbody
         if (isRiding)
         {
-            rb.MovePosition(rb.position + movement * boatSpeed * Time.fixedDeltaTime);
+            Vector2 nextPosition = rb.position + movement * boatSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(nextPosition);
+
+            if (movement.sqrMagnitude > 0.001f && Time.time >= nextWakeTime)
+            {
+                Vector2 heading = movement.normalized;
+                Vector2 wakePosition = nextPosition - heading * wakeOffset;
+                WaterImpactSplash.SpawnWake(wakePosition, heading);
+                nextWakeTime = Time.time + wakeInterval;
+            }
         }
     }
 
@@ -164,5 +210,59 @@ public class BoatController : MonoBehaviour
         {
             canBoard = false;
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!isRiding || playerHealth == null || Time.time < nextCrashDamageTime)
+        {
+            return;
+        }
+
+        CrashableObject crashableObject = collision.collider.GetComponentInParent<CrashableObject>();
+        if (crashableObject == null || !crashableObject.DamagesBoat)
+        {
+            return;
+        }
+
+        playerHealth.TakeDamage(crashDamage);
+        nextCrashDamageTime = Time.time + crashDamageCooldown;
+        PlayCrashFeedback(collision.GetContact(0).point);
+    }
+
+    private void PlayCrashFeedback(Vector2 contactPoint)
+    {
+        Vector2 recoilDirection = rb.position - contactPoint;
+        if (recoilDirection.sqrMagnitude < 0.001f)
+        {
+            recoilDirection = movement.sqrMagnitude > 0.001f ? -movement.normalized : Vector2.left;
+        }
+        else
+        {
+            recoilDirection.Normalize();
+        }
+
+        rb.position += recoilDirection * recoilDistance;
+        cameraShake?.Shake(cameraShakeDuration, cameraShakeStrength);
+        WaterImpactSplash.Spawn(contactPoint);
+
+        if (boatRenderer != null)
+        {
+            if (boatFlashCoroutine != null)
+            {
+                StopCoroutine(boatFlashCoroutine);
+            }
+
+            boatFlashCoroutine = StartCoroutine(FlashBoat());
+        }
+    }
+
+    private System.Collections.IEnumerator FlashBoat()
+    {
+        Color originalColor = boatRenderer.color;
+        boatRenderer.color = new Color(1f, 0.45f, 0.4f, originalColor.a);
+        yield return new WaitForSecondsRealtime(boatFlashDuration);
+        boatRenderer.color = originalColor;
+        boatFlashCoroutine = null;
     }
 }

@@ -18,7 +18,10 @@ public class PlayerHealth : MonoBehaviour
 
     private Vector3 worldHealthBarFullScale;
     private Vector2[] heartOriginalPositions;
+    private Vector3[] heartOriginalScales;
+    private Color[] heartOriginalColors;
     private Coroutine heartShakeCoroutine;
+    private Coroutine lostHeartFeedbackCoroutine;
 
     void Awake()
     {
@@ -59,6 +62,7 @@ public class PlayerHealth : MonoBehaviour
         if (currentHealth < previousHealth)
         {
             ShakeHeartRow();
+            PlayLostHeartFeedback(previousHealth);
         }
     }
 
@@ -119,13 +123,63 @@ public class PlayerHealth : MonoBehaviour
         }
 
         heartOriginalPositions = new Vector2[heartImages.Length];
+        heartOriginalScales = new Vector3[heartImages.Length];
+        heartOriginalColors = new Color[heartImages.Length];
         for (int i = 0; i < heartImages.Length; i++)
         {
             if (heartImages[i] != null)
             {
                 heartOriginalPositions[i] = heartImages[i].rectTransform.anchoredPosition;
+                heartOriginalScales[i] = heartImages[i].rectTransform.localScale;
+                heartOriginalColors[i] = heartImages[i].color;
             }
         }
+    }
+
+    private void PlayLostHeartFeedback(int previousHealth)
+    {
+        if (heartImages == null || heartImages.Length == 0)
+        {
+            return;
+        }
+
+        int lostHeartIndex = loseHeartsFromRight
+            ? previousHealth - 1
+            : heartImages.Length - previousHealth;
+
+        if (lostHeartIndex < 0 || lostHeartIndex >= heartImages.Length || heartImages[lostHeartIndex] == null)
+        {
+            return;
+        }
+
+        if (lostHeartFeedbackCoroutine != null)
+        {
+            StopCoroutine(lostHeartFeedbackCoroutine);
+            RestoreHeartVisuals();
+        }
+
+        lostHeartFeedbackCoroutine = StartCoroutine(LostHeartFeedbackRoutine(lostHeartIndex));
+    }
+
+    private IEnumerator LostHeartFeedbackRoutine(int heartIndex)
+    {
+        const float feedbackDuration = 0.28f;
+        Image heart = heartImages[heartIndex];
+        float elapsed = 0f;
+
+        while (elapsed < feedbackDuration)
+        {
+            float progress = elapsed / feedbackDuration;
+            float pulse = 1f + Mathf.Sin(progress * Mathf.PI) * 0.35f;
+            heart.rectTransform.localScale = heartOriginalScales[heartIndex] * pulse;
+            heart.color = Color.Lerp(new Color(1f, 0.4f, 0.25f, 1f), heartOriginalColors[heartIndex], progress);
+
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        RestoreHeartVisuals();
+        lostHeartFeedbackCoroutine = null;
     }
 
     private void ShakeHeartRow()
@@ -185,5 +239,22 @@ public class PlayerHealth : MonoBehaviour
         }
 
         SetHeartPositions(Vector2.zero);
+    }
+
+    private void RestoreHeartVisuals()
+    {
+        if (heartOriginalScales == null || heartOriginalColors == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < heartImages.Length; i++)
+        {
+            if (heartImages[i] != null)
+            {
+                heartImages[i].rectTransform.localScale = heartOriginalScales[i];
+                heartImages[i].color = heartOriginalColors[i];
+            }
+        }
     }
 }

@@ -10,6 +10,11 @@ public class TreeCut : Tool
     [Header("Scoring")]
     [SerializeField] int pointsForCutting = 1;
 
+    [Header("Cleanup Feedback")]
+    [SerializeField] private bool useWaterCleanupFeedback = true;
+    [SerializeField] private AudioClip cleanupSound;
+    [Range(0f, 1f)] [SerializeField] private float cleanupSoundVolume = 0.8f;
+
     [Header("UI Visuals")]
     public Slider healthBarSlider;
     private int maxHealth;
@@ -56,6 +61,19 @@ public class TreeCut : Tool
             {
                 ScoreManager.Instance.AddScore(pointsForCutting);
             }
+
+            if (useWaterCleanupFeedback)
+            {
+                WaterCleaningRipple.Spawn(transform.position);
+            }
+
+            CleanupScorePopup.Spawn(transform.position, pointsForCutting);
+
+            if (cleanupSound != null)
+            {
+                AudioSource.PlayClipAtPoint(cleanupSound, transform.position, cleanupSoundVolume);
+            }
+
             Destroy(gameObject);
         }
     }
