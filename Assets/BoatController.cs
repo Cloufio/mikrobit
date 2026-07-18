@@ -30,6 +30,9 @@ public class BoatController : MonoBehaviour
     [SerializeField] private float wakeInterval = 0.12f;
     [SerializeField] private float wakeOffset = 1.15f;
 
+    [Header("Render Order")]
+    [SerializeField] private int boatSortingOrder = 4;
+
     private bool canBoard = false;
     private bool isRiding = false;
     private Rigidbody2D rb;
@@ -52,6 +55,10 @@ public class BoatController : MonoBehaviour
         }
 
         boatRenderer = GetComponent<SpriteRenderer>();
+        if (boatRenderer != null)
+        {
+            boatRenderer.sortingOrder = boatSortingOrder;
+        }
 
         if (Camera.main != null)
         {

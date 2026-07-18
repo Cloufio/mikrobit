@@ -10,5 +10,14 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        // The ambience controller safely does nothing in scenes without the water-detail tilemap.
+        if (FindFirstObjectByType<SeaAmbienceController>() == null)
+        {
+            gameObject.AddComponent<SeaAmbienceController>();
+        }
+    }
+
     public GameObject player;
 }

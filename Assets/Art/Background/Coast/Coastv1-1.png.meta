@@ -575,7 +575,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coastv1-1_18
+      name: 1-PelengkapKiri
       rect:
         serializedVersion: 2
         x: 288
@@ -641,15 +641,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coastv1-1_21
+      name: 11-PelengkapKiri
       rect:
         serializedVersion: 2
         x: 336
         y: 240
         width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        height: 13
+      alignment: 9
+      pivot: {x: 0.5, y: 0.35}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -16885,7 +16885,7 @@ TextureImporter:
         width: 5
         height: 4
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -16903,11 +16903,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 224
-        y: 61
-        width: 16
-        height: 19
+        y: 59
+        width: 23
+        height: 21
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -16929,7 +16929,7 @@ TextureImporter:
         width: 16
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -16946,12 +16946,12 @@ TextureImporter:
       name: 1-BottomLeft
       rect:
         serializedVersion: 2
-        x: 192
-        y: 61
-        width: 16
-        height: 19
+        x: 189
+        y: 57
+        width: 19
+        height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -16973,7 +16973,7 @@ TextureImporter:
         width: 16
         height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -16995,7 +16995,7 @@ TextureImporter:
         width: 16
         height: 22
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -17004,6 +17004,28 @@ TextureImporter:
       bones: []
       spriteID: 767719b266fe44e4780e3196605594ea
       internalID: -871236064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Coastv1-1_18
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 239
+        width: 3
+        height: 2
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd23c28dc8c724bab8cd4adb2d6c69e7
+      internalID: -2053940064
       vertices: []
       indices: 
       edges: []
@@ -17028,6 +17050,8 @@ TextureImporter:
       1-Middle: -1852755766
       1-MiddleLeft: 1223558842
       1-MiddleRIght: 245913086
+      1-PelengkapKiri: 6243280189952813773
+      11-PelengkapKiri: 6815596352714444582
       Coastv1-1_0: 809362594821768103
       Coastv1-1_1: -8290218980045924352
       Coastv1-1_10: -5615815334726302604
@@ -17118,7 +17142,7 @@ TextureImporter:
       Coastv1-1_177: 217253311
       Coastv1-1_178: -243537188
       Coastv1-1_179: -1026815311
-      Coastv1-1_18: 6243280189952813773
+      Coastv1-1_18: -2053940064
       Coastv1-1_180: 1567555037
       Coastv1-1_181: 1401901063
       Coastv1-1_182: -986757386
@@ -17152,7 +17176,6 @@ TextureImporter:
       Coastv1-1_207: 1369736613
       Coastv1-1_208: -602253148
       Coastv1-1_209: 1018986932
-      Coastv1-1_21: 6815596352714444582
       Coastv1-1_210: 876853550
       Coastv1-1_211: -1089488128
       Coastv1-1_212: -179674518
