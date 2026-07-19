@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+
+        if (FindFirstObjectByType<OnboardingTutorial>() == null)
+        {
+            gameObject.AddComponent<OnboardingTutorial>();
+        }
     }
 
     private void Start()
