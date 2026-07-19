@@ -9,10 +9,10 @@ using TMPro;
 public class BoatBoardingPrompt : MonoBehaviour
 {
     private const int PromptSortingOrder = 20;
-    private static readonly Color LabelColor = new Color(0.9f, 0.98f, 1f, 1f);
-    private static readonly Color ActionColor = new Color(1f, 0.38f, 0.14f, 1f);
-    private static readonly Color KeycapColor = new Color(0.04f, 0.14f, 0.2f, 0.94f);
-    private static readonly Color KeycapOutlineColor = new Color(0.55f, 0.94f, 1f, 1f);
+    private static readonly Color PlateColor = new Color(0.025f, 0.14f, 0.22f, 0.94f);
+    private static readonly Color KeycapColor = new Color(1f, 0.76f, 0.25f, 1f);
+    private static readonly Color DarkBlue = new Color(0.035f, 0.18f, 0.27f, 1f);
+    private static readonly Color BodyTextColor = new Color(0.84f, 0.95f, 0.98f, 1f);
 
     private Canvas promptCanvas;
     private RectTransform promptTransform;
@@ -36,41 +36,36 @@ public class BoatBoardingPrompt : MonoBehaviour
 
     private IEnumerator BuildPrompt()
     {
-        TMP_FontAsset font = null;
-        Font actionFont = null;
-        for (int frame = 0; frame < 30 && (font == null || actionFont == null); frame++)
-        {
-            // IntroScene uses this TextMesh Pro font from the project's Resources folder.
-            font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-            if (font == null)
-            {
-                font = TMP_Settings.defaultFontAsset;
-            }
+        TMP_FontAsset normalFont = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        normalFont ??= TMP_Settings.defaultFontAsset;
 
+        Font boldPixelFont = null;
+        for (int frame = 0; frame < 30 && boldPixelFont == null; frame++)
+        {
             ScoreManager scoreManager = ScoreManager.Instance != null
                 ? ScoreManager.Instance
                 : FindFirstObjectByType<ScoreManager>();
-            actionFont = scoreManager != null && scoreManager.scoreTextElement != null
+            boldPixelFont = scoreManager != null && scoreManager.scoreTextElement != null
                 ? scoreManager.scoreTextElement.font
                 : null;
 
-            if (font == null || actionFont == null)
+            if (boldPixelFont == null)
             {
                 yield return null;
             }
         }
 
-        if (font == null || actionFont == null)
+        if (normalFont == null || boldPixelFont == null)
         {
-            Debug.LogWarning("Boat boarding prompt could not find its UI fonts.", this);
+            Debug.LogWarning("Boat boarding prompt could not find its fonts.", this);
             yield break;
         }
 
-        CreatePrompt(font, actionFont);
+        CreatePrompt(normalFont, boldPixelFont);
         SetVisible(shouldShow);
     }
 
-    private void CreatePrompt(TMP_FontAsset keyFont, Font actionFont)
+    private void CreatePrompt(TMP_FontAsset normalFont, Font boldPixelFont)
     {
         GameObject promptObject = new GameObject("Board Boat Prompt", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         promptObject.transform.SetParent(transform, false);
@@ -83,31 +78,30 @@ public class BoatBoardingPrompt : MonoBehaviour
         promptCanvas.pixelPerfect = true;
 
         CanvasScaler scaler = promptObject.GetComponent<CanvasScaler>();
-        scaler.dynamicPixelsPerUnit = 16f;
-        scaler.referencePixelsPerUnit = 100f;
+        scaler.dynamicPixelsPerUnit = 32f;
+        scaler.referencePixelsPerUnit = 32f;
 
         promptTransform = promptObject.GetComponent<RectTransform>();
-        promptTransform.sizeDelta = new Vector2(390f, 82f);
-        baseLocalPosition = new Vector3(0f, 1.45f, 0f);
+        promptTransform.sizeDelta = new Vector2(330f, 58f);
+        baseLocalPosition = new Vector3(0f, 1.35f, 0f);
         promptTransform.localPosition = baseLocalPosition;
-        promptTransform.localScale = Vector3.one * 0.011f;
+        promptTransform.localScale = Vector3.one * 0.0125f;
 
-        GameObject keycapObject = new GameObject("E Keycap", typeof(RectTransform), typeof(Image), typeof(Outline));
+        CreateImage(promptTransform, "Prompt Plate", Vector2.zero, new Vector2(330f, 58f), PlateColor);
+
+        GameObject keycapObject = new GameObject("E Keycap", typeof(RectTransform), typeof(Image));
         keycapObject.transform.SetParent(promptTransform, false);
         RectTransform keycapTransform = keycapObject.GetComponent<RectTransform>();
-        keycapTransform.anchoredPosition = new Vector2(-108f, 0f);
-        keycapTransform.sizeDelta = new Vector2(70f, 68f);
+        keycapTransform.anchoredPosition = new Vector2(-47f, 0f);
+        keycapTransform.sizeDelta = new Vector2(48f, 44f);
 
         keycapImage = keycapObject.GetComponent<Image>();
         keycapImage.color = KeycapColor;
         keycapImage.raycastTarget = false;
 
-        Outline keycapOutline = keycapObject.GetComponent<Outline>();
-        keycapOutline.effectColor = KeycapOutlineColor;
-        keycapOutline.effectDistance = new Vector2(2f, -2f);
-
-        CreateText(keycapTransform, "Key Label", "E", keyFont, 46, Vector2.zero, new Vector2(70f, 68f), LabelColor, TextAlignmentOptions.Center);
-        CreateActionText(promptTransform, actionFont);
+        CreateText(keycapTransform, "Key Label", "E", boldPixelFont, 34, Vector2.zero, new Vector2(48f, 44f), DarkBlue, TextAnchor.MiddleCenter);
+        CreateNormalText(promptTransform, "Press Label", "Press", normalFont, new Vector2(-120f, 0f), new Vector2(72f, 44f), TextAlignmentOptions.MidlineRight);
+        CreateNormalText(promptTransform, "Action Label", "to Ride Boat", normalFont, new Vector2(64f, 0f), new Vector2(150f, 44f), TextAlignmentOptions.MidlineLeft);
     }
 
     private void Update()
@@ -121,19 +115,68 @@ public class BoatBoardingPrompt : MonoBehaviour
         promptTransform.localPosition = baseLocalPosition + Vector3.up * pulse;
 
         Color keycapColor = KeycapColor;
-        keycapColor.a = 0.9f + Mathf.Sin(Time.unscaledTime * 3f) * 0.06f;
+        keycapColor.a = 0.92f + Mathf.Sin(Time.unscaledTime * 3f) * 0.08f;
         keycapImage.color = keycapColor;
     }
 
-    private static TextMeshProUGUI CreateText(
+    private static Image CreateImage(
+        Transform parent,
+        string objectName,
+        Vector2 position,
+        Vector2 size,
+        Color color)
+    {
+        GameObject imageObject = new GameObject(objectName, typeof(RectTransform), typeof(Image));
+        imageObject.transform.SetParent(parent, false);
+
+        RectTransform rectTransform = imageObject.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = position;
+        rectTransform.sizeDelta = size;
+
+        Image image = imageObject.GetComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+        return image;
+    }
+
+    private static Text CreateText(
         Transform parent,
         string objectName,
         string value,
-        TMP_FontAsset font,
+        Font font,
         int fontSize,
         Vector2 position,
         Vector2 size,
         Color color,
+        TextAnchor alignment)
+    {
+        GameObject textObject = new GameObject(objectName, typeof(RectTransform), typeof(Text));
+        textObject.transform.SetParent(parent, false);
+
+        RectTransform rectTransform = textObject.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = position;
+        rectTransform.sizeDelta = size;
+
+        Text text = textObject.GetComponent<Text>();
+        text.font = font;
+        text.text = value;
+        text.fontSize = fontSize;
+        text.alignment = alignment;
+        text.horizontalOverflow = HorizontalWrapMode.Overflow;
+        text.verticalOverflow = VerticalWrapMode.Overflow;
+        text.color = color;
+        text.raycastTarget = false;
+
+        return text;
+    }
+
+    private static TextMeshProUGUI CreateNormalText(
+        Transform parent,
+        string objectName,
+        string value,
+        TMP_FontAsset font,
+        Vector2 position,
+        Vector2 size,
         TextAlignmentOptions alignment)
     {
         GameObject textObject = new GameObject(objectName, typeof(RectTransform), typeof(TextMeshProUGUI));
@@ -146,33 +189,12 @@ public class BoatBoardingPrompt : MonoBehaviour
         TextMeshProUGUI text = textObject.GetComponent<TextMeshProUGUI>();
         text.font = font;
         text.text = value;
-        text.fontSize = fontSize;
+        text.fontSize = 24;
         text.alignment = alignment;
         text.enableWordWrapping = false;
         text.overflowMode = TextOverflowModes.Overflow;
-        text.color = color;
+        text.color = BodyTextColor;
         text.raycastTarget = false;
-
         return text;
-    }
-
-    private static void CreateActionText(Transform parent, Font font)
-    {
-        GameObject textObject = new GameObject("Action Label", typeof(RectTransform), typeof(Text));
-        textObject.transform.SetParent(parent, false);
-
-        RectTransform rectTransform = textObject.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = new Vector2(70f, 0f);
-        rectTransform.sizeDelta = new Vector2(240f, 70f);
-
-        Text text = textObject.GetComponent<Text>();
-        text.font = font;
-        text.text = "RIDE BOAT";
-        text.fontSize = 42;
-        text.alignment = TextAnchor.MiddleLeft;
-        text.horizontalOverflow = HorizontalWrapMode.Overflow;
-        text.verticalOverflow = VerticalWrapMode.Overflow;
-        text.color = ActionColor;
-        text.raycastTarget = false;
     }
 }

@@ -12,6 +12,9 @@ public class BoatController : MonoBehaviour
     [Header("Boarding Setup")]
     public Transform driverSeat;
 
+    [Header("Boarding Prompt")]
+    [SerializeField] private bool showBoardingPrompt = false;
+
     [Header("Animation Setup")]
     public Animator boatAnimator;
     public Animator playerAnimator;
@@ -61,13 +64,16 @@ public class BoatController : MonoBehaviour
             boatRenderer.sortingOrder = boatSortingOrder;
         }
 
-        boardingPrompt = GetComponent<BoatBoardingPrompt>();
-        if (boardingPrompt == null)
+        if (showBoardingPrompt)
         {
-            boardingPrompt = gameObject.AddComponent<BoatBoardingPrompt>();
-        }
+            boardingPrompt = GetComponent<BoatBoardingPrompt>();
+            if (boardingPrompt == null)
+            {
+                boardingPrompt = gameObject.AddComponent<BoatBoardingPrompt>();
+            }
 
-        RefreshBoardingPrompt();
+            RefreshBoardingPrompt();
+        }
 
         if (Camera.main != null)
         {
@@ -234,7 +240,10 @@ public class BoatController : MonoBehaviour
 
     private void RefreshBoardingPrompt()
     {
-        boardingPrompt?.SetVisible(canBoard && !isRiding);
+        if (showBoardingPrompt)
+        {
+            boardingPrompt?.SetVisible(canBoard && !isRiding);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
