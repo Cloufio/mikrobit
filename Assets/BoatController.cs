@@ -11,9 +11,13 @@ public class BoatController : MonoBehaviour
 
     [Header("Boarding Setup")]
     public Transform driverSeat;
+    [Tooltip("The fixed front-facing sprite shown while the player is seated. Leave empty to use the player's starting idle sprite.")]
+    [SerializeField] private Sprite boardedPlayerSprite;
 
     [Header("Boarding Prompt")]
-    [SerializeField] private bool showBoardingPrompt = false;
+    [SerializeField] private bool showBoardingPrompt = true;
+    [SerializeField] private BoatBoardingPrompt.Style boardingPromptStyle = new BoatBoardingPrompt.Style();
+    [SerializeField, Min(0.1f)] private float boardingPromptRange = 4f;
 
     [Header("Animation Setup")]
     public Animator boatAnimator;
@@ -47,11 +51,19 @@ public class BoatController : MonoBehaviour
     private Coroutine boatFlashCoroutine;
     private float nextWakeTime;
     private BoatBoardingPrompt boardingPrompt;
+    private SpriteRenderer playerRenderer;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
+        playerRenderer = player != null ? player.GetComponent<SpriteRenderer>() : null;
+
+        // The scene starts with the front-facing idle sprite, which is the intended boat pose.
+        if (boardedPlayerSprite == null && playerRenderer != null)
+        {
+            boardedPlayerSprite = playerRenderer.sprite;
+        }
 
         if (playerHealth == null)
         {
@@ -72,6 +84,8 @@ public class BoatController : MonoBehaviour
                 boardingPrompt = gameObject.AddComponent<BoatBoardingPrompt>();
             }
 
+            boardingPrompt.Configure(boardingPromptStyle);
+            boardingPrompt.Initialize();
             RefreshBoardingPrompt();
         }
 
@@ -87,6 +101,8 @@ public class BoatController : MonoBehaviour
 
     void Update()
     {
+        UpdateBoardingAvailability();
+
         // 1. Check for boarding input (Press E)
         if (canBoard && Input.GetKeyDown(KeyCode.E))
         {
@@ -119,15 +135,6 @@ public class BoatController : MonoBehaviour
                     boatAnimator.SetFloat("lastInputX", movement.x);
                     boatAnimator.SetFloat("lastInputY", movement.y);
                 }
-                if (playerAnimator != null)
-                {
-                    playerAnimator.SetBool("isWalking", true);
-                    playerAnimator.SetFloat("inputX", movement.x);
-                    playerAnimator.SetFloat("inputY", movement.y);
-
-                    playerAnimator.SetFloat("lastInputX", movement.x);
-                    playerAnimator.SetFloat("lastInputY", movement.y);
-                }
             }
             else
             {
@@ -135,10 +142,6 @@ public class BoatController : MonoBehaviour
                 if (boatAnimator != null)
                 {
                     boatAnimator.SetBool("isWalking", false);
-                }
-                if (playerAnimator != null)
-                {
-                    playerAnimator.SetBool("isWalking", false);
                 }
             }
         }
@@ -175,6 +178,16 @@ public class BoatController : MonoBehaviour
         // Disable the player's normal walking script
         playerMovementScript.enabled = false;
 
+        // Always show the same seated passenger pose, regardless of the last walking frame.
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = false;
+        }
+        if (playerRenderer != null && boardedPlayerSprite != null)
+        {
+            playerRenderer.sprite = boardedPlayerSprite;
+        }
+
         // Put the player's physics to sleep so they don't fight the boat
         Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
         if (playerRb != null)
@@ -199,6 +212,17 @@ public class BoatController : MonoBehaviour
 
         // Re-enable player walking
         playerMovementScript.enabled = true;
+
+        // Hand control back to the player animator after leaving the boat.
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = true;
+            playerAnimator.Rebind();
+            playerAnimator.SetFloat("Horizontal", 0f);
+            playerAnimator.SetFloat("Vertical", -1f);
+            playerAnimator.SetFloat("Speed", 0f);
+            playerAnimator.Update(0f);
+        }
 
         // Un-parent the player so they can walk away
         player.transform.SetParent(null);
@@ -244,6 +268,23 @@ public class BoatController : MonoBehaviour
         {
             boardingPrompt?.SetVisible(canBoard && !isRiding);
         }
+    }
+
+    private void UpdateBoardingAvailability()
+    {
+        if (player == null || isRiding)
+        {
+            return;
+        }
+
+        bool playerIsNearby = Vector2.Distance(player.transform.position, transform.position) <= boardingPromptRange;
+        if (canBoard == playerIsNearby)
+        {
+            return;
+        }
+
+        canBoard = playerIsNearby;
+        RefreshBoardingPrompt();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
