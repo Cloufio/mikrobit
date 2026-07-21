@@ -14,7 +14,12 @@ public class IntroController : MonoBehaviour
     // Adjust these values in the Inspector
     [Header("Timing Settings")]
     public float timeBetweenChars = 0.05f; // How fast the text types out
-    public float timeAfterParagraph = 2.0f; // How long to wait after a paragraph is finished
+
+    [Header("Interaction Settings")]
+    [Tooltip("How much faster text types after the player presses Space, Enter, or double-clicks.")]
+    [Min(1f)] public float fastForwardMultiplier = 12f;
+    [Tooltip("Maximum time between clicks for a double-click.")]
+    [Min(0.05f)] public float doubleClickWindow = 0.28f;
 
     // Optional: Add a sound effect for typing
     [Header("Audio Settings")]
@@ -29,11 +34,35 @@ public class IntroController : MonoBehaviour
         "This ocean is on the brink of its fate. Only you can decide: total destruction... or a new lease on life."
     };
 
+    private bool advanceRequested;
+    private float lastClickTime = float.NegativeInfinity;
+
     void Start()
     {
         // Ensure the text is empty at the start
         introText.text = "";
         StartCoroutine(PlayIntroSequence());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) ||
+            Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            advanceRequested = true;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            float clickTime = Time.unscaledTime;
+            if (clickTime - lastClickTime <= doubleClickWindow)
+            {
+                advanceRequested = true;
+            }
+
+            lastClickTime = clickTime;
+        }
     }
 
     IEnumerator PlayIntroSequence()
@@ -44,8 +73,8 @@ public class IntroController : MonoBehaviour
             // Call the typing coroutine for the current paragraph
             yield return StartCoroutine(TypeText(paragraph));
 
-            // Wait for a moment before starting the next paragraph
-            yield return new WaitForSeconds(timeAfterParagraph);
+            // Once fully visible, dialogue waits for a fresh advance input.
+            yield return StartCoroutine(WaitForAdvanceInput());
 
             // Clear the text for the next paragraph
             introText.text = "";
@@ -59,9 +88,15 @@ public class IntroController : MonoBehaviour
     {
         // 'i' will be our character counter
         int i = 0;
+        bool isFastForwarding = false;
 
         while (i < textToType.Length)
         {
+            if (ConsumeAdvanceInput())
+            {
+                isFastForwarding = true;
+            }
+
             // Add one character to the text component
             introText.text += textToType[i];
             i++;
@@ -72,8 +107,33 @@ public class IntroController : MonoBehaviour
                 typingAudioSource.Play();
             }
 
-            // Wait a short moment before typing the next character
-            yield return new WaitForSeconds(timeBetweenChars);
+            // Keep revealing characters quickly instead of skipping the paragraph outright.
+            float characterDelay = isFastForwarding
+                ? timeBetweenChars / fastForwardMultiplier
+                : timeBetweenChars;
+            yield return new WaitForSeconds(characterDelay);
         }
+
+        // An input used to finish the current paragraph must not also advance it.
+        advanceRequested = false;
+    }
+
+    private IEnumerator WaitForAdvanceInput()
+    {
+        while (!ConsumeAdvanceInput())
+        {
+            yield return null;
+        }
+    }
+
+    private bool ConsumeAdvanceInput()
+    {
+        if (!advanceRequested)
+        {
+            return false;
+        }
+
+        advanceRequested = false;
+        return true;
     }
 }
