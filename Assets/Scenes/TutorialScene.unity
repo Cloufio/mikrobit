@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -31,7 +31,7 @@ RenderSettings:
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
-  m_SpotCookie: {fileID: 10003, guid: 0000000000000000f000000000000000, type: 0}
+  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
@@ -83,6 +83,7 @@ LightmapSettings:
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
     m_PVREnvironmentMIS: 1
+    m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
     m_PVRFilteringGaussRadiusAO: 2
@@ -112,7 +113,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -162,22 +163,209 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8aef36d2c7eb42b9af48cdb92909a458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialSprite: {fileID: -1921337063021962082, guid: 28467e9cdcab549e096f06f9f4c9b56c, type: 3}
+  steps:
+  - title: Get To The Boat
+    description: Walk to the dock and press [E] to board the boat.
+    image: {fileID: 6169685882368022304, guid: ab6b65b23d5314b23afbe349f200564b, type: 3}
+    video: {fileID: 0}
+    mediaColor:
+      r: 0.18
+      g: 0.47
+      b: 0.62
+      a: 1
+  - title: Clean The Sea
+    description: Click nearby trash to clear it and earn points.
+    image: {fileID: 1074747423237002283, guid: 22b357ef52a4a4aa394c5de2f01bfb51, type: 3}
+    video: {fileID: 0}
+    mediaColor:
+      r: 0.18
+      g: 0.47
+      b: 0.62
+      a: 1
+  - title: Avoid Obstacles
+    description: Steer clear of rocks and ice to protect your health.
+    image: {fileID: 2101014457, guid: 9619a38ba21e96e40a571ceea3140a44, type: 3}
+    video: {fileID: 0}
+    mediaColor:
+      r: 0.18
+      g: 0.47
+      b: 0.62
+      a: 1
   nextSceneName: MainScene2
-  beforeKeyText: PRESS
+  tutorialFont: {fileID: 0}
+  beforeKeyText: Press
   keyText: ENTER
-  afterKeyText: TO CONTINUE
-  promptFont: {fileID: 0}
-  artworkScale: 1
+  afterKeyText: To Continue
   promptMargin: {x: 56, y: 42}
-  backdropColor: {r: 0.01, g: 0.05, b: 0.08, a: 1}
-  bodyTextColor: {r: 0.94, g: 0.99, b: 1, a: 1}
-  keycapFill: {r: 0.02, g: 0.12, b: 0.18, a: 0.96}
-  keycapBorderColor: {r: 0.9, g: 0.98, b: 1, a: 1}
-  bodyFontSize: 28
-  keyFontSize: 21
+  backdropColor:
+    r: 0.015
+    g: 0.09
+    b: 0.08
+    a: 1
+  cardColor:
+    r: 0.025
+    g: 0.15
+    b: 0.16
+    a: 0.98
+  accentColor:
+    r: 0.72
+    g: 0.94
+    b: 0.18
+    a: 1
+  headingColor:
+    r: 0.93
+    g: 1
+    b: 0.84
+    a: 1
+  bodyTextColor:
+    r: 0.94
+    g: 0.99
+    b: 1
+    a: 1
+  keycapFill:
+    r: 0.02
+    g: 0.12
+    b: 0.18
+    a: 0.96
+  keycapBorderColor:
+    r: 0.9
+    g: 0.98
+    b: 1
+    a: 1
+  isLoading: 0
+  roundedFillSprite: {fileID: 0}
+  roundedOutlineSprite: {fileID: 0}
+--- !u!1 &100010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 100012}
+  - component: {fileID: 100011}
+  - component: {fileID: 100013}
+  m_Layer: 0
+  m_Name: Main Camera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!20 &100011
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100010}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.01, g: 0.05, b: 0.08, a: 1}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 5
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &100012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100010}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &100013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 100001}
+  - {fileID: 100012}

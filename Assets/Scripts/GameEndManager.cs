@@ -6,14 +6,14 @@ using System.Collections;
 public class GameEndManager : MonoBehaviour
 {
     [Header("Game Conditions")]
-    [Tooltip("The score threshold to differentiate between endings.")]
-    public int scoreThresholdForGoodEnding = 30;
+    [Tooltip("Scores at or above this value unlock the good ending.")]
+    public int scoreThresholdForGoodEnding = 100;
 
     [Header("Scene Transitions")]
-    [Tooltip("Build index for the scene to load if score > scoreThresholdForGoodEnding.")]
-    public int goodEndingSceneIndex = 3;
-    [Tooltip("Build index for the scene to load if score <= scoreThresholdForGoodEnding.")]
-    public int badEndingSceneIndex = 4;
+    [Tooltip("Scene to load when the player reaches the score threshold.")]
+    public string goodEndingSceneName = "GoodEnding";
+    [Tooltip("Scene to load when the player finishes below the score threshold.")]
+    public string badEndingSceneName = "BadEnding";
 
     [Header("Fade Settings")]
     [Tooltip("The UI Image to use for fading in the Inspector.")]
@@ -85,26 +85,26 @@ public class GameEndManager : MonoBehaviour
         if (timeIsOver)
         {
             conditionsHaveBeenMet = true;
-            int sceneIndexToLoad;
+            string sceneNameToLoad;
 
-            if (currentScore > scoreThresholdForGoodEnding)
+            if (currentScore >= scoreThresholdForGoodEnding)
             {
-                Debug.Log($"Time has run out! Score ({currentScore}) > {scoreThresholdForGoodEnding}. Loading 'Good Ending' scene (index {goodEndingSceneIndex}).");
-                sceneIndexToLoad = goodEndingSceneIndex;
+                Debug.Log($"Time has run out! Score ({currentScore}) >= {scoreThresholdForGoodEnding}. Loading '{goodEndingSceneName}'.");
+                sceneNameToLoad = goodEndingSceneName;
             }
             else
             {
-                Debug.Log($"Time has run out! Score ({currentScore}) <= {scoreThresholdForGoodEnding}. Loading 'Bad Ending' scene (index {badEndingSceneIndex}).");
-                sceneIndexToLoad = badEndingSceneIndex;
+                Debug.Log($"Time has run out! Score ({currentScore}) < {scoreThresholdForGoodEnding}. Loading '{badEndingSceneName}'.");
+                sceneNameToLoad = badEndingSceneName;
             }
 
             // Re-activate the panel before starting the fade-out.
             fadePanel.gameObject.SetActive(true);
-            StartCoroutine(PerformFadeAndLoadScene(sceneIndexToLoad));
+            StartCoroutine(PerformFadeAndLoadScene(sceneNameToLoad));
         }
     }
 
-    IEnumerator PerformFadeAndLoadScene(int targetSceneIndex)
+    IEnumerator PerformFadeAndLoadScene(string targetSceneName)
     {
         if (Time.timeScale == 0f)
         {
@@ -124,6 +124,6 @@ public class GameEndManager : MonoBehaviour
         }
 
         fadePanel.color = new Color(panelColor.r, panelColor.g, panelColor.b, 1f);
-        SceneManager.LoadScene(targetSceneIndex);
+        SceneManager.LoadScene(targetSceneName);
     }
 }

@@ -4953,9 +4953,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c3d9d0c83b4894a9405562380c12c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreThresholdForGoodEnding: 40
-  goodEndingSceneIndex: 4
-  badEndingSceneIndex: 3
+  scoreThresholdForGoodEnding: 100
+  goodEndingSceneName: GoodEnding
+  badEndingSceneName: BadEnding
   fadePanel: {fileID: 274176636}
   fadeInDuration: 1.5
   fadeOutDuration: 2

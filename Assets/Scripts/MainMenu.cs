@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
 
     public void SkipStory()
     {
-        SceneManager.LoadScene("TutorialScene");
+        SceneManager.LoadScene("MainScene2");
     }
 
     public void ExitGame()
