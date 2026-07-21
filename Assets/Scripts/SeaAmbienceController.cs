@@ -15,6 +15,20 @@ public class SeaAmbienceController : MonoBehaviour
     private const float SpriteRefreshInterval = 0.18f;
     private const int PassiveWaterSortingOrder = 1;
 
+    // Only these animated tiles are allowed to feed the ambient ripple layer.
+    // Other water assets remain visible on their tilemaps but receive no extra effect.
+    private static readonly HashSet<string> RippleTileNames = new HashSet<string>
+    {
+        "WaterDetail1",
+        "WaterDetail2",
+        "WaterDetail3",
+        "WaterDetail4",
+        "WaterDetail5",
+        "WaterDetail6",
+        "WaterDetail7",
+        "WaterDetail8"
+    };
+
     private readonly List<Vector3Int> waterCells = new List<Vector3Int>();
     private readonly List<Vector3Int> shorelineCells = new List<Vector3Int>();
     private readonly List<AmbientPatch> ambientPatches = new List<AmbientPatch>();
@@ -98,7 +112,8 @@ public class SeaAmbienceController : MonoBehaviour
         BoundsInt bounds = waterDetailTilemap.cellBounds;
         foreach (Vector3Int cell in bounds.allPositionsWithin)
         {
-            if (waterDetailTilemap.GetSprite(cell) != null)
+            TileBase tile = waterDetailTilemap.GetTile(cell);
+            if (tile != null && RippleTileNames.Contains(tile.name))
             {
                 waterCells.Add(cell);
             }
