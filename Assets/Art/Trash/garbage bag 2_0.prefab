@@ -443,7 +443,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeHealth: 30
   damagePerHit: 10
-  pointsForCutting: 1
+  pointsForCutting: 3
+  useWaterCleanupFeedback: 1
+  cleanupSound: {fileID: 0}
+  cleanupSoundVolume: 0.8
   healthBarSlider: {fileID: 470019473420904337}
 --- !u!114 &6693684759000248227
 MonoBehaviour:
