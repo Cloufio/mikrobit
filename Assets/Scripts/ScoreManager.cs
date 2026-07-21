@@ -36,7 +36,8 @@ public class ScoreManager : MonoBehaviour
         currentScore = 0;
         UpdateScoreDisplay();
 
-        timerIsRunning = true;
+        // The countdown begins only after the player boards the boat.
+        timerIsRunning = false;
         DisplayTime(timeRemaining);
     }
 
@@ -63,6 +64,17 @@ public class ScoreManager : MonoBehaviour
     {
         currentScore += pointsToAdd;
         UpdateScoreDisplay();
+    }
+
+    public void StartTimer()
+    {
+        if (timeRemaining <= 0f)
+        {
+            return;
+        }
+
+        timerIsRunning = true;
+        DisplayTime(timeRemaining);
     }
 
     void UpdateScoreDisplay()

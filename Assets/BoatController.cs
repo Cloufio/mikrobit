@@ -37,6 +37,10 @@ public class BoatController : MonoBehaviour
     [SerializeField] private float wakeInterval = 0.12f;
     [SerializeField] private float wakeOffset = 1.15f;
 
+    [Header("Idle Sway")]
+    [SerializeField, Min(0f)] private float idleSwayAngle = 1.5f;
+    [SerializeField, Min(0f)] private float idleSwaySpeed = 1.5f;
+
     [Header("Render Order")]
     [SerializeField] private int boatSortingOrder = 4;
 
@@ -52,10 +56,14 @@ public class BoatController : MonoBehaviour
     private float nextWakeTime;
     private BoatBoardingPrompt boardingPrompt;
     private SpriteRenderer playerRenderer;
+    private float idleBaseRotation;
+    private float idleSwayPhase;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        idleBaseRotation = rb != null ? rb.rotation : transform.eulerAngles.z;
+        idleSwayPhase = Random.Range(0f, Mathf.PI * 2f);
         playerHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
         playerRenderer = player != null ? player.GetComponent<SpriteRenderer>() : null;
 
@@ -154,8 +162,14 @@ public class BoatController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Apply movement to the boat's Rigidbody
-        if (isRiding)
+        if (!isRiding)
+        {
+            ApplyIdleSway();
+            return;
+        }
+
+        // Apply movement to the boat's Rigidbody.
+        if (rb != null)
         {
             Vector2 nextPosition = rb.position + movement * boatSpeed * Time.fixedDeltaTime;
             rb.MovePosition(nextPosition);
@@ -174,6 +188,8 @@ public class BoatController : MonoBehaviour
     {
         isRiding = true;
         RefreshBoardingPrompt();
+        ResetBoatRotation();
+        ScoreManager.Instance?.StartTimer();
 
         // Disable the player's normal walking script
         playerMovementScript.enabled = false;
@@ -240,6 +256,25 @@ public class BoatController : MonoBehaviour
         // Turn the player's collider back on
         player.GetComponent<Collider2D>().enabled = true;
         RefreshBoardingPrompt();
+    }
+
+    private void ApplyIdleSway()
+    {
+        if (rb == null || idleSwayAngle <= 0f)
+        {
+            return;
+        }
+
+        float angle = idleBaseRotation + Mathf.Sin(Time.time * idleSwaySpeed + idleSwayPhase) * idleSwayAngle;
+        rb.MoveRotation(angle);
+    }
+
+    private void ResetBoatRotation()
+    {
+        if (rb != null)
+        {
+            rb.rotation = idleBaseRotation;
+        }
     }
 
     // Detect when the player walks close to the boat

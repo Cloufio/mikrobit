@@ -12386,6 +12386,7 @@ GameObject:
   - component: {fileID: 1180453457}
   - component: {fileID: 1180453460}
   - component: {fileID: 1180453462}
+  - component: {fileID: 1180453463}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -12543,6 +12544,30 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!114 &1180453463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180453456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8bdf0c2a1c34d0baa4cb1f2d0c37c82, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  boatFocus: {fileID: 1993068423}
+  playerFocus: {fileID: 927823229}
+  fadeInDelay: 1.5
+  boatFocusDuration: 2
+  panDuration: 1
+  panCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  focusOffset: {x: 0, y: 0, z: -10}
 --- !u!1 &1198122747
 GameObject:
   m_ObjectHideFlags: 0
