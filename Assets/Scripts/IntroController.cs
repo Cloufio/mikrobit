@@ -9,7 +9,7 @@ public class IntroController : MonoBehaviour
     public TextMeshProUGUI introText;
 
     // The name of your main game scene
-    public string mainGameSceneName = "MainScene2";
+    public string mainGameSceneName = "MainScene";
 
     // Adjust these values in the Inspector
     [Header("Timing Settings")]

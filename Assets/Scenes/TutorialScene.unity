@@ -191,7 +191,7 @@ MonoBehaviour:
       g: 0.47
       b: 0.62
       a: 1
-  nextSceneName: MainScene2
+  nextSceneName: MainScene
   tutorialFont: {fileID: 0}
   beforeKeyText: Press
   keyText: ENTER

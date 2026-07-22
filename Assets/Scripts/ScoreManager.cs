@@ -66,6 +66,22 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreDisplay();
     }
 
+    /// <summary>
+    /// Rewards an active cleanup round with more time. Time cannot be added before
+    /// boarding or after the round has ended.
+    /// </summary>
+    public bool AddTime(float secondsToAdd)
+    {
+        if (secondsToAdd <= 0f || !timerIsRunning)
+        {
+            return false;
+        }
+
+        timeRemaining += secondsToAdd;
+        DisplayTime(timeRemaining);
+        return true;
+    }
+
     public void StartTimer()
     {
         if (timeRemaining <= 0f)

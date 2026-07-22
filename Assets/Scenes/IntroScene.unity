@@ -509,7 +509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   introText: {fileID: 2111575077}
-  mainGameSceneName: MainScene2
+  mainGameSceneName: MainScene
   timeBetweenChars: 0.05
   timeAfterParagraph: 2
   typingAudioSource: {fileID: 0}

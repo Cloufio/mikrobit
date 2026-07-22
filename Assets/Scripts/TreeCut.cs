@@ -9,6 +9,7 @@ public class TreeCut : Tool
 
     [Header("Scoring")]
     [SerializeField] int pointsForCutting = 1;
+    [SerializeField, Min(0f)] private float timeBonusOnCleanup = 2f;
 
     [Header("Cleanup Feedback")]
     [SerializeField] private bool useWaterCleanupFeedback = true;
@@ -66,6 +67,7 @@ public class TreeCut : Tool
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.AddScore(pointsForCutting);
+                ScoreManager.Instance.AddTime(timeBonusOnCleanup);
             }
 
             if (useWaterCleanupFeedback)
