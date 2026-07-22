@@ -23,7 +23,7 @@ public class MainMenu : MonoBehaviour
 
     public void ShowAchievements()
     {
-        Debug.Log("Achievements selected. Create and connect an achievements page when it is ready.");
+        SceneManager.LoadScene("AchievementScene");
     }
 
     public void ShowLeaderboards()

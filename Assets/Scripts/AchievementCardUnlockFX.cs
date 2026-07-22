@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,11 +26,27 @@ public class AchievementCardUnlockFX : MonoBehaviour
     [SerializeField] private float sparkleSpeed = 1.8f;
     [SerializeField] private float sparklePadding = 26f;
 
+    [Header("Card Flip Details")]
+    [SerializeField] private bool canOpenDetails = true;
+    [SerializeField] private float flipDuration = 0.32f;
+    [SerializeField] private string cardTitle = "THE FOOL";
+    [SerializeField, TextArea(2, 3)] private string unlockText = "UNLOCKED BY\nCLEANING YOUR FIRST PIECE OF TRASH.";
+    [SerializeField, TextArea(2, 3)] private string symbolismText = "SYMBOLIZES\nA NEW BEGINNING FOR THE SEA.";
+    [SerializeField] private TMP_FontAsset detailFont;
+    [SerializeField] private Color detailBackground = new Color(0.06f, 0.04f, 0.08f, 1f);
+    [SerializeField] private Color detailBorder = new Color(1f, 0.75f, 0.2f, 1f);
+    [SerializeField] private Color detailText = new Color(1f, 0.91f, 0.68f, 1f);
+
     private readonly List<Vector2> basePositions = new();
     private readonly List<float> sparklePhases = new();
     private readonly List<Image> sparkles = new();
+    private readonly List<Graphic> faceGraphics = new();
     private Vector2 cardCenter;
     private Vector2 cardSize;
+    private RectTransform detailPanel;
+    private float flipAngle;
+    private float targetFlipAngle;
+    private bool detailsShown;
 
     private void Awake()
     {
@@ -38,6 +55,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
             if (layer != null)
             {
                 basePositions.Add(layer.anchoredPosition);
+                faceGraphics.AddRange(layer.GetComponentsInChildren<Graphic>(true));
             }
         }
     }
@@ -53,6 +71,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
         cardCenter = cardLayers[0].anchoredPosition;
         cardSize = cardLayers[0].rect.size;
         CreateSparkles();
+        CreateDetailPanel();
     }
 
     private void OnEnable()
@@ -63,6 +82,23 @@ public class AchievementCardUnlockFX : MonoBehaviour
     private void OnDisable()
     {
         SetSparkleVisibility(false);
+
+        detailsShown = false;
+        flipAngle = 0f;
+        targetFlipAngle = 0f;
+
+        if (detailPanel != null)
+        {
+            detailPanel.gameObject.SetActive(false);
+        }
+
+        foreach (Graphic graphic in faceGraphics)
+        {
+            if (graphic != null)
+            {
+                graphic.enabled = true;
+            }
+        }
     }
 
     private void Update()
@@ -70,6 +106,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
         float time = Time.unscaledTime;
         float verticalOffset = Mathf.Sin(time * floatSpeed) * floatHeight;
         float rotation = Mathf.Sin(time * wobbleSpeed) * wobbleAngle;
+        UpdateCardFlip();
         int positionIndex = 0;
 
         foreach (RectTransform layer in cardLayers)
@@ -81,6 +118,14 @@ public class AchievementCardUnlockFX : MonoBehaviour
 
             layer.anchoredPosition = basePositions[positionIndex++] + Vector2.up * verticalOffset;
             layer.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            layer.localScale = new Vector3(GetFaceScale(), 1f, 1f);
+        }
+
+        if (detailPanel != null)
+        {
+            detailPanel.anchoredPosition = cardCenter + Vector2.up * verticalOffset;
+            detailPanel.localRotation = Quaternion.Euler(0f, 0f, rotation);
+            detailPanel.localScale = new Vector3(GetDetailScale(), 1f, 1f);
         }
 
         for (int i = 0; i < sparkles.Count; i++)
@@ -91,6 +136,24 @@ public class AchievementCardUnlockFX : MonoBehaviour
             sparkles[i].color = color;
             sparkles[i].rectTransform.localScale = Vector3.one * (0.7f + pulse * 0.55f);
         }
+
+        if (canOpenDetails && unlocked && !Mathf.Approximately(GetFaceScale(), 0f) && Input.GetMouseButtonDown(0)
+            && RectTransformUtility.RectangleContainsScreenPoint(cardLayers[0], Input.mousePosition, null))
+        {
+            ToggleDetails();
+        }
+    }
+
+    /// <summary>Called from the Inspector or by clicking the unlocked card.</summary>
+    public void ToggleDetails()
+    {
+        if (!canOpenDetails || !unlocked || detailPanel == null)
+        {
+            return;
+        }
+
+        detailsShown = !detailsShown;
+        targetFlipAngle = detailsShown ? 180f : 0f;
     }
 
     private void CreateSparkles()
@@ -119,6 +182,118 @@ public class AchievementCardUnlockFX : MonoBehaviour
             sparkles.Add(sparkle);
             sparklePhases.Add(RandomRange(random, 0f, Mathf.PI * 2f));
         }
+    }
+
+    private void CreateDetailPanel()
+    {
+        if (!canOpenDetails || cardLayers[0] == null)
+        {
+            return;
+        }
+
+        Transform parent = cardLayers[0].parent;
+        GameObject panelObject = new GameObject("Achievement Details", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        detailPanel = panelObject.GetComponent<RectTransform>();
+        detailPanel.SetParent(parent, false);
+        detailPanel.anchorMin = new Vector2(0.5f, 0.5f);
+        detailPanel.anchorMax = new Vector2(0.5f, 0.5f);
+        detailPanel.pivot = new Vector2(0.5f, 0.5f);
+        detailPanel.sizeDelta = cardSize + new Vector2(12f, 12f);
+        detailPanel.anchoredPosition = cardCenter;
+        detailPanel.SetAsLastSibling();
+
+        Image border = panelObject.GetComponent<Image>();
+        border.color = detailBorder;
+        border.raycastTarget = false;
+
+        RectTransform inner = CreatePanelLayer("Detail Background", detailPanel, detailBackground, new Vector2(12f, 12f));
+        TMP_FontAsset font = ResolveDetailFont();
+        CreateDetailLabel("Title", inner, cardTitle, new Vector2(0.5f, 0.74f), 34f, FontStyles.Bold, detailText);
+        CreateDetailLabel("Unlock Requirement", inner, unlockText, new Vector2(0.5f, 0.51f), 19f, FontStyles.Normal, detailText);
+        CreateDetailLabel("Meaning", inner, symbolismText, new Vector2(0.5f, 0.28f), 19f, FontStyles.Normal, detailText);
+
+        foreach (TextMeshProUGUI label in inner.GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            label.font = font;
+        }
+
+        detailPanel.gameObject.SetActive(false);
+    }
+
+    private static RectTransform CreatePanelLayer(string name, RectTransform parent, Color color, Vector2 inset)
+    {
+        GameObject layerObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        RectTransform layer = layerObject.GetComponent<RectTransform>();
+        layer.SetParent(parent, false);
+        layer.anchorMin = Vector2.zero;
+        layer.anchorMax = Vector2.one;
+        layer.offsetMin = inset * 0.5f;
+        layer.offsetMax = -inset * 0.5f;
+
+        Image image = layerObject.GetComponent<Image>();
+        image.color = color;
+        image.raycastTarget = false;
+        return layer;
+    }
+
+    private static void CreateDetailLabel(string name, RectTransform parent, string text, Vector2 anchor, float size, FontStyles style, Color color)
+    {
+        GameObject labelObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+        RectTransform labelTransform = labelObject.GetComponent<RectTransform>();
+        labelTransform.SetParent(parent, false);
+        labelTransform.anchorMin = anchor;
+        labelTransform.anchorMax = anchor;
+        labelTransform.pivot = new Vector2(0.5f, 0.5f);
+        labelTransform.sizeDelta = new Vector2(280f, 120f);
+
+        TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
+        label.text = text;
+        label.fontSize = size;
+        label.fontStyle = style;
+        label.color = color;
+        label.alignment = TextAlignmentOptions.Center;
+        label.enableWordWrapping = true;
+        label.raycastTarget = false;
+    }
+
+    private TMP_FontAsset ResolveDetailFont()
+    {
+        if (detailFont != null)
+        {
+            return detailFont;
+        }
+
+        TMP_Text sceneLabel = GetComponentInParent<Canvas>().GetComponentInChildren<TMP_Text>(true);
+        return sceneLabel != null ? sceneLabel.font : TMP_Settings.defaultFontAsset;
+    }
+
+    private void UpdateCardFlip()
+    {
+        flipAngle = Mathf.MoveTowards(flipAngle, targetFlipAngle, 180f / Mathf.Max(flipDuration, 0.01f) * Time.unscaledDeltaTime);
+        bool showFront = Mathf.Cos(flipAngle * Mathf.Deg2Rad) >= 0f;
+
+        foreach (Graphic graphic in faceGraphics)
+        {
+            if (graphic != null)
+            {
+                graphic.enabled = showFront;
+            }
+        }
+
+        if (detailPanel != null)
+        {
+            detailPanel.gameObject.SetActive(!showFront);
+        }
+    }
+
+    private float GetFaceScale()
+    {
+        return Mathf.Abs(Mathf.Cos(flipAngle * Mathf.Deg2Rad));
+    }
+
+    private float GetDetailScale()
+    {
+        return Mathf.Abs(Mathf.Cos(flipAngle * Mathf.Deg2Rad));
     }
 
     private void SetSparkleVisibility(bool visible)
