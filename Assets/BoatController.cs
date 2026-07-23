@@ -23,9 +23,9 @@ public class BoatController : MonoBehaviour
     public Animator boatAnimator;
     public Animator playerAnimator;
 
-    [Header("Crash Damage")]
-    [SerializeField] private int crashDamage = 1;
-    [SerializeField] private float crashDamageCooldown = 0.75f;
+    [Header("Crash Timer Penalty")]
+    [SerializeField, Min(0f)] private float crashTimePenalty = 5f;
+    [SerializeField] private float crashPenaltyCooldown = 0.75f;
 
     [Header("Crash Feedback")]
     [SerializeField] private float cameraShakeDuration = 0.16f;
@@ -48,8 +48,7 @@ public class BoatController : MonoBehaviour
     private bool isRiding = false;
     private Rigidbody2D rb;
     private Vector2 movement;
-    private PlayerHealth playerHealth;
-    private float nextCrashDamageTime;
+    private float nextCrashPenaltyTime;
     private CameraShake cameraShake;
     private SpriteRenderer boatRenderer;
     private Coroutine boatFlashCoroutine;
@@ -64,18 +63,12 @@ public class BoatController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         idleBaseRotation = rb != null ? rb.rotation : transform.eulerAngles.z;
         idleSwayPhase = Random.Range(0f, Mathf.PI * 2f);
-        playerHealth = player != null ? player.GetComponent<PlayerHealth>() : null;
         playerRenderer = player != null ? player.GetComponent<SpriteRenderer>() : null;
 
         // The scene starts with the front-facing idle sprite, which is the intended boat pose.
         if (boardedPlayerSprite == null && playerRenderer != null)
         {
             boardedPlayerSprite = playerRenderer.sprite;
-        }
-
-        if (playerHealth == null)
-        {
-            Debug.LogError("BoatController could not find PlayerHealth on the assigned player.", this);
         }
 
         boatRenderer = GetComponent<SpriteRenderer>();
@@ -324,7 +317,7 @@ public class BoatController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isRiding || playerHealth == null || Time.time < nextCrashDamageTime)
+        if (!isRiding || Time.time < nextCrashPenaltyTime)
         {
             return;
         }
@@ -335,8 +328,8 @@ public class BoatController : MonoBehaviour
             return;
         }
 
-        playerHealth.TakeDamage(crashDamage);
-        nextCrashDamageTime = Time.time + crashDamageCooldown;
+        ScoreManager.Instance?.SubtractTime(crashTimePenalty);
+        nextCrashPenaltyTime = Time.time + crashPenaltyCooldown;
         PlayCrashFeedback(collision.GetContact(0).point);
     }
 

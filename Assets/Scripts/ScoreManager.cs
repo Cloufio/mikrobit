@@ -67,17 +67,23 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Rewards an active cleanup round with more time. Time cannot be added before
-    /// boarding or after the round has ended.
+    /// Penalizes an active round by removing time. The timer is clamped to zero
+    /// and ends immediately when the penalty consumes the remaining time.
     /// </summary>
-    public bool AddTime(float secondsToAdd)
+    public bool SubtractTime(float secondsToSubtract)
     {
-        if (secondsToAdd <= 0f || !timerIsRunning)
+        if (secondsToSubtract <= 0f || !timerIsRunning)
         {
             return false;
         }
 
-        timeRemaining += secondsToAdd;
+        timeRemaining = Mathf.Max(0f, timeRemaining - secondsToSubtract);
+        if (timeRemaining <= 0f)
+        {
+            timerIsRunning = false;
+            Debug.Log("Time has run out!");
+        }
+
         DisplayTime(timeRemaining);
         return true;
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class CrashableObject : MonoBehaviour
 {
-    [Tooltip("Objects with this component damage the player when the boat crashes into them.")]
+    [Tooltip("Objects with this component remove time when the boat crashes into them.")]
     [SerializeField] private bool damagesBoat = true;
 
     public bool DamagesBoat => damagesBoat;

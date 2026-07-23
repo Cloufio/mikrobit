@@ -7523,7 +7523,6 @@ GameObject:
   - component: {fileID: 927823224}
   - component: {fileID: 927823223}
   - component: {fileID: 927823230}
-  - component: {fileID: 2123000601}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -21804,8 +21803,8 @@ MonoBehaviour:
   boardingPromptRange: 2.65
   boatAnimator: {fileID: 1993068425}
   playerAnimator: {fileID: 927823225}
-  crashDamage: 1
-  crashDamageCooldown: 0.75
+  crashTimePenalty: 5
+  crashPenaltyCooldown: 0.75
   cameraShakeDuration: 0.16
   cameraShakeStrength: 0.08
   recoilDistance: 0.28
@@ -56632,34 +56631,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2123000601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 927823222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f2b76d86cc34a7cb2aa01c5ca4a7e59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 5
-  currentHealth: 5
-  hudHealthBar: {fileID: 0}
-  worldHealthBar: {fileID: 0}
-  heartImages:
-  - {fileID: 2123000703}
-  - {fileID: 2123000713}
-  - {fileID: 2123000723}
-  - {fileID: 2123000733}
-  - {fileID: 2123000743}
-  remainingHeartSprite: {fileID: 325848108, guid: 7fcd843191abf4f9e9c59f560e6a20f6, type: 3}
-  lostHeartSprite: {fileID: 1441468769, guid: 7fcd843191abf4f9e9c59f560e6a20f6, type: 3}
-  loseHeartsFromRight: 1
-  debugDamageKey: 111
-  damageShakeDuration: 0.18
-  damageShakeDistance: 7
 --- !u!1 &2123000700
 GameObject:
   m_ObjectHideFlags: 0
@@ -56677,7 +56648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2123000701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56752,7 +56723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2123000711
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56827,7 +56798,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2123000721
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56902,7 +56873,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2123000731
 RectTransform:
   m_ObjectHideFlags: 0
@@ -56977,7 +56948,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2123000741
 RectTransform:
   m_ObjectHideFlags: 0
