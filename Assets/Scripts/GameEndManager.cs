@@ -5,15 +5,9 @@ using System.Collections;
 
 public class GameEndManager : MonoBehaviour
 {
-    [Header("Game Conditions")]
-    [Tooltip("Scores at or above this value unlock the good ending.")]
-    public int scoreThresholdForGoodEnding = 100;
-
     [Header("Scene Transitions")]
-    [Tooltip("Scene to load when the player reaches the score threshold.")]
-    public string goodEndingSceneName = "GoodEnding";
-    [Tooltip("Scene to load when the player finishes below the score threshold.")]
-    public string badEndingSceneName = "BadEnding";
+    [Tooltip("Scene shown when the timer expires or the player runs out of health.")]
+    public string finalScoreSceneName = "FinalScoreScene";
 
     [Header("Fade Settings")]
     [Tooltip("The UI Image to use for fading in the Inspector.")]
@@ -25,10 +19,12 @@ public class GameEndManager : MonoBehaviour
 
     private bool conditionsHaveBeenMet = false;
     private ScoreManager scoreManagerInstance;
+    private PlayerHealth playerHealth;
 
     void Start()
     {
         scoreManagerInstance = ScoreManager.Instance;
+        playerHealth = FindFirstObjectByType<PlayerHealth>();
 
         if (scoreManagerInstance == null)
         {
@@ -81,27 +77,27 @@ public class GameEndManager : MonoBehaviour
 
         int currentScore = scoreManagerInstance.currentScore;
         bool timeIsOver = !scoreManagerInstance.timerIsRunning && scoreManagerInstance.timeRemaining <= 0;
+        bool healthIsDepleted = playerHealth != null && playerHealth.currentHealth <= 0;
 
-        if (timeIsOver)
+        if (timeIsOver || healthIsDepleted)
         {
             conditionsHaveBeenMet = true;
-            string sceneNameToLoad;
-
-            if (currentScore >= scoreThresholdForGoodEnding)
-            {
-                Debug.Log($"Time has run out! Score ({currentScore}) >= {scoreThresholdForGoodEnding}. Loading '{goodEndingSceneName}'.");
-                sceneNameToLoad = goodEndingSceneName;
-            }
-            else
-            {
-                Debug.Log($"Time has run out! Score ({currentScore}) < {scoreThresholdForGoodEnding}. Loading '{badEndingSceneName}'.");
-                sceneNameToLoad = badEndingSceneName;
-            }
+            SaveRunScore(currentScore);
+            string endReason = healthIsDepleted ? "Health depleted" : "Time has run out";
+            Debug.Log($"{endReason}. Loading '{finalScoreSceneName}' with score {currentScore}.");
 
             // Re-activate the panel before starting the fade-out.
             fadePanel.gameObject.SetActive(true);
-            StartCoroutine(PerformFadeAndLoadScene(sceneNameToLoad));
+            StartCoroutine(PerformFadeAndLoadScene(finalScoreSceneName));
         }
+    }
+
+    private static void SaveRunScore(int currentScore)
+    {
+        int bestScore = Mathf.Max(PlayerPrefs.GetInt("Microbit_BestScore", 0), currentScore);
+        PlayerPrefs.SetInt("Microbit_LastScore", currentScore);
+        PlayerPrefs.SetInt("Microbit_BestScore", bestScore);
+        PlayerPrefs.Save();
     }
 
     IEnumerator PerformFadeAndLoadScene(string targetSceneName)

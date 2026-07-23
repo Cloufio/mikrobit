@@ -9,11 +9,17 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 84221fbcb0201684296848a3d2e86c03
   - enabled: 1
+    path: Assets/Scenes/AchievementScene.unity
+    guid: 6c6fc88241514825b8f1a689c0584eb3
+  - enabled: 1
     path: Assets/Scenes/IntroScene.unity
     guid: badc80816d7e9ce49943b6247de1c02a
   - enabled: 1
     path: Assets/Scenes/MainScene.unity
     guid: 8a888143397e8cf46a3d5451398d59da
+  - enabled: 1
+    path: Assets/Scenes/FinalScoreScene.unity
+    guid: 77bf62427d3294aa09349497c227c4af
   - enabled: 1
     path: Assets/Scenes/BadEnding.unity
     guid: 2f213fbf7a6bd5a44bc3455d33d65ffd
