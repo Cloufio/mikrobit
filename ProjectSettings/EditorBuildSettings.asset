@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainScene.unity
     guid: 8a888143397e8cf46a3d5451398d59da
   - enabled: 1
+    path: Assets/Scenes/FinalScoreScene.unity
+    guid: 77bf62427d3294aa09349497c227c4af
+  - enabled: 1
     path: Assets/Scenes/BadEnding.unity
     guid: 2f213fbf7a6bd5a44bc3455d33d65ffd
   - enabled: 1

@@ -74,6 +74,7 @@ public class AchievementPageController : MonoBehaviour
         ApplyPageContent(page);
         currentPage = page;
         UpdatePageIndicators();
+        UpdateNavigationButtons();
     }
 
     private void ShowPageImmediately(int page)
@@ -81,6 +82,7 @@ public class AchievementPageController : MonoBehaviour
         currentPage = page;
         ApplyPageContent(page);
         UpdatePageIndicators();
+        UpdateNavigationButtons();
     }
 
     private void ApplyPageContent(int page)
@@ -130,6 +132,19 @@ public class AchievementPageController : MonoBehaviour
         if (secondPageIndicator != null)
         {
             secondPageIndicator.color = currentPage == 1 ? activeIndicatorColor : inactiveIndicatorColor;
+        }
+    }
+
+    private void UpdateNavigationButtons()
+    {
+        if (nextPageButton != null)
+        {
+            nextPageButton.gameObject.SetActive(currentPage == 0);
+        }
+
+        if (previousPageButton != null)
+        {
+            previousPageButton.gameObject.SetActive(currentPage == 1);
         }
     }
 

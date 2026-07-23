@@ -208,9 +208,9 @@ public class AchievementCardUnlockFX : MonoBehaviour
 
         RectTransform inner = CreatePanelLayer("Detail Background", detailPanel, detailBackground, new Vector2(12f, 12f));
         TMP_FontAsset font = ResolveDetailFont();
-        CreateDetailLabel("Title", inner, cardTitle, new Vector2(0.5f, 0.74f), 34f, FontStyles.Bold, detailText);
-        CreateDetailLabel("Unlock Requirement", inner, unlockText, new Vector2(0.5f, 0.51f), 19f, FontStyles.Normal, detailText);
-        CreateDetailLabel("Meaning", inner, symbolismText, new Vector2(0.5f, 0.28f), 19f, FontStyles.Normal, detailText);
+        CreateDetailLabel("Title", inner, cardTitle, new Vector2(0.5f, 0.74f), 48f, FontStyles.Bold, detailText);
+        CreateDetailLabel("Unlock Requirement", inner, unlockText, new Vector2(0.5f, 0.51f), 28f, FontStyles.Normal, detailText);
+        CreateDetailLabel("Meaning", inner, symbolismText, new Vector2(0.5f, 0.28f), 28f, FontStyles.Normal, detailText);
 
         foreach (TextMeshProUGUI label in inner.GetComponentsInChildren<TextMeshProUGUI>())
         {

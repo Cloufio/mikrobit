@@ -2099,7 +2099,7 @@ MonoBehaviour:
   symbolismText: 'SYMBOLIZES
 
     A NEW BEGINNING FOR THE SEA.'
-  detailFont: {fileID: 0}
+  detailFont: {fileID: 11400000, guid: 9a14a8a1184c5f14fbce3338ea4d7a35, type: 2}
   detailBackground: {r: 0.06, g: 0.04, b: 0.08, a: 1}
   detailBorder: {r: 1, g: 0.75, b: 0.2, a: 1}
   detailText: {r: 1, g: 0.91, b: 0.68, a: 1}
@@ -2819,8 +2819,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 88
-  m_fontSizeBase: 88
+  m_fontSize: 96
+  m_fontSizeBase: 96
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3330,14 +3330,10 @@ MonoBehaviour:
   sparklePadding: 26
   canOpenDetails: 1
   flipDuration: 0.32
-  cardTitle: THE FOOL
-  unlockText: 'UNLOCKED BY
-
-    CLEANING YOUR FIRST PIECE OF TRASH.'
-  symbolismText: 'SYMBOLIZES
-
-    A NEW BEGINNING FOR THE SEA.'
-  detailFont: {fileID: 0}
+  cardTitle: The Fool
+  unlockText: Unlocked by riding the boat for the first time
+  symbolismText: Symbolizes a new beginning for the sea
+  detailFont: {fileID: 11400000, guid: 9a14a8a1184c5f14fbce3338ea4d7a35, type: 2}
   detailBackground: {r: 0.06, g: 0.04, b: 0.08, a: 1}
   detailBorder: {r: 1, g: 0.75, b: 0.2, a: 1}
   detailText: {r: 1, g: 0.91, b: 0.68, a: 1}
