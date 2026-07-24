@@ -44,12 +44,69 @@ public class AchievementCardUnlockFX : MonoBehaviour
     private Vector2 cardCenter;
     private Vector2 cardSize;
     private RectTransform detailPanel;
+    private TextMeshProUGUI detailTitleLabel;
+    private TextMeshProUGUI detailRequirementLabel;
+    private TextMeshProUGUI detailFactLabel;
     private float flipAngle;
     private float targetFlipAngle;
     private bool detailsShown;
+    private bool presentationInitialized;
 
     private void Awake()
     {
+        InitializePresentation();
+    }
+
+    /// <summary>
+    /// Assigns the visible image layers when this reusable effect is added to a card slot at runtime.
+    /// Existing Inspector assignments are kept intact.
+    /// </summary>
+    public void SetCardLayers(RectTransform[] layers)
+    {
+        if (presentationInitialized || layers == null || layers.Length == 0)
+        {
+            return;
+        }
+
+        cardLayers = layers;
+        InitializePresentation();
+    }
+
+    /// <summary>
+    /// Copies the presentation-only Inspector settings from the first card slot to another slot.
+    /// Card-specific title, combo, and fact data still comes from ConfigureDetails.
+    /// </summary>
+    public void CopyVisualStyleFrom(AchievementCardUnlockFX source)
+    {
+        if (source == null || source == this || presentationInitialized)
+        {
+            return;
+        }
+
+        floatHeight = source.floatHeight;
+        floatSpeed = source.floatSpeed;
+        wobbleAngle = source.wobbleAngle;
+        wobbleSpeed = source.wobbleSpeed;
+        sparkleCount = source.sparkleCount;
+        sparkleColor = source.sparkleColor;
+        sparkleSizeRange = source.sparkleSizeRange;
+        sparkleSpeed = source.sparkleSpeed;
+        sparklePadding = source.sparklePadding;
+        canOpenDetails = source.canOpenDetails;
+        flipDuration = source.flipDuration;
+        detailFont = source.detailFont;
+        detailBackground = source.detailBackground;
+        detailBorder = source.detailBorder;
+        detailText = source.detailText;
+    }
+
+    private void InitializePresentation()
+    {
+        if (presentationInitialized || cardLayers == null || cardLayers.Length == 0 || cardLayers[0] == null)
+        {
+            return;
+        }
+
         foreach (RectTransform layer in cardLayers)
         {
             if (layer != null)
@@ -58,20 +115,23 @@ public class AchievementCardUnlockFX : MonoBehaviour
                 faceGraphics.AddRange(layer.GetComponentsInChildren<Graphic>(true));
             }
         }
-    }
-
-    private void Start()
-    {
-        if (!unlocked || cardLayers == null || cardLayers.Length == 0 || cardLayers[0] == null)
-        {
-            enabled = false;
-            return;
-        }
 
         cardCenter = cardLayers[0].anchoredPosition;
         cardSize = cardLayers[0].rect.size;
         CreateSparkles();
         CreateDetailPanel();
+        presentationInitialized = true;
+    }
+
+    private void Start()
+    {
+        InitializePresentation();
+
+        if (cardLayers == null || cardLayers.Length == 0 || cardLayers[0] == null)
+        {
+            enabled = false;
+            return;
+        }
     }
 
     private void OnEnable()
@@ -98,6 +158,19 @@ public class AchievementCardUnlockFX : MonoBehaviour
             {
                 graphic.enabled = true;
             }
+        }
+
+        for (int index = 0; index < cardLayers.Length && index < basePositions.Count; index++)
+        {
+            RectTransform layer = cardLayers[index];
+            if (layer == null)
+            {
+                continue;
+            }
+
+            layer.anchoredPosition = basePositions[index];
+            layer.localRotation = Quaternion.identity;
+            layer.localScale = Vector3.one;
         }
     }
 
@@ -156,6 +229,25 @@ public class AchievementCardUnlockFX : MonoBehaviour
         targetFlipAngle = detailsShown ? 180f : 0f;
     }
 
+    /// <summary>
+    /// Lets the catalogue controller reuse this card slot with its current card data.
+    /// The controller owns unlock detection; this component only presents it.
+    /// </summary>
+    public void ConfigureDetails(bool isUnlocked, string title, string requirement, string funFact)
+    {
+        unlocked = isUnlocked;
+        cardTitle = title;
+        unlockText = $"COMBO\n{requirement}";
+        symbolismText = $"FUN FACT\n{funFact}";
+
+        if (detailTitleLabel != null)
+        {
+            detailTitleLabel.text = cardTitle;
+            detailRequirementLabel.text = unlockText;
+            detailFactLabel.text = symbolismText;
+        }
+    }
+
     private void CreateSparkles()
     {
         System.Random random = new System.Random(gameObject.GetInstanceID());
@@ -208,9 +300,9 @@ public class AchievementCardUnlockFX : MonoBehaviour
 
         RectTransform inner = CreatePanelLayer("Detail Background", detailPanel, detailBackground, new Vector2(12f, 12f));
         TMP_FontAsset font = ResolveDetailFont();
-        CreateDetailLabel("Title", inner, cardTitle, new Vector2(0.5f, 0.74f), 48f, FontStyles.Bold, detailText);
-        CreateDetailLabel("Unlock Requirement", inner, unlockText, new Vector2(0.5f, 0.51f), 28f, FontStyles.Normal, detailText);
-        CreateDetailLabel("Meaning", inner, symbolismText, new Vector2(0.5f, 0.28f), 28f, FontStyles.Normal, detailText);
+        detailTitleLabel = CreateDetailLabel("Title", inner, cardTitle, new Vector2(0.5f, 0.74f), 48f, FontStyles.Bold, detailText);
+        detailRequirementLabel = CreateDetailLabel("Unlock Requirement", inner, unlockText, new Vector2(0.5f, 0.51f), 28f, FontStyles.Normal, detailText);
+        detailFactLabel = CreateDetailLabel("Meaning", inner, symbolismText, new Vector2(0.5f, 0.28f), 28f, FontStyles.Normal, detailText);
 
         foreach (TextMeshProUGUI label in inner.GetComponentsInChildren<TextMeshProUGUI>())
         {
@@ -236,7 +328,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
         return layer;
     }
 
-    private static void CreateDetailLabel(string name, RectTransform parent, string text, Vector2 anchor, float size, FontStyles style, Color color)
+    private static TextMeshProUGUI CreateDetailLabel(string name, RectTransform parent, string text, Vector2 anchor, float size, FontStyles style, Color color)
     {
         GameObject labelObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         RectTransform labelTransform = labelObject.GetComponent<RectTransform>();
@@ -254,6 +346,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
         label.alignment = TextAlignmentOptions.Center;
         label.enableWordWrapping = true;
         label.raycastTarget = false;
+        return label;
     }
 
     private TMP_FontAsset ResolveDetailFont()

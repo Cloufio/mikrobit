@@ -1,21 +1,46 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[Serializable]
+public class AchievementCardDefinition
+{
+    [SerializeField] private string id;
+    [SerializeField] private string title;
+    [SerializeField, TextArea(2, 4)] private string requirement;
+    [SerializeField, TextArea(4, 8)] private string funFact;
+    [SerializeField] private Sprite artwork;
+    [SerializeField] private bool unlocked;
+
+    public string Id => id;
+    public string Title => title;
+    public string Requirement => requirement;
+    public string FunFact => funFact;
+    public Sprite Artwork => artwork;
+    public bool Unlocked => unlocked;
+}
+
 /// <summary>
-/// Drives the two-page achievement carousel using the three existing card slots in AchievementScene.
-/// The page art and unlock states are editable in the Inspector.
+/// Shows the ordered microplastic-combo card catalogue in the three existing card slots.
+/// Combo detection can be added later; the unlock state is currently editable per card.
 /// </summary>
 public class AchievementPageController : MonoBehaviour
 {
-    [Header("Page One: The Fool, Chariot, Strength")]
-    [SerializeField] private Sprite[] firstPageCards = new Sprite[3];
-    [SerializeField] private bool[] firstPageUnlocked = { true, false, false };
+    private const int CardsPerPage = 3;
+    private static readonly string[] PageIndicatorNames =
+    {
+        "FirstPageButton",
+        "SecondPageButton",
+        "ThirdPageButton",
+        "FourthPageButton",
+        "FifthPageButton"
+    };
 
-    [Header("Page Two: Star, Moon, World")]
-    [SerializeField] private Sprite[] secondPageCards = new Sprite[3];
-    [SerializeField] private bool[] secondPageUnlocked = { false, false, false };
+    [Header("Achievement Cards (Ordered)")]
+    [SerializeField] private AchievementCardDefinition[] achievementCards = Array.Empty<AchievementCardDefinition>();
 
     [Header("Navigation")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
@@ -25,28 +50,29 @@ public class AchievementPageController : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float lockedOverlayAlpha = 0.99f;
 
     private readonly List<Image[]> cardLayers = new();
+    private readonly List<AchievementCardUnlockFX> cardEffects = new();
+    private readonly List<Image> pageIndicators = new();
     private Button nextPageButton;
     private Button previousPageButton;
-    private Image firstPageIndicator;
-    private Image secondPageIndicator;
-    private AchievementCardUnlockFX foolCardEffect;
+    private TMP_Text progressText;
     private int currentPage;
+
+    private int PageCount => Mathf.Max(1, Mathf.CeilToInt(achievementCards.Length / (float)CardsPerPage));
 
     private void Awake()
     {
         CacheSceneObjects();
-        WirePageButtons();
         ShowPageImmediately(0);
     }
 
     public void NextPage()
     {
-        ShowSecondPage();
+        ShowPage(currentPage + 1);
     }
 
     public void PreviousPage()
     {
-        ShowFirstPage();
+        ShowPage(currentPage - 1);
     }
 
     public void ShowFirstPage()
@@ -56,7 +82,7 @@ public class AchievementPageController : MonoBehaviour
 
     public void ShowSecondPage()
     {
-        ShowPage(1);
+        ShowPage(Mathf.Min(1, PageCount - 1));
     }
 
     public void BackToMainMenu()
@@ -66,72 +92,91 @@ public class AchievementPageController : MonoBehaviour
 
     private void ShowPage(int page)
     {
-        if (page == currentPage)
+        int clampedPage = Mathf.Clamp(page, 0, PageCount - 1);
+        if (clampedPage == currentPage)
         {
             return;
         }
 
-        ApplyPageContent(page);
-        currentPage = page;
+        currentPage = clampedPage;
+        ApplyPageContent();
         UpdatePageIndicators();
         UpdateNavigationButtons();
+        UpdateProgressText();
     }
 
     private void ShowPageImmediately(int page)
     {
-        currentPage = page;
-        ApplyPageContent(page);
+        currentPage = Mathf.Clamp(page, 0, PageCount - 1);
+        ApplyPageContent();
         UpdatePageIndicators();
         UpdateNavigationButtons();
+        UpdateProgressText();
     }
 
-    private void ApplyPageContent(int page)
+    private void ApplyPageContent()
     {
-        Sprite[] sprites = page == 0 ? firstPageCards : secondPageCards;
-        bool[] unlockedStates = page == 0 ? firstPageUnlocked : secondPageUnlocked;
+        int pageStart = currentPage * CardsPerPage;
 
-        for (int i = 0; i < cardLayers.Count; i++)
+        for (int slot = 0; slot < cardLayers.Count; slot++)
         {
-            if (i >= sprites.Length || sprites[i] == null)
+            int cardIndex = pageStart + slot;
+            AchievementCardDefinition card = cardIndex < achievementCards.Length ? achievementCards[cardIndex] : null;
+            AchievementCardUnlockFX cardEffect = slot < cardEffects.Count ? cardEffects[slot] : null;
+
+            // Disable before swapping art so the effect restores the previous card cleanly.
+            if (cardEffect != null && cardEffect.enabled)
             {
-                continue;
+                cardEffect.enabled = false;
             }
 
-            Image[] layers = cardLayers[i];
-            bool isUnlocked = i < unlockedStates.Length && unlockedStates[i];
+            ApplyCardToSlot(cardLayers[slot], card);
 
-            foreach (Image layer in layers)
+            if (cardEffect != null && card != null)
             {
-                layer.sprite = sprites[i];
+                cardEffect.ConfigureDetails(card.Unlocked, card.Title, card.Requirement, card.FunFact);
+                cardEffect.enabled = card.Unlocked && card.Artwork != null;
             }
+        }
+    }
 
-            if (layers.Length > 0)
-            {
-                layers[0].color = Color.white;
-            }
+    private void ApplyCardToSlot(Image[] layers, AchievementCardDefinition card)
+    {
+        bool hasArtwork = card != null && card.Artwork != null;
 
-            if (layers.Length > 1)
+        foreach (Image layer in layers)
+        {
+            if (layer != null)
             {
-                layers[1].color = new Color(0f, 0f, 0f, isUnlocked ? unlockedOverlayAlpha : lockedOverlayAlpha);
+                layer.enabled = hasArtwork;
+                layer.sprite = hasArtwork ? card.Artwork : null;
             }
         }
 
-        if (foolCardEffect != null)
+        if (!hasArtwork || layers.Length == 0)
         {
-            foolCardEffect.enabled = page == 0 && firstPageUnlocked.Length > 0 && firstPageUnlocked[0];
+            return;
+        }
+
+        layers[0].color = Color.white;
+
+        if (layers.Length > 1 && layers[1] != null)
+        {
+            layers[1].color = new Color(0f, 0f, 0f, card.Unlocked ? unlockedOverlayAlpha : lockedOverlayAlpha);
         }
     }
 
     private void UpdatePageIndicators()
     {
-        if (firstPageIndicator != null)
+        for (int index = 0; index < pageIndicators.Count; index++)
         {
-            firstPageIndicator.color = currentPage == 0 ? activeIndicatorColor : inactiveIndicatorColor;
-        }
+            Image indicator = pageIndicators[index];
+            if (indicator == null)
+            {
+                continue;
+            }
 
-        if (secondPageIndicator != null)
-        {
-            secondPageIndicator.color = currentPage == 1 ? activeIndicatorColor : inactiveIndicatorColor;
+            indicator.color = index == currentPage ? activeIndicatorColor : inactiveIndicatorColor;
         }
     }
 
@@ -139,18 +184,39 @@ public class AchievementPageController : MonoBehaviour
     {
         if (nextPageButton != null)
         {
-            nextPageButton.gameObject.SetActive(currentPage == 0);
+            nextPageButton.gameObject.SetActive(currentPage < PageCount - 1);
         }
 
         if (previousPageButton != null)
         {
-            previousPageButton.gameObject.SetActive(currentPage == 1);
+            previousPageButton.gameObject.SetActive(currentPage > 0);
         }
+    }
+
+    private void UpdateProgressText()
+    {
+        if (progressText == null)
+        {
+            return;
+        }
+
+        int unlockedCount = 0;
+        foreach (AchievementCardDefinition card in achievementCards)
+        {
+            if (card != null && card.Unlocked)
+            {
+                unlockedCount++;
+            }
+        }
+
+        progressText.text = $"Unlocked {unlockedCount}/{achievementCards.Length}";
     }
 
     private void CacheSceneObjects()
     {
-        for (int i = 1; i <= 3; i++)
+        AchievementCardUnlockFX visualEffectTemplate = null;
+
+        for (int i = 1; i <= CardsPerPage; i++)
         {
             Transform card = transform.Find($"Card{i}");
             if (card == null)
@@ -169,26 +235,54 @@ public class AchievementPageController : MonoBehaviour
             }
 
             cardLayers.Add(directLayers.ToArray());
+
+            AchievementCardUnlockFX cardEffect = card.GetComponent<AchievementCardUnlockFX>();
+            if (cardEffect == null)
+            {
+                cardEffect = card.gameObject.AddComponent<AchievementCardUnlockFX>();
+            }
+
+            if (visualEffectTemplate == null)
+            {
+                visualEffectTemplate = cardEffect;
+            }
+            else
+            {
+                cardEffect.CopyVisualStyleFrom(visualEffectTemplate);
+            }
+
+            RectTransform[] layers = new RectTransform[directLayers.Count];
+            for (int layerIndex = 0; layerIndex < directLayers.Count; layerIndex++)
+            {
+                layers[layerIndex] = directLayers[layerIndex].rectTransform;
+            }
+
+            cardEffect.SetCardLayers(layers);
+            cardEffects.Add(cardEffect);
         }
 
-        firstPageIndicator = FindChildObject("FirstPageButton")?.GetComponent<Image>();
-        secondPageIndicator = FindChildObject("SecondPageButton")?.GetComponent<Image>();
+        for (int index = 0; index < PageIndicatorNames.Length; index++)
+        {
+            GameObject pageIndicatorObject = FindChildObject(PageIndicatorNames[index]);
+            Image pageIndicator = pageIndicatorObject?.GetComponent<Image>();
+            if (pageIndicator == null)
+            {
+                continue;
+            }
+
+            pageIndicators.Add(pageIndicator);
+
+            Button pageButton = pageIndicatorObject.GetComponent<Button>();
+            if (pageButton != null)
+            {
+                int pageIndex = index;
+                pageButton.onClick.AddListener(() => ShowPage(pageIndex));
+            }
+        }
+
         nextPageButton = FindChildObject("NextPageButton")?.GetComponent<Button>();
         previousPageButton = FindChildObject("PreviousButton")?.GetComponent<Button>();
-        foolCardEffect = transform.Find("Card1")?.GetComponent<AchievementCardUnlockFX>();
-    }
-
-    private void WirePageButtons()
-    {
-        if (nextPageButton != null)
-        {
-            nextPageButton.onClick.AddListener(NextPage);
-        }
-
-        if (previousPageButton != null)
-        {
-            previousPageButton.onClick.AddListener(PreviousPage);
-        }
+        progressText = FindChildObject("AchievementUnlocked")?.GetComponent<TMP_Text>();
     }
 
     private GameObject FindChildObject(string objectName)
