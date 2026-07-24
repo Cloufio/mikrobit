@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MikroBitBackgroud_0: 1775941523991792578
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

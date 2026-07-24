@@ -18,6 +18,7 @@ public class TreeCut : Tool
     [Header("UI Visuals")]
     public Slider healthBarSlider;
     private int maxHealth;
+    private TrashPollutionPatch pollutionPatch;
 
     private void Awake()
     {
@@ -43,6 +44,11 @@ public class TreeCut : Tool
             // Hide the health bar initially
             healthBarSlider.gameObject.SetActive(false);
         }
+
+        if (ShouldUsePollutionPatch())
+        {
+            pollutionPatch = TrashPollutionPatch.Spawn(transform);
+        }
     }
 
     public override void Hit()
@@ -63,6 +69,8 @@ public class TreeCut : Tool
 
         if (treeHealth <= 0)
         {
+            pollutionPatch?.Clean();
+
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.AddScore(pointsForCutting);
@@ -82,5 +90,18 @@ public class TreeCut : Tool
 
             Destroy(gameObject);
         }
+    }
+
+    private bool ShouldUsePollutionPatch()
+    {
+        if (!useWaterCleanupFeedback)
+        {
+            return false;
+        }
+
+        // Water trash renders at order 2. Trees share this interaction script but
+        // render at order 3, so they should not create pollution in the water.
+        SpriteRenderer rootRenderer = GetComponent<SpriteRenderer>();
+        return rootRenderer != null && rootRenderer.sortingOrder <= 2;
     }
 }
