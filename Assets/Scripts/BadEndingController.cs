@@ -1,18 +1,25 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;         // Required for UI Image
-using UnityEngine.SceneManagement; // Required for scene management
-using System.Collections;     // Required for Coroutines
-using UnityEngine.Tilemaps;   // Required for Tilemaps
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
-public class BadEndingSceneController : MonoBehaviour
+public class BadEndingController : MonoBehaviour
 {
+    // --- Constants ---
+    private const string WATER_RESOURCE_NAME = "WaterDetail6";
+    private const string TRASH_RESOURCE_FOLDER = "Trash";
+
     [Header("Fade Settings")]
     [Tooltip("The UI Image to use for fading. It should cover the screen.")]
     public Image fadePanel;
+
     [Tooltip("How long the fade-in effect should take in seconds.")]
     public float fadeInDuration = 1.5f;
+
     [Tooltip("How long the fade-out effect should take in seconds.")]
     public float fadeOutDuration = 1.5f;
+
     [Tooltip("How long to wait (in seconds) after fade-in before starting fade-out.")]
     public float waitDuration = 2.0f;
 
@@ -20,7 +27,7 @@ public class BadEndingSceneController : MonoBehaviour
     [Tooltip("The build index of the scene to load after fade-out (e.g., 0 for Main Menu).")]
     public int sceneIndexToLoad = 0;
 
-    void Start()
+    private void Start()
     {
         // 1. Perform scene flooding to remove land and unify water tiles
         FloodScene();
@@ -30,35 +37,33 @@ public class BadEndingSceneController : MonoBehaviour
 
         if (fadePanel == null)
         {
-            Debug.LogError("BadEndingSceneController: Fade Panel is not assigned in the Inspector!");
-            // Optionally, try to find it if not assigned, or disable the script
-            // For simplicity, we'll just log an error. The scene won't fade correctly.
+            Debug.LogError("BadEndingController: Fade Panel is not assigned in the Inspector!");
             enabled = false;
             return;
         }
 
-        // Ensure Time.timeScale is 1 when this scene starts, in case it was set to 0 previously.
+        // Ensure Time.timeScale is 1 when scene starts
         if (Time.timeScale != 1f)
         {
             Time.timeScale = 1f;
-            Debug.Log("BadEndingSceneController: Time.timeScale was not 1, resetting to 1.");
+            Debug.Log("BadEndingController: Reset Time.timeScale to 1.");
         }
 
-        // Start the sequence
+        // Start fade sequence
         StartCoroutine(SceneSequenceCoroutine());
     }
 
-    void FloodScene()
+    private void FloodScene()
     {
         // 1. Find all Tilemaps in the scene
-        var tilemaps = FindObjectsOfType<Tilemap>();
+        Tilemap[] tilemaps = FindObjectsOfType<Tilemap>();
         Tilemap waterTilemap = null;
 
-        // 2. Identify the water Tilemap and disable land Tilemaps
-        foreach (var tm in tilemaps)
+        // 2. Identify water Tilemap and disable land Tilemaps
+        foreach (Tilemap tm in tilemaps)
         {
-            string name = tm.gameObject.name.ToLower();
-            if (name.Contains("water"))
+            string tmName = tm.gameObject.name.ToLower();
+            if (tmName.Contains("water"))
             {
                 waterTilemap = tm;
             }
@@ -68,95 +73,97 @@ public class BadEndingSceneController : MonoBehaviour
             }
         }
 
-        // 3. Disable all other land/floor/spawner/tree GameObjects in the scene
-        var allObjects = FindObjectsOfType<GameObject>();
-        foreach (var go in allObjects)
+        // 3. Disable all other land/floor/spawner/tree GameObjects in scene
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        foreach (GameObject go in allObjects)
         {
-            if (go == null) continue;
+            if (go == null || go == gameObject) continue;
 
             string name = go.name.ToLower();
 
-            // Skip critical scene manager components, lights, cameras, and UI canvas elements
-            if (go == gameObject || 
-                name.Contains("manager") || 
-                name.Contains("camera") || 
-                name.Contains("light") || 
-                name.Contains("canvas") || 
-                name.Contains("fade") || 
-                name.Contains("water"))
-            {
-                continue;
-            }
+            // Skip critical scene manager components, lights, cameras, canvas, and water
+            if (IsCriticalObject(name)) continue;
 
             // Disable objects related to land, spawners, trees, etc.
-            if (name.Contains("floor") || 
-                name.Contains("spawn") || 
-                name.Contains("map") || 
-                name.Contains("tree") || 
-                name.Contains("plant") || 
-                name.Contains("forest") ||
-                name.Contains("bridge") ||
-                name.Contains("grass"))
+            if (IsLandOrEnvironmentObject(name))
             {
                 go.SetActive(false);
             }
         }
 
-        // 4. Fill the water tilemap with the gameplay water tile to represent a complete flood
+        // 4. Fill the water tilemap with gameplay water tile to represent a complete flood
         if (waterTilemap != null)
         {
-            var waterTile = Resources.Load<TileBase>("WaterDetail6");
+            TileBase waterTile = Resources.Load<TileBase>(WATER_RESOURCE_NAME);
             if (waterTile != null)
             {
                 waterTilemap.ClearAllTiles();
 
-                // Define a large grid size to cover the entire screen (e.g. -60 to 60)
-                int size = 60;
-                for (int x = -size; x <= size; x++)
+                const int gridSize = 60;
+                for (int x = -gridSize; x <= gridSize; x++)
                 {
-                    for (int y = -size; y <= size; y++)
+                    for (int y = -gridSize; y <= gridSize; y++)
                     {
                         waterTilemap.SetTile(new Vector3Int(x, y, 0), waterTile);
                     }
                 }
-                Debug.Log("BadEndingSceneController: Successfully flooded scene with gameplay water.");
+                Debug.Log("BadEndingController: Successfully flooded scene with gameplay water.");
             }
             else
             {
-                Debug.LogError("BadEndingSceneController: Could not find WaterDetail6 in Resources!");
+                Debug.LogError($"BadEndingController: Could not find '{WATER_RESOURCE_NAME}' in Resources!");
             }
         }
         else
         {
-            Debug.LogError("BadEndingSceneController: Could not find Water Tilemap in the scene!");
+            Debug.LogError("BadEndingController: Could not find Water Tilemap in the scene!");
         }
     }
 
-    void SpawnTrash()
+    private bool IsCriticalObject(string name)
     {
-        // Load all trash prefabs from Resources/Trash
-        GameObject[] trashPrefabs = Resources.LoadAll<GameObject>("Trash");
+        return name.Contains("manager") ||
+               name.Contains("camera") ||
+               name.Contains("light") ||
+               name.Contains("canvas") ||
+               name.Contains("fade") ||
+               name.Contains("water");
+    }
+
+    private bool IsLandOrEnvironmentObject(string name)
+    {
+        return name.Contains("floor") ||
+               name.Contains("spawn") ||
+               name.Contains("map") ||
+               name.Contains("tree") ||
+               name.Contains("plant") ||
+               name.Contains("forest") ||
+               name.Contains("bridge") ||
+               name.Contains("grass");
+    }
+
+    private void SpawnTrash()
+    {
+        GameObject[] trashPrefabs = Resources.LoadAll<GameObject>(TRASH_RESOURCE_FOLDER);
         if (trashPrefabs == null || trashPrefabs.Length == 0)
         {
-            Debug.LogWarning("BadEndingSceneController: No trash prefabs found in Resources/Trash!");
+            Debug.LogWarning($"BadEndingController: No trash prefabs found in Resources/{TRASH_RESOURCE_FOLDER}!");
             return;
         }
 
-        // Spawn a random number of trash items at random positions in the scene to represent the flood
-        int trashCount = Random.Range(30, 50); // spawn between 30 and 50 trash items
+        int trashCount = Random.Range(30, 50);
         for (int i = 0; i < trashCount; i++)
         {
             GameObject prefab = trashPrefabs[Random.Range(0, trashPrefabs.Length)];
 
-            // Random position in range -20 to 20
             float rx = Random.Range(-20f, 20f);
             float ry = Random.Range(-20f, 20f);
             Vector3 spawnPos = new Vector3(rx, ry, 0f);
 
             GameObject spawned = Instantiate(prefab, spawnPos, Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)));
 
-            // Make sure the trash doesn't fall or get pushed away by physics
-            var rb = spawned.GetComponent<Rigidbody2D>();
+            // Freeze rigidbodies to keep trash static
+            Rigidbody2D rb = spawned.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
                 rb.bodyType = RigidbodyType2D.Kinematic;
@@ -164,46 +171,40 @@ public class BadEndingSceneController : MonoBehaviour
                 rb.angularVelocity = 0f;
             }
         }
-        Debug.Log($"BadEndingSceneController: Successfully spawned {trashCount} trash items on the flooded water.");
+        Debug.Log($"BadEndingController: Successfully spawned {trashCount} trash items on flooded water.");
     }
 
-    IEnumerator SceneSequenceCoroutine()
+    private IEnumerator SceneSequenceCoroutine()
     {
-        // 1. Start with the panel fully opaque (if it's not already, e.g., from a previous scene's fade-out)
-        //    and then fade it in (alpha from 1 to 0).
         fadePanel.gameObject.SetActive(true);
         yield return StartCoroutine(Fade(1f, 0f, fadeInDuration)); // Fade In
 
-        // 2. Wait for the specified duration
-        Debug.Log($"BadEndingSceneController: Fade-in complete. Waiting for {waitDuration} seconds.");
+        Debug.Log($"BadEndingController: Fade-in complete. Waiting for {waitDuration} seconds.");
         yield return new WaitForSeconds(waitDuration);
 
-        // 3. Fade out (alpha from 0 to 1)
-        Debug.Log("BadEndingSceneController: Wait complete. Starting fade-out.");
+        Debug.Log("BadEndingController: Wait complete. Starting fade-out.");
         yield return StartCoroutine(Fade(0f, 1f, fadeOutDuration)); // Fade Out
 
-        // 4. Load the next scene
-        Debug.Log($"BadEndingSceneController: Fade-out complete. Loading scene with build index {sceneIndexToLoad}.");
+        Debug.Log($"BadEndingController: Loading scene with build index {sceneIndexToLoad}.");
         SceneManager.LoadScene(sceneIndexToLoad);
     }
 
-    IEnumerator Fade(float startAlpha, float endAlpha, float duration)
+    private IEnumerator Fade(float startAlpha, float endAlpha, float duration)
     {
         float elapsedTime = 0f;
-        Color panelColor = fadePanel.color; // Get the base color (e.g., black)
+        Color panelColor = fadePanel.color;
 
-        // Ensure the panel starts at the correct alpha
         fadePanel.color = new Color(panelColor.r, panelColor.g, panelColor.b, startAlpha);
 
         while (elapsedTime < duration)
         {
-            elapsedTime += Time.deltaTime; // Use unscaled time if you want fade during Time.timeScale = 0, but usually not needed here
+            elapsedTime += Time.deltaTime;
             float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
             fadePanel.color = new Color(panelColor.r, panelColor.g, panelColor.b, newAlpha);
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        // Ensure the panel is exactly at the endAlpha
         fadePanel.color = new Color(panelColor.r, panelColor.g, panelColor.b, endAlpha);
     }
 }
+
