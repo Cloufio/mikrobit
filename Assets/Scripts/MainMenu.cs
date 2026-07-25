@@ -18,4 +18,16 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Exit button pressed!");
         Application.Quit();
     }
+
+    public void ShowLeaderboard()
+    {
+        if (LeaderboardManager.Instance != null)
+        {
+            LeaderboardManager.Instance.FetchTopScores();
+        }
+        else
+        {
+            Debug.LogWarning("LeaderboardManager instance not found in scene!");
+        }
+    }
 }

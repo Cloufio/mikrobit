@@ -85,6 +85,13 @@ public class GameEndManager : MonoBehaviour
         if (timeIsOver)
         {
             conditionsHaveBeenMet = true;
+
+            // Submit score to global leaderboard
+            if (LeaderboardManager.Instance != null)
+            {
+                LeaderboardManager.Instance.SubmitScore(currentScore);
+            }
+
             int sceneIndexToLoad;
 
             if (currentScore > scoreThresholdForGoodEnding)
@@ -119,6 +126,13 @@ public class GameEndManager : MonoBehaviour
         }
 
         int currentScore = scoreManagerInstance != null ? scoreManagerInstance.currentScore : 0;
+
+        // Submit score to global leaderboard
+        if (LeaderboardManager.Instance != null)
+        {
+            LeaderboardManager.Instance.SubmitScore(currentScore);
+        }
+
         int sceneIndexToLoad;
 
         if (currentScore > scoreThresholdForGoodEnding)
