@@ -21,11 +21,16 @@ public class AchievementCardDefinition
     public string FunFact => funFact;
     public Sprite Artwork => artwork;
     public bool Unlocked => unlocked;
+
+    public void SetUnlocked(bool value)
+    {
+        unlocked = value;
+    }
 }
 
 /// <summary>
 /// Shows the ordered microplastic-combo card catalogue in the three existing card slots.
-/// Combo detection can be added later; the unlock state is currently editable per card.
+/// Persisted combo unlocks are reflected whenever this scene is opened.
 /// </summary>
 public class AchievementPageController : MonoBehaviour
 {
@@ -62,7 +67,18 @@ public class AchievementPageController : MonoBehaviour
     private void Awake()
     {
         CacheSceneObjects();
+        ApplyPersistedUnlocks();
         ShowPageImmediately(0);
+    }
+
+    private void OnEnable()
+    {
+        MicroplasticComboTracker.ComboUnlocked += HandleComboUnlocked;
+    }
+
+    private void OnDisable()
+    {
+        MicroplasticComboTracker.ComboUnlocked -= HandleComboUnlocked;
     }
 
     public void NextPage()
@@ -88,6 +104,39 @@ public class AchievementPageController : MonoBehaviour
     public void BackToMainMenu()
     {
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private void ApplyPersistedUnlocks()
+    {
+        foreach (AchievementCardDefinition card in achievementCards)
+        {
+            if (card != null && MicroplasticComboTracker.IsUnlocked(card.Id))
+            {
+                card.SetUnlocked(true);
+            }
+        }
+    }
+
+    private void HandleComboUnlocked(MicroplasticComboTracker.ComboDefinition unlockedCombo)
+    {
+        bool changed = false;
+        foreach (AchievementCardDefinition card in achievementCards)
+        {
+            if (card == null || !string.Equals(card.Id, unlockedCombo.id, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            card.SetUnlocked(true);
+            changed = true;
+            break;
+        }
+
+        if (changed)
+        {
+            ApplyPageContent();
+            UpdateProgressText();
+        }
     }
 
     private void ShowPage(int page)

@@ -4,45 +4,48 @@ using UnityEngine.UI;
 public class TreeCut : Tool
 {
     [Header("Tree Stats")]
-    [SerializeField] int treeHealth = 25;
+    [SerializeField] int treeHealth = 30;
     [SerializeField] int damagePerHit = 10;
 
     [Header("Scoring")]
     [SerializeField] int pointsForCutting = 1;
-    [SerializeField, Min(0f)] private float timeBonusOnCleanup = 2f;
 
     [Header("Cleanup Feedback")]
     [SerializeField] private bool useWaterCleanupFeedback = true;
     [SerializeField] private AudioClip cleanupSound;
     [Range(0f, 1f)] [SerializeField] private float cleanupSoundVolume = 0.8f;
 
-    [Header("UI Visuals")]
-    public Slider healthBarSlider;
+    private TrashPollutionPatch pollutionPatch;
+    private Slider healthBarSlider;
     private int maxHealth;
 
     private void Awake()
     {
+        // Every water-trash prefab uses the same three-click cleanup rule.
+        if (ShouldUsePollutionPatch())
+        {
+            treeHealth = 30;
+            damagePerHit = 10;
+        }
+
         // Trash remains selectable by ToolController while also physically blocking the boat.
         foreach (Collider2D interactionCollider in GetComponents<Collider2D>())
         {
             interactionCollider.isTrigger = false;
         }
 
-        healthBarSlider = GetComponentInChildren<Slider>();
-
-        if (healthBarSlider == null)
+        healthBarSlider = GetComponentInChildren<Slider>(true);
+        if (healthBarSlider != null)
         {
-            Debug.LogError(gameObject.name + " could not find a Slider in its children! Make sure the health bar is part of the prefab.");
-        }
-        else
-        {
-            // Set the slider's maximum and current value immediately
             maxHealth = treeHealth;
             healthBarSlider.maxValue = maxHealth;
             healthBarSlider.value = maxHealth;
-
-            // Hide the health bar initially
             healthBarSlider.gameObject.SetActive(false);
+        }
+
+        if (ShouldUsePollutionPatch())
+        {
+            pollutionPatch = TrashPollutionPatch.Spawn(transform);
         }
     }
 
@@ -54,20 +57,19 @@ public class TreeCut : Tool
         }
 
         treeHealth -= damagePerHit;
-        Debug.Log(gameObject.name + " was hit! Remaining health: " + treeHealth);
-
         if (healthBarSlider != null)
         {
-            // Feed the raw health number directly into the slider
-            healthBarSlider.value = treeHealth;
+            healthBarSlider.value = Mathf.Max(0, treeHealth);
         }
 
         if (treeHealth <= 0)
         {
+            pollutionPatch?.Clean();
+            MicroplasticComboTracker.RecordTrashCollected(gameObject.name);
+
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.AddScore(pointsForCutting);
-                ScoreManager.Instance.AddTime(timeBonusOnCleanup);
             }
 
             if (useWaterCleanupFeedback)
@@ -84,5 +86,18 @@ public class TreeCut : Tool
 
             Destroy(gameObject);
         }
+    }
+
+    private bool ShouldUsePollutionPatch()
+    {
+        if (!useWaterCleanupFeedback)
+        {
+            return false;
+        }
+
+        // Water trash renders at order 2. Trees share this interaction script but
+        // render at order 3, so they should not create pollution in the water.
+        SpriteRenderer rootRenderer = GetComponent<SpriteRenderer>();
+        return rootRenderer != null && rootRenderer.sortingOrder <= 2;
     }
 }

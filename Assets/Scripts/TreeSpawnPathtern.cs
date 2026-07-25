@@ -7,7 +7,21 @@ public class LevelGeneration : MonoBehaviour {
 
     void Start()
     {
+        if (ComboSpawnPool.TryGetSpawnPrefab(out GameObject comboPrefab))
+        {
+            Instantiate(comboPrefab, transform.position, Quaternion.identity);
+            return;
+        }
+
+        if (objects == null || objects.Length == 0)
+        {
+            return;
+        }
+
         int rand = Random.Range(0, objects.Length);
-        Instantiate(objects[rand], transform.position, Quaternion.identity);
+        if (objects[rand] != null)
+        {
+            Instantiate(objects[rand], transform.position, Quaternion.identity);
+        }
     }
 }

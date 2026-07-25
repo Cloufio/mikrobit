@@ -6,7 +6,7 @@ using System.Collections;
 public class GameEndManager : MonoBehaviour
 {
     [Header("Scene Transitions")]
-    [Tooltip("Scene shown when the timer expires or the player runs out of health.")]
+    [Tooltip("Scene shown when the timer expires.")]
     public string finalScoreSceneName = "FinalScoreScene";
 
     [Header("Fade Settings")]
@@ -19,12 +19,10 @@ public class GameEndManager : MonoBehaviour
 
     private bool conditionsHaveBeenMet = false;
     private ScoreManager scoreManagerInstance;
-    private PlayerHealth playerHealth;
 
     void Start()
     {
         scoreManagerInstance = ScoreManager.Instance;
-        playerHealth = FindFirstObjectByType<PlayerHealth>();
 
         if (scoreManagerInstance == null)
         {
@@ -77,14 +75,11 @@ public class GameEndManager : MonoBehaviour
 
         int currentScore = scoreManagerInstance.currentScore;
         bool timeIsOver = !scoreManagerInstance.timerIsRunning && scoreManagerInstance.timeRemaining <= 0;
-        bool healthIsDepleted = playerHealth != null && playerHealth.currentHealth <= 0;
-
-        if (timeIsOver || healthIsDepleted)
+        if (timeIsOver)
         {
             conditionsHaveBeenMet = true;
             SaveRunScore(currentScore);
-            string endReason = healthIsDepleted ? "Health depleted" : "Time has run out";
-            Debug.Log($"{endReason}. Loading '{finalScoreSceneName}' with score {currentScore}.");
+            Debug.Log($"Time has run out. Loading '{finalScoreSceneName}' with score {currentScore}.");
 
             // Re-activate the panel before starting the fade-out.
             fadePanel.gameObject.SetActive(true);

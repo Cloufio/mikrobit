@@ -1,0 +1,268 @@
+using System;
+using System.Collections.Generic;
+
+#if UNITY_EDITOR && UNITY_2021_3_OR_NEWER && !LOOTLOCKER_DISABLE_EDITOR_EXTENSION
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using LootLocker.Extension.Responses;
+
+namespace LootLocker.Extension
+{
+    public partial class LootLockerAdminExtension : EditorWindow
+    {
+        #region State Variables
+        private Dictionary<int, LootLocker.Extension.DataTypes.Game> gameData = new Dictionary<int, LootLocker.Extension.DataTypes.Game>();
+        private DateTime gameDataRefreshTime;
+        private readonly int gameDataCacheExpirationTimeMinutes = 1;
+        private VisualElement currentFlow = null;
+        private VisualElement previousFlow = null;
+        private string mfaKey;
+        private int rotateIndex = 0;
+        #endregion
+
+        #region Serialized Fields
+        [SerializeField]
+        private VisualTreeAsset m_VisualTreeAsset = default;
+        #endregion
+
+        #region Style Colors
+        [Header("Colors")]
+        private StyleColor defaultButton;
+        #endregion
+
+        #region UI Element References
+        // Basic UI elements
+        private Label gameName;
+        private Label securityWarning;
+
+        // Flows
+        private VisualElement activeFlow;
+        private VisualElement loginFlow, mfaFlow, gameSelectorFlow, apiKeyFlow, settingsFlow;
+
+        // Menu
+        private VisualElement menu;
+        private Button menuAPIKeyBtn;
+        private Button menuChangeGameBtn;
+        private Button menuLogoutBtn;
+
+        // Popup
+        private VisualElement popup;
+        private Label popupTitle, popupMessage;
+        private Button popupBtn;
+
+        // API Key
+        private Label newApiKeyCancel;
+        private VisualElement newApiKeyWindow;
+        private TextField newApiKeyName;
+        private VisualElement createApiKeyWindow;
+        private Button createNewApiKeyBtn;
+        private Button createApiKeyBtn;
+        private VisualElement apiKeyList;
+
+        // Login UI
+        private TextField emailField, passwordField;
+        private Label signupLink, gettingStartedLink, forgotPasswordLink;
+        private Button loginBtn;
+
+        // MFA UI
+        private TextField codeField;
+        private Button signInBtn;
+
+        // Game Selector UI
+        private VisualElement gameSelectorList;
+
+        // Loading Icon
+        private VisualElement loadingPage;
+        private VisualElement loadingIcon;
+
+        // License Countdown UI
+        private VisualElement licenseCountdownContainer;
+        private Label licenseCountdownLabel;
+        private Image licenseCountdownIcon;
+
+        // Settings UI
+        private Button settingsBtn;
+        private Button settingsBackBtn;
+        private TextField gameVersionField;
+        private Label gameVersionWarning;
+#if UNITY_2022_1_OR_NEWER
+        private EnumField logLevelField;
+#endif
+        private Toggle logErrorsAsWarningsToggle, logInBuildsToggle, allowTokenRefreshToggle;
+        #endregion
+
+        #region SDK Tools
+        [MenuItem("Window/" + LootLockerConfig.PackageName + "/Tools/Clear Local Player Data", true, 101)]
+        public static bool ValidateClearLocalPlayerData()
+        {
+            return LootLockerConfig.current.enableEditorAdminExtension;
+        }
+
+        [MenuItem("Window/" + LootLockerConfig.PackageName + "/Tools/Clear Local Player Data", false, 101)]
+        public static void ClearLocalPlayerData()
+        {
+            if (!EditorUtility.DisplayDialog("Clear Local Player Data", "Are you sure you want to clear all local player data? This action cannot be undone.", "Yes", "No"))
+            {
+                return;
+            }
+            LootLockerStateData.ClearAllSavedStates();
+        }
+        #endregion
+
+        #region Window Management
+        [MenuItem("Window/" + LootLockerConfig.PackageName + "/Manage", true, 100)]
+        public static bool ValidateRun()
+        {
+            return LootLockerConfig.current.enableEditorAdminExtension;
+        }
+
+        [MenuItem("Window/" + LootLockerConfig.PackageName + "/Manage", false, 100)]
+        public static void Run()
+        {
+            LootLockerAdminExtension wnd = GetWindow<LootLockerAdminExtension>();
+            wnd.titleContent = new GUIContent(LootLockerConfig.PackageName);
+
+            if (!string.IsNullOrEmpty(LootLockerEditorData.GetAdminToken()))
+            {
+                LootLockerConfig.current.adminToken = LootLockerEditorData.GetAdminToken();
+                wnd.RefreshUserInformation(() =>
+                {
+                    if (LootLockerEditorData.GetSelectedGame() != 0)
+                    {
+                        wnd.SwapFlows(wnd.apiKeyFlow);
+                        return;
+                    }
+                    wnd.SwapFlows(wnd.gameSelectorFlow);
+                });
+                return;
+            }
+
+            wnd.SwapFlows(wnd.loginFlow);
+        }
+
+        [InitializeOnLoadMethod]
+        public static void LoadFirstTime()
+        {
+            if (LootLockerEditorData.ShouldAutoShowWindow())
+            {
+                EditorApplication.delayCall = (EditorApplication.CallbackFunction)Delegate.Combine(
+                    EditorApplication.delayCall, 
+                    (EditorApplication.CallbackFunction)delegate
+                    {
+                        LootLockerAdminExtension wnd = GetWindow<LootLockerAdminExtension>();
+                        wnd.titleContent = new GUIContent(LootLockerConfig.PackageName);
+                        wnd.ShowUtility();
+                    });
+            }
+        }
+
+        public void CreateGUI()
+        {
+            InitializeUIElements();
+            SetupSettingsButton();
+            Run();
+        }
+        #endregion
+
+        #region Flow Management
+
+        void SwapFlows(VisualElement newFlow)
+        {
+            if (currentFlow == newFlow) return;
+            
+            activeFlow = newFlow;
+            
+            if (currentFlow != null)
+            {
+                currentFlow.style.display = DisplayStyle.None;
+                if (currentFlow == apiKeyFlow && apiKeyList != null)
+                {
+                    apiKeyList.Clear();
+                }
+            }
+
+            newFlow.style.display = DisplayStyle.Flex;
+            
+            ConfigureFlowUI(newFlow);
+            
+            currentFlow = newFlow;
+        }
+
+        private void ConfigureFlowUI(VisualElement flow)
+        {
+            // Hide security warning by default
+            if (securityWarning != null) securityWarning.style.display = DisplayStyle.None;
+
+            if (flow == gameSelectorFlow)
+            {
+                ConfigureGameSelectorFlow();
+            }
+            else if (flow == apiKeyFlow)
+            {
+                ConfigureApiKeyFlow();
+            }
+            else if (flow == settingsFlow)
+            {
+                ConfigureSettingsFlow();
+            }
+            else if (flow == loginFlow)
+            {
+                ConfigureLoginFlow();
+            }
+            else if (flow == mfaFlow)
+            {
+                ConfigureMfaFlow();
+            }
+        }
+
+        private void ConfigureGameSelectorFlow()
+        {
+            if (licenseCountdownContainer != null) licenseCountdownContainer.style.display = DisplayStyle.None;
+            if (gameName != null) gameName.text = "LootLocker";
+            if (settingsBtn != null) settingsBtn.style.display = DisplayStyle.None;
+            if (emailField != null) emailField.value = "";
+            if (passwordField != null) passwordField.value = "";
+            SetMenuVisibility(apiKey: false, changeGame: false, logout: true);
+            if (createApiKeyWindow != null) createApiKeyWindow.style.display = DisplayStyle.None;
+            CreateGameButtons();
+        }
+
+        private void ConfigureApiKeyFlow()
+        {
+            if (settingsBtn != null) settingsBtn.style.display = DisplayStyle.Flex;
+            if (gameName != null) gameName.text = LootLockerEditorData.GetSelectedGameName();
+            UpdateLicenseCountdownUI();
+            SetMenuVisibility(apiKey: true, changeGame: true, logout: true);
+            if (createApiKeyWindow != null) createApiKeyWindow.style.display = DisplayStyle.Flex;
+
+            RefreshAPIKeys();
+        }
+
+        private void ConfigureSettingsFlow()
+        {
+            if (settingsBtn != null) settingsBtn.style.display = DisplayStyle.Flex;
+            if (licenseCountdownContainer != null) licenseCountdownContainer.style.display = DisplayStyle.None;
+            SetMenuVisibility(apiKey: true, changeGame: true, logout: true);
+            if (createApiKeyWindow != null) createApiKeyWindow.style.display = DisplayStyle.None;
+            LoadSettingsUI();
+        }
+
+        private void ConfigureLoginFlow()
+        {
+            if (licenseCountdownContainer != null) licenseCountdownContainer.style.display = DisplayStyle.None;
+            if (settingsBtn != null) settingsBtn.style.display = DisplayStyle.None;
+            if (menu != null) menu.style.display = DisplayStyle.None;
+            if (createApiKeyWindow != null) createApiKeyWindow.style.display = DisplayStyle.None;
+            if (securityWarning != null) securityWarning.style.display = DisplayStyle.Flex;
+        }
+
+        private void ConfigureMfaFlow()
+        {
+            if (settingsBtn != null) settingsBtn.style.display = DisplayStyle.None;
+            SetMenuVisibility(apiKey: false, changeGame: false, logout: true);
+        }
+        #endregion
+    }
+}
+#endif
