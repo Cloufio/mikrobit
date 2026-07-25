@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 public class FinalScoreController : MonoBehaviour
@@ -23,11 +24,60 @@ public class FinalScoreController : MonoBehaviour
     [SerializeField] private Color outlineColor = new Color(0.24f, 0.12f, 0.13f, 1f);
     [SerializeField] private Color shadowColor = new Color(0.72f, 0.29f, 0.18f, 1f);
 
+    [Header("Navigation")]
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private string replaySceneName = "IntroScene";
+
     private readonly List<Material> runtimeMaterials = new List<Material>();
 
     private void Start()
     {
         ApplyExistingLayoutContent(GetRunScore(), GetBestScore());
+        ConnectNavigationButtons();
+    }
+
+    private void ConnectNavigationButtons()
+    {
+        Button menuButton = FindSceneButton("MenuButton");
+        if (menuButton != null)
+        {
+            menuButton.onClick.RemoveAllListeners();
+            menuButton.onClick.AddListener(ReturnToMainMenu);
+        }
+        else
+        {
+            Debug.LogWarning("FinalScoreController could not find MenuButton in the active scene.");
+        }
+
+        Button replayButton = FindSceneButton("ReplayButton");
+        if (replayButton != null)
+        {
+            replayButton.onClick.RemoveAllListeners();
+            replayButton.onClick.AddListener(Replay);
+        }
+    }
+
+    public void ReturnToMainMenu()
+    {
+        Debug.Log("FinalScoreController loading " + mainMenuSceneName + ".");
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private void Replay()
+    {
+        SceneManager.LoadScene(replaySceneName);
+    }
+
+    private static Button FindSceneButton(string objectName)
+    {
+        Button[] buttons = UnityEngine.Object.FindObjectsByType<Button>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Button button in buttons)
+        {
+            if (button.name == objectName)
+                return button;
+        }
+
+        return null;
     }
 
     private void ApplyExistingLayoutContent(int runScore, int bestScoreValue)

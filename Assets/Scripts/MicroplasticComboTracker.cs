@@ -62,6 +62,8 @@ public sealed class MicroplasticComboTracker : MonoBehaviour
     }
 
     private const string UnlockKeyPrefix = "Microbit.ComboUnlocked.";
+    private const string AchievementResetVersionKey = "Microbit.AchievementResetVersion";
+    private const int AchievementResetVersion = 1;
     private static readonly List<ComboDefinition> Definitions = new()
     {
         new ComboDefinition("microfiber-clutter", "Microfiber Clutter", "3x Fiber",
@@ -140,6 +142,7 @@ public sealed class MicroplasticComboTracker : MonoBehaviour
 
         instance = this;
         UnityEngine.Object.DontDestroyOnLoad(gameObject);
+        ResetLegacyUnlocksOnce();
     }
 
     /// <summary>Called only when a trash object has actually been cleaned.</summary>
@@ -160,6 +163,7 @@ public sealed class MicroplasticComboTracker : MonoBehaviour
 
     public static bool IsUnlocked(string id)
     {
+        ResetLegacyUnlocksOnce();
         return !string.IsNullOrWhiteSpace(id) && PlayerPrefs.GetInt(UnlockKeyPrefix + id, 0) == 1;
     }
 
@@ -182,6 +186,22 @@ public sealed class MicroplasticComboTracker : MonoBehaviour
             PlayerPrefs.DeleteKey(UnlockKeyPrefix + definition.id);
         }
 
+        PlayerPrefs.Save();
+    }
+
+    private static void ResetLegacyUnlocksOnce()
+    {
+        if (PlayerPrefs.GetInt(AchievementResetVersionKey, 0) >= AchievementResetVersion)
+        {
+            return;
+        }
+
+        foreach (ComboDefinition definition in Definitions)
+        {
+            PlayerPrefs.DeleteKey(UnlockKeyPrefix + definition.id);
+        }
+
+        PlayerPrefs.SetInt(AchievementResetVersionKey, AchievementResetVersion);
         PlayerPrefs.Save();
     }
 

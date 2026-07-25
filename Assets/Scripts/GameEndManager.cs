@@ -79,6 +79,7 @@ public class GameEndManager : MonoBehaviour
         {
             conditionsHaveBeenMet = true;
             SaveRunScore(currentScore);
+            LeaderboardManager.EnsureInstance().SubmitCompletedScore(currentScore);
             Debug.Log($"Time has run out. Loading '{finalScoreSceneName}' with score {currentScore}.");
 
             // Re-activate the panel before starting the fade-out.

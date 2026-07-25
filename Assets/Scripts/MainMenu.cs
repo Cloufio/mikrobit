@@ -18,7 +18,7 @@ public class MainMenu : MonoBehaviour
 
     public void playGame()
     {
-        SceneManager.LoadScene("IntroScene");
+        LeaderboardManager.EnsureInstance().PromptForPlayerName(() => SceneManager.LoadScene("IntroScene"));
     }
 
     public void ShowAchievements()
@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
 
     public void ShowLeaderboards()
     {
-        Debug.Log("Leaderboards selected. Connect this button to your leaderboard service when it is ready.");
+        SceneManager.LoadScene("LeaderboardScene");
     }
 
     private void ConfigureRenamedButton(string buttonName, string label)

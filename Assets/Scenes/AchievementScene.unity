@@ -1974,14 +1974,14 @@ MonoBehaviour:
     funFact: Combining synthetic fibers when washing polyester or nylon clothes can
       release more than 700,000 microplastic fibers into wastewater in one wash.
     artwork: {fileID: -1126322624708572206, guid: 1bfe9ef5004064fa0ac302e5902b04ce, type: 3}
-    unlocked: 1
+    unlocked: 0
   - id: shattered-bottle
     title: Shattered Bottle
     requirement: 2x Fragment + 1x Used Plastic Bottle
     funFact: A whole plastic bottle floating at sea can be broken down by UV light
       and waves into millions of sharp plastic fragments.
     artwork: {fileID: 5574494191235828947, guid: 552e122f706cb438282a01fb234eccc2, type: 3}
-    unlocked: 1
+    unlocked: 0
   - id: microbead-scrub
     title: Microbead Scrub
     requirement: 3x Pellet (Nurdle)

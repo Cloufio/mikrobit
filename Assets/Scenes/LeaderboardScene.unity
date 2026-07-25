@@ -690,24 +690,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 352498276}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d7759dd15d4e8c97d3acbf10829af8, type: 3}
+  m_Script: {fileID: 11500000, guid: 55d7cfaa36954a329eefbcdbb2cf8196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstPageCards:
-  - {fileID: 21300000, guid: 1f4dd93438d2e46ba913eb1bccaeaec5, type: 3}
-  - {fileID: 21300000, guid: 1034bd1de00ab4110814d0994f977aa1, type: 3}
-  - {fileID: 21300000, guid: 650f56561b2c44a4c910335a73c54907, type: 3}
-  firstPageUnlocked: 010000
-  secondPageCards:
-  - {fileID: 21300000, guid: aae8035de0bdf4962a3e23b967d537e6, type: 3}
-  - {fileID: 21300000, guid: a19672c6b5d014670972d6f7d279279d, type: 3}
-  - {fileID: 21300000, guid: fa00fe9e61a654394ae288b6a2141878, type: 3}
-  secondPageUnlocked: 000000
   mainMenuSceneName: MainMenu
-  activeIndicatorColor: {r: 1, g: 1, b: 1, a: 1}
-  inactiveIndicatorColor: {r: 0, g: 0, b: 0, a: 1}
-  unlockedOverlayAlpha: 0.31
-  lockedOverlayAlpha: 0.78
+  visibleRows: 5
+  statusColor: {r: 1, g: 0.88, b: 0.6, a: 1}
 --- !u!114 &352498278
 MonoBehaviour:
   m_ObjectHideFlags: 0
