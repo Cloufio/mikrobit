@@ -2017,7 +2017,7 @@ MonoBehaviour:
     requirement: 2x Fragment + 1x Vehicle Tire
     funFact: Tire-road friction creates rubber microplastic fragments. They are one
       of the largest land-based sources of microplastics.
-    artwork: {fileID: 0}
+    artwork: {fileID: 6334408594541877448, guid: 800728784367a48aeaf041acbb66af59, type: 3}
     unlocked: 0
   - id: synthetic-tea-bag
     title: Synthetic Tea Bag
@@ -2025,7 +2025,7 @@ MonoBehaviour:
     funFact: Some tea bags use synthetic plastic materials. Brewing one in hot water
       can release up to 11.6 billion microplastic and nanoplastic particles into
       a single cup.
-    artwork: {fileID: 0}
+    artwork: {fileID: -740038425095449823, guid: 6675a79ba50374a7b9db6c600db04d30, type: 3}
     unlocked: 0
   - id: microplastic-soup
     title: Microplastic Soup

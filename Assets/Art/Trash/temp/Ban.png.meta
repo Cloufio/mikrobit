@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c3be5e7df4d7043dd983acefce3e29f2
+guid: 4f82c1356ab624ac9902fb22f4695424
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4677621682219381667
-    second: IkanMati_0
+      213: 2479246731736983375
+    second: Ban_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: IkanMati_0
+      name: Ban_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1254
-        height: 1254
+        x: 187
+        y: 88
+        width: 779
+        height: 835
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d5c06a5fcdfb51fb0800000000000000
-      internalID: -4677621682219381667
+      spriteID: f472bb354cd086220800000000000000
+      internalID: 2479246731736983375
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      IkanMati_0: -4677621682219381667
+      Ban_0: 2479246731736983375
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

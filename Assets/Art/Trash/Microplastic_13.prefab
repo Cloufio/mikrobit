@@ -55,8 +55,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.19090424, g: 0.735849, b: 0.28523535, a: 1}
   m_RaycastTarget: 1
@@ -123,8 +123,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -236,8 +236,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
@@ -259,8 +259,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
   m_BlockingMask:
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 1249475910335133097}
   - component: {fileID: 2538988006735746462}
   m_Layer: 0
-  m_Name: rubberTire
+  m_Name: Microplastic_13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -382,7 +382,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -180680006, guid: 9619a38ba21e96e40a571ceea3140a44, type: 3}
+  m_Sprite: {fileID: 5200885273586929546, guid: 55938ecdc740d4edc98340da4ffdd60f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -437,7 +437,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8000, y: 0.8000}
+  m_Size: {x: 0.4800, y: 0.4800}
   m_EdgeRadius: 0
 --- !u!114 &1249475910335133097
 MonoBehaviour:
@@ -449,11 +449,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b8c1e4c387a4b04cb1c26391edd9275, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  treeHealth: 30
-  damagePerHit: 10
-  pointsForCutting: 3
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treeHealth: 10
+  damagePerHit: 5
+  pointsForCutting: 1
   useWaterCleanupFeedback: 1
   cleanupSound: {fileID: 0}
   cleanupSoundVolume: 0.8
@@ -468,8 +468,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8425523ee76624a95909344a5d90524d, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   swaySpeed: 5
   maxSwayAngle: 2
 --- !u!1 &6819404150125990246
@@ -527,8 +527,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
   m_RaycastTarget: 1

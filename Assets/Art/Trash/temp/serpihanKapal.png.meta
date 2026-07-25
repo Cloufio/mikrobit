@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: c326028738ecd4cf0b646f84c9d6c006
+guid: e6a3263378ace48188be792c3da670c0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8304866368404314153
-    second: WadahPlastik_0
+      213: 8352089730514707305
+    second: serpihanKapal_0
+  - first:
+      213: -1905018770756990813
+    second: serpihanKapal_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +40,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +78,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WadahPlastik_0
+      name: serpihanKapal_0
       rect:
         serializedVersion: 2
-        x: 157
-        y: 88
-        width: 849
-        height: 931
+        x: 259
+        y: 57
+        width: 747
+        height: 962
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +131,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 928d3d306ffc04370800000000000000
-      internalID: 8304866368404314153
+      spriteID: 963648fcb5598e370800000000000000
+      internalID: 8352089730514707305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: serpihanKapal_1
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 315
+        width: 55
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a8049e65830095e0800000000000000
+      internalID: -1905018770756990813
       vertices: []
       indices: 
       edges: []
@@ -147,7 +172,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      serpihanKapal_0: 8352089730514707305
+      serpihanKapal_1: -1905018770756990813
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
