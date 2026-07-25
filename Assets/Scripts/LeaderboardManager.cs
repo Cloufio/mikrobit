@@ -113,4 +113,69 @@ public class LeaderboardManager : MonoBehaviour
             }
         });
     }
+
+    // ==========================================
+    // FITUR ACHIEVEMENT (PLAYER STORAGE CLOUD)
+    // ==========================================
+
+    /// <summary>
+    /// Membuka (Unlock) Achievement di Cloud LootLocker
+    /// Contoh penggunaan: LeaderboardManager.Instance.UnlockAchievement("GOOD_ENDING_UNLOCKED");
+    /// </summary>
+    public void UnlockAchievement(string achievementKey)
+    {
+        if (!isLoggedIn)
+        {
+            StartCoroutine(UnlockAchievementWhenLoggedIn(achievementKey));
+            return;
+        }
+
+        LootLockerSDKManager.UpdateSingleKeyPersistentStorage(achievementKey, "unlocked", (response) =>
+        {
+            if (response.success)
+            {
+                Debug.Log($"LootLocker Achievement: '{achievementKey}' BERHASIL Di-unlock!");
+            }
+            else
+            {
+                Debug.LogError($"LootLocker Achievement: Gagal unlock '{achievementKey}' - " + (response.errorData != null ? response.errorData.message : "Unknown error"));
+            }
+        });
+    }
+
+    private IEnumerator UnlockAchievementWhenLoggedIn(string achievementKey)
+    {
+        yield return new WaitUntil(() => isLoggedIn);
+        UnlockAchievement(achievementKey);
+    }
+
+    /// <summary>
+    /// Mengecek apakah Achievement tertentu sudah di-unlock sebelumnya oleh player di Cloud
+    /// </summary>
+    public void CheckAchievement(string achievementKey, System.Action<bool> callback)
+    {
+        if (!isLoggedIn)
+        {
+            StartCoroutine(CheckAchievementWhenLoggedIn(achievementKey, callback));
+            return;
+        }
+
+        LootLockerSDKManager.GetSingleKeyPersistentStorage(achievementKey, (response) =>
+        {
+            if (response.success && response.payload != null && response.payload.value == "unlocked")
+            {
+                callback?.Invoke(true);
+            }
+            else
+            {
+                callback?.Invoke(false);
+            }
+        });
+    }
+
+    private IEnumerator CheckAchievementWhenLoggedIn(string achievementKey, System.Action<bool> callback)
+    {
+        yield return new WaitUntil(() => isLoggedIn);
+        CheckAchievement(achievementKey, callback);
+    }
 }

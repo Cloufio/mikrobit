@@ -62,7 +62,32 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int pointsToAdd)
     {
         currentScore += pointsToAdd;
+        currentCombo++;
         UpdateScoreDisplay();
+        CheckComboAchievements();
+    }
+
+    public void ResetCombo()
+    {
+        currentCombo = 0;
+    }
+
+    private void CheckComboAchievements()
+    {
+        if (LeaderboardManager.Instance == null) return;
+
+        if (currentCombo >= 5)
+        {
+            LeaderboardManager.Instance.UnlockAchievement("CARD_COMBO_5X");
+        }
+        if (currentCombo >= 10)
+        {
+            LeaderboardManager.Instance.UnlockAchievement("CARD_COMBO_10X");
+        }
+        if (currentCombo >= 20)
+        {
+            LeaderboardManager.Instance.UnlockAchievement("CARD_COMBO_20X");
+        }
     }
 
     void UpdateScoreDisplay()
