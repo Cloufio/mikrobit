@@ -18,12 +18,13 @@ public class LeaderboardManager : MonoBehaviour
     private const string GuestIdentifierKey = "Microbit.LootLocker.GuestIdentifier";
     private const string PlayerNameKey = "Microbit.PlayerName";
     private const string MemberIdKey = "Microbit.LootLocker.MemberId";
+    private const string PendingScoreKey = "Microbit.LootLocker.PendingScore";
 
     public static LeaderboardManager Instance { get; private set; }
 
     [Header("LootLocker")]
-    [Tooltip("Create a leaderboard with this key in LootLocker, or change this value to your existing key.")]
-    [SerializeField] private string leaderboardKey = "microbit-global";
+    [Tooltip("LootLocker leaderboard key. The current Global_Leaderboard uses global_leaderboard.")]
+    [SerializeField] private string leaderboardKey = "global_leaderboard";
     [SerializeField, Min(1)] private int leaderboardEntryCount = 10;
     [SerializeField, Min(1f)] private float requestTimeoutSeconds = 12f;
 
@@ -37,6 +38,7 @@ public class LeaderboardManager : MonoBehaviour
     private bool sessionReady;
     private bool sessionStarting;
     private string memberId;
+    private string lastSessionError;
     private TMP_InputField usernameInput;
     private GameObject activeOverlay;
 
@@ -68,6 +70,7 @@ public class LeaderboardManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         EnsureGuestIdentifier();
+        RetryPendingScore();
     }
 
     public void PromptForPlayerName(UnityAction onConfirmed)
@@ -104,6 +107,7 @@ public class LeaderboardManager : MonoBehaviour
     /// </summary>
     public void RequestLeaderboard(Action<bool, LootLockerLeaderboardMember[], string> onComplete)
     {
+        RetryPendingScore();
         StartCoroutine(RequestLeaderboardRoutine(onComplete));
     }
 
@@ -114,21 +118,52 @@ public class LeaderboardManager : MonoBehaviour
             return;
         }
 
+        // Keep the score until LootLocker explicitly confirms it. This lets a
+        // run survive a scene transition, a slow guest session, or a brief
+        // connection failure without silently disappearing from the board.
+        PlayerPrefs.SetInt(PendingScoreKey, score);
+        PlayerPrefs.Save();
+        SubmitPendingScore();
+    }
+
+    private void RetryPendingScore()
+    {
+        if (PlayerPrefs.HasKey(PendingScoreKey))
+        {
+            SubmitPendingScore();
+        }
+    }
+
+    private void SubmitPendingScore()
+    {
+        if (!PlayerPrefs.HasKey(PendingScoreKey))
+        {
+            return;
+        }
+
+        int score = Mathf.Max(0, PlayerPrefs.GetInt(PendingScoreKey));
         EnsureSession(ready =>
         {
             if (!ready)
             {
-                Debug.LogWarning("LootLocker score submission skipped because the guest session could not start.");
+                Debug.LogWarning("LootLocker score is queued until the guest session can start.");
                 return;
             }
 
             string displayName = GetDisplayName();
-            LootLockerSDKManager.SubmitScore(memberId, score, leaderboardKey, displayName, response =>
+            // This is a Player leaderboard. LootLocker uses the active guest
+            // session automatically, so member_id must remain blank.
+            LootLockerSDKManager.SubmitScore(string.Empty, score, leaderboardKey, displayName, response =>
             {
                 if (!response.success)
                 {
                     Debug.LogWarning($"LootLocker could not submit score: {GetError(response)}");
+                    return;
                 }
+
+                PlayerPrefs.DeleteKey(PendingScoreKey);
+                PlayerPrefs.Save();
+                Debug.Log($"LootLocker submitted score {response.score} to '{leaderboardKey}' at rank {response.rank}.");
             });
         });
     }
@@ -153,6 +188,12 @@ public class LeaderboardManager : MonoBehaviour
 
     private System.Collections.IEnumerator RequestLeaderboardRoutine(Action<bool, LootLockerLeaderboardMember[], string> onComplete)
     {
+        if (!HasLootLockerApiKey())
+        {
+            onComplete?.Invoke(false, null, "LootLocker API key is missing. Open Edit > Project Settings > LootLocker SDK and paste this game's Game API Key.");
+            yield break;
+        }
+
         bool sessionFinished = false;
         bool sessionSucceeded = false;
         EnsureSession(ready =>
@@ -175,7 +216,10 @@ public class LeaderboardManager : MonoBehaviour
 
         if (!sessionSucceeded)
         {
-            onComplete?.Invoke(false, null, "LootLocker guest session failed. Check the API key in LootLockerConfig.");
+            string message = string.IsNullOrEmpty(lastSessionError)
+                ? "LootLocker guest session failed. Check the API key and Guest platform in LootLocker."
+                : $"LootLocker guest session failed: {lastSessionError}";
+            onComplete?.Invoke(false, null, message);
             yield break;
         }
 
@@ -229,6 +273,7 @@ public class LeaderboardManager : MonoBehaviour
             sessionStarting = false;
             sessionReady = response.success;
             memberId = response.success ? response.player_id.ToString() : string.Empty;
+            lastSessionError = sessionReady ? string.Empty : GetError(response);
 
             if (sessionReady)
             {
@@ -248,6 +293,12 @@ public class LeaderboardManager : MonoBehaviour
                 callback?.Invoke(sessionReady);
             }
         });
+    }
+
+    private static bool HasLootLockerApiKey()
+    {
+        LootLockerConfig config = LootLockerConfig.Get();
+        return config != null && !string.IsNullOrWhiteSpace(config.apiKey);
     }
 
     private string EnsureGuestIdentifier()
