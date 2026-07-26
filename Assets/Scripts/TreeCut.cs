@@ -8,7 +8,7 @@ public class TreeCut : Tool
     [SerializeField] int damagePerHit = 10;
 
     [Header("Scoring")]
-    [SerializeField] int pointsForCutting = 1;
+    [SerializeField] int pointsForCutting = 2;
 
     [Header("Cleanup Feedback")]
     [SerializeField] private bool useWaterCleanupFeedback = true;

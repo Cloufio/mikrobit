@@ -342,7 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeHealth: 30
   damagePerHit: 10
-  pointsForCutting: 1
+  pointsForCutting: 2
   healthBarSlider: {fileID: 0}
 --- !u!1 &4233856060870142679
 GameObject:

@@ -183,10 +183,23 @@ public class AchievementPageController : MonoBehaviour
 
             if (cardEffect != null && card != null)
             {
-                cardEffect.ConfigureDetails(card.Unlocked, card.Title, card.Requirement, card.FunFact);
+                cardEffect.ConfigureDetails(card.Unlocked, card.Title, card.Requirement, GetLocalizedFunFact(card));
                 cardEffect.enabled = card.Unlocked && card.Artwork != null;
             }
         }
+    }
+
+    private static string GetLocalizedFunFact(AchievementCardDefinition card)
+    {
+        foreach (MicroplasticComboTracker.ComboDefinition definition in MicroplasticComboTracker.AllDefinitions)
+        {
+            if (string.Equals(definition.id, card.Id, StringComparison.OrdinalIgnoreCase))
+            {
+                return definition.funFact;
+            }
+        }
+
+        return card.FunFact;
     }
 
     private void ApplyCardToSlot(Image[] layers, AchievementCardDefinition card)

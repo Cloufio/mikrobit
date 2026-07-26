@@ -358,7 +358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeHealth: 30
   damagePerHit: 10
-  pointsForCutting: 1
+  pointsForCutting: 2
   timeBonusOnCleanup: 2
   useWaterCleanupFeedback: 1
   cleanupSound: {fileID: 0}

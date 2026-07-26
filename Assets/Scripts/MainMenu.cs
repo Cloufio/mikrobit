@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [Header("Renamed Button Labels")]
-    [SerializeField] private Color labelCoverColor = new Color(0.83f, 0.42f, 0.28f, 1f);
-    [SerializeField] private Color labelColor = new Color(1f, 0.91f, 0.67f, 1f);
-    [SerializeField] private float renamedButtonFontSize = 27f;
+    [Header("Custom Button Artwork")]
+    [SerializeField] private Sprite customButtonFrame;
+    [SerializeField] private Sprite playButtonLabel;
+    [SerializeField] private Sprite achievementButtonLabel;
+    [SerializeField] private Sprite leaderboardButtonLabel;
+    [SerializeField] private Vector2 customButtonSize = new Vector2(520f, 170f);
+    [SerializeField] private Vector2 labelArtworkSize = new Vector2(400f, 218f);
 
     [Header("Player Name Widget")]
     [Tooltip("Optional. Leave empty to reuse the existing BoldPixels font in MainMenu.")]
@@ -26,8 +29,9 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
-        ConfigureRenamedButton("AchievementsButton", "Achievements");
-        ConfigureRenamedButton("LeaderboardsButton", "Leaderboards");
+        ConfigureCustomButton("PlayButton", playButtonLabel);
+        ConfigureCustomButton("AchievementsButton", achievementButtonLabel);
+        ConfigureCustomButton("LeaderboardsButton", leaderboardButtonLabel);
         ConfigurePlayerNameWidget();
     }
 
@@ -67,64 +71,68 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("LeaderboardScene");
     }
 
-    private void ConfigureRenamedButton(string buttonName, string label)
+    private void ConfigureCustomButton(string buttonName, Sprite labelSprite)
     {
         Transform buttonTransform = transform.Find(buttonName);
-        if (buttonTransform == null)
+        if (buttonTransform == null || customButtonFrame == null || labelSprite == null)
         {
-            Debug.LogWarning($"MainMenu could not find '{buttonName}'.", this);
+            Debug.LogWarning($"MainMenu could not configure custom artwork for '{buttonName}'.", this);
             return;
         }
 
         RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
-        TMP_Text labelText = buttonTransform.GetComponentInChildren<TMP_Text>(true);
-        if (buttonRect == null || labelText == null)
+        Image buttonImage = buttonTransform.GetComponent<Image>();
+        Button button = buttonTransform.GetComponent<Button>();
+        if (buttonRect == null || buttonImage == null || button == null)
         {
             Debug.LogWarning($"MainMenu button '{buttonName}' is missing its UI components.", this);
             return;
         }
 
-        Image coverImage = GetOrCreateLabelCover(buttonRect);
-        RectTransform coverRect = coverImage.rectTransform;
-        coverRect.anchorMin = new Vector2(0.5f, 0.5f);
-        coverRect.anchorMax = new Vector2(0.5f, 0.5f);
-        coverRect.pivot = new Vector2(0.5f, 0.5f);
-        coverRect.anchoredPosition = Vector2.zero;
-        coverRect.sizeDelta = new Vector2(buttonRect.sizeDelta.x - 32f, buttonRect.sizeDelta.y - 34f);
-        coverImage.color = labelCoverColor;
+        buttonRect.sizeDelta = customButtonSize;
+        buttonImage.sprite = customButtonFrame;
+        buttonImage.color = Color.white;
+        buttonImage.type = Image.Type.Simple;
+        buttonImage.preserveAspect = true;
+        button.targetGraphic = buttonImage;
 
-        labelText.gameObject.SetActive(true);
-        labelText.transform.SetAsLastSibling();
-        labelText.text = label;
-        labelText.fontSize = renamedButtonFontSize;
-        labelText.fontStyle = FontStyles.Bold;
-        labelText.color = labelColor;
-        labelText.alignment = TextAlignmentOptions.Center;
-        labelText.textWrappingMode = TextWrappingModes.NoWrap;
-        labelText.overflowMode = TextOverflowModes.Overflow;
-
-        RectTransform labelRect = labelText.rectTransform;
-        labelRect.anchorMin = Vector2.zero;
-        labelRect.anchorMax = Vector2.one;
-        labelRect.offsetMin = new Vector2(20f, 0f);
-        labelRect.offsetMax = new Vector2(-20f, 0f);
-    }
-
-    private static Image GetOrCreateLabelCover(RectTransform buttonRect)
-    {
-        Transform coverTransform = buttonRect.Find("Label Cover");
-        if (coverTransform != null)
+        Transform legacyCover = buttonTransform.Find("Label Cover");
+        if (legacyCover != null)
         {
-            return coverTransform.GetComponent<Image>();
+            legacyCover.gameObject.SetActive(false);
         }
 
-        GameObject coverObject = new GameObject("Label Cover", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-        coverObject.transform.SetParent(buttonRect, false);
-        coverObject.transform.SetAsFirstSibling();
+        foreach (TMP_Text legacyText in buttonTransform.GetComponentsInChildren<TMP_Text>(true))
+        {
+            legacyText.gameObject.SetActive(false);
+        }
 
-        Image coverImage = coverObject.GetComponent<Image>();
-        coverImage.raycastTarget = false;
-        return coverImage;
+        Transform existingLabel = buttonTransform.Find("Artwork Label");
+        GameObject labelObject;
+        if (existingLabel != null)
+        {
+            labelObject = existingLabel.gameObject;
+        }
+        else
+        {
+            labelObject = new GameObject("Artwork Label", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            labelObject.transform.SetParent(buttonRect, false);
+        }
+
+        Image labelImage = labelObject.GetComponent<Image>();
+        labelImage.sprite = labelSprite;
+        labelImage.color = Color.white;
+        labelImage.type = Image.Type.Simple;
+        labelImage.preserveAspect = true;
+        labelImage.raycastTarget = false;
+
+        RectTransform labelRect = labelImage.rectTransform;
+        labelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        labelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        labelRect.pivot = new Vector2(0.5f, 0.5f);
+        labelRect.sizeDelta = labelArtworkSize;
+        labelRect.anchoredPosition = Vector2.zero;
+        labelRect.SetAsLastSibling();
     }
 
     private void ConfigurePlayerNameWidget()

@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 15212859}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0, y: 3.21, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 2.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -639,7 +639,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -201}
+  m_AnchoredPosition: {x: 0, y: -3}
   m_SizeDelta: {x: 432, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &894198048
@@ -772,7 +772,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1}
+  m_AnchoredPosition: {x: 0, y: 232}
   m_SizeDelta: {x: 432, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &962971222
@@ -905,7 +905,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -412}
+  m_AnchoredPosition: {x: 0, y: -238}
   m_SizeDelta: {x: 432, y: 96}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1440824860
@@ -1642,6 +1642,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4fdeaf814de614287af53488701b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customButtonFrame: {fileID: -2939870748282980532, guid: 5ae64a8dcbaa64fe298f12b338c53657, type: 3}
+  playButtonLabel: {fileID: 21300000, guid: 32e37d92f28d463f9c010576fe49a292, type: 3}
+  achievementButtonLabel: {fileID: 21300000, guid: 73f639b225754eea98c322c02464b5e2, type: 3}
+  leaderboardButtonLabel: {fileID: 21300000, guid: 6555696188284513bd1c6000089f15ae, type: 3}
+  customButtonSize: {x: 520, y: 170}
+  labelArtworkSize: {x: 400, y: 218}
+  playerNameFont: {fileID: 0}
+  playerNamePanelColor: {r: 0.04, g: 0.12, b: 0.2, a: 0.94}
+  playerNameLabelColor: {r: 1, g: 0.68, b: 0.24, a: 1}
+  playerNameValueColor: {r: 0.95, g: 0.98, b: 1, a: 1}
+  playerNameWidgetPosition: {x: -42, y: -34}
+  playerNameWidgetSize: {x: 420, y: 100}
+  playerNameLabelFontSize: 24
+  playerNameValueFontSize: 34
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

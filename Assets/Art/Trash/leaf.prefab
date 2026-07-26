@@ -443,7 +443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   treeHealth: 30
   damagePerHit: 10
-  pointsForCutting: 1
+  pointsForCutting: 2
   healthBarSlider: {fileID: 8186587393290665685}
 --- !u!114 &8880020282359546843
 MonoBehaviour:
