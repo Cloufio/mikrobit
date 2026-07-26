@@ -16,6 +16,12 @@ public class ToolController : MonoBehaviour
         playermov = GetComponent<NewMonoBehaviourScript>();
     }
 
+    /// <summary>Uses the same reach calculation as the click interaction.</summary>
+    public bool IsWithinInteractionRange(Transform target)
+    {
+        return target != null && Vector2.Distance(transform.position, target.position) <= offsetDistance + pickupZone;
+    }
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -51,9 +57,7 @@ public class ToolController : MonoBehaviour
                 continue;
             }
 
-            Vector2 origin = transform.position;
-            float interactionRange = offsetDistance + pickupZone;
-            if (Vector2.Distance(origin, candidate.transform.position) > interactionRange)
+            if (!IsWithinInteractionRange(candidate.transform))
             {
                 continue;
             }

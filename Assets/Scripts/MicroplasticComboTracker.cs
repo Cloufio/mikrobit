@@ -115,9 +115,24 @@ public sealed class MicroplasticComboTracker : MonoBehaviour
 
     private static MicroplasticComboTracker instance;
     private readonly Dictionary<MaterialType, int> collectedMaterials = new();
+    private static readonly List<string> newlyUnlockedThisRun = new();
 
     public static event Action<ComboDefinition> ComboUnlocked;
     public static IReadOnlyList<ComboDefinition> AllDefinitions => Definitions;
+    /// <summary>Achievement IDs that became unlocked during the current playthrough only.</summary>
+    public static IReadOnlyList<string> NewlyUnlockedThisRun => newlyUnlockedThisRun;
+
+    /// <summary>Starts a fresh run without changing the player's permanent unlocks.</summary>
+    public static void BeginRun()
+    {
+        if (instance == null)
+        {
+            CreateRuntimeTracker();
+        }
+
+        newlyUnlockedThisRun.Clear();
+        instance.collectedMaterials.Clear();
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void CreateRuntimeTracker()
@@ -219,6 +234,7 @@ public sealed class MicroplasticComboTracker : MonoBehaviour
 
             PlayerPrefs.SetInt(UnlockKeyPrefix + definition.id, 1);
             PlayerPrefs.Save();
+            newlyUnlockedThisRun.Add(definition.id);
             ComboUnlocked?.Invoke(definition);
             Debug.Log($"Unlocked microplastic combo: {definition.title}");
         }

@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/FinalScoreScene.unity
     guid: 77bf62427d3294aa09349497c227c4af
   - enabled: 1
+    path: Assets/Scenes/CelebrateScene.unity
+    guid: 2511f0a1ee6a42a8a3f70602f8d0a1ea
+  - enabled: 1
     path: Assets/Scenes/BadEnding.unity
     guid: 2f213fbf7a6bd5a44bc3455d33d65ffd
   - enabled: 1

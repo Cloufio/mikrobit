@@ -11,7 +11,7 @@ public class GameEndManager : MonoBehaviour
 
     [Header("Score Endings")]
     [Tooltip("Scores at or above this value show the good ending before the final score.")]
-    public int goodEndingMinimumScore = 100;
+    public int goodEndingMinimumScore = 50;
     public string goodEndingSceneName = "GoodEnding";
     public string badEndingSceneName = "BadEnding";
 
@@ -28,6 +28,8 @@ public class GameEndManager : MonoBehaviour
 
     void Start()
     {
+        // The final-score screen should only celebrate achievements earned in this run.
+        MicroplasticComboTracker.BeginRun();
         scoreManagerInstance = ScoreManager.Instance;
 
         if (scoreManagerInstance == null)

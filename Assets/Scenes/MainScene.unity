@@ -260,8 +260,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_ComponentVersion: 2
   m_LightType: 4
   m_BlendStyleIndex: 0
@@ -5566,7 +5566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   finalScoreSceneName: FinalScoreScene
-  goodEndingMinimumScore: 100
+  goodEndingMinimumScore: 50
   goodEndingSceneName: GoodEnding
   badEndingSceneName: BadEnding
   fadePanel: {fileID: 274176636}
@@ -8035,6 +8035,7 @@ GameObject:
   - component: {fileID: 927823223}
   - component: {fileID: 927823230}
   - component: {fileID: 927823231}
+  - component: {fileID: 927823232}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -8351,6 +8352,28 @@ MonoBehaviour:
   textWorldScale: 2.4
   textFontSize: 2.6
   sortingOrder: 50
+--- !u!114 &927823232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927823222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16a33e5f4207437b88b721a47490ea98, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  leftClickSprite: {fileID: 21300000, guid: 7d7e18b915d84ea5b17c80db7594f9b5, type: 3}
+  promptFont: {fileID: 11400000, guid: 9a14a8a1184c5f14fbce3338ea4d7a35, type: 2}
+  promptText: untuk hancurin sampah
+  localOffset: {x: 0, y: 0.95, z: 0}
+  iconWorldWidth: 0.72
+  textWorldScale: 1.7
+  textFontSize: 2.1
+  iconTextGap: 0.16
+  sortingOrder: 50
+  scanInterval: 0.12
 --- !u!1 &933563597
 GameObject:
   m_ObjectHideFlags: 0
@@ -22653,6 +22676,7 @@ MonoBehaviour:
   boardedPlayerSprite: {fileID: 0}
   showBoardingPrompt: 1
   boardingPromptStyle:
+    font: {fileID: 11400000, guid: 9a14a8a1184c5f14fbce3338ea4d7a35, type: 2}
     beforeKeyText: Press
     keyText: E
     afterKeyText: to Ride Boat
@@ -22661,7 +22685,7 @@ MonoBehaviour:
     sortingOrder: 20
     bodyFontSize: 120
     keyFontSize: 140
-    bodyColor: {r: 0.020583197, g: 0, b: 0.3962264, a: 1}
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
     keyTextColor: {r: 1, g: 1, b: 1, a: 1}
     keycapSize: {x: 52, y: 50}
     keycapFill: {r: 0.02, g: 0.12, b: 0.18, a: 0.72}

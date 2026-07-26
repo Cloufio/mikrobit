@@ -14,6 +14,9 @@ public class BoatBoardingPrompt : MonoBehaviour
     [Serializable]
     public class Style
     {
+        [Header("Typography")]
+        public TMP_FontAsset font;
+
         [Header("Copy")]
         public string beforeKeyText = "Press";
         public string keyText = "E";
@@ -24,7 +27,6 @@ public class BoatBoardingPrompt : MonoBehaviour
         [Min(0.001f)] public float worldScale = 1f;
         [Min(0)] public int sortingOrder = 20;
 
-        [Header("Typography")]
         [Min(1)] public int bodyFontSize = 34;
         [Min(1)] public int keyFontSize = 32;
         public Color bodyColor = Color.white;
@@ -77,7 +79,7 @@ public class BoatBoardingPrompt : MonoBehaviour
 
     private void CreatePrompt()
     {
-        TMP_FontAsset bodyFont = TMP_Settings.defaultFontAsset;
+        TMP_FontAsset bodyFont = style.font != null ? style.font : TMP_Settings.defaultFontAsset;
         if (bodyFont == null)
         {
             Debug.LogWarning("Boat boarding prompt could not find a usable font.", this);

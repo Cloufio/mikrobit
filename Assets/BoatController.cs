@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class BoatController : MonoBehaviour
 {
+    /// <summary>True after the player has boarded at least once during this run.</summary>
+    public bool HasBoardedBoat => hasBoardedBoat;
+
     [Header("Boat Settings")]
     public float boatSpeed = 5f;
 
@@ -46,6 +49,7 @@ public class BoatController : MonoBehaviour
 
     private bool canBoard = false;
     private bool isRiding = false;
+    private bool hasBoardedBoat;
     private Rigidbody2D rb;
     private Vector2 movement;
     private float nextCrashPenaltyTime;
@@ -180,6 +184,7 @@ public class BoatController : MonoBehaviour
     private void BoardBoat()
     {
         isRiding = true;
+        hasBoardedBoat = true;
         RefreshBoardingPrompt();
         ResetBoatRotation();
         ScoreManager.Instance?.StartTimer();
