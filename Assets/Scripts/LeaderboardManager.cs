@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LootLocker;
 using LootLocker.Requests;
@@ -9,38 +10,64 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Keeps one LootLocker guest session alive between scenes and owns the menu
-/// overlays for choosing a display name and viewing the global leaderboard.
+/// Keeps one LootLocker guest session alive between scenes and owns the player
+/// identity flow. Player names are set on the LootLocker profile so the same
+/// name is used both when scores are submitted and when the board is read.
 /// </summary>
 [DisallowMultipleComponent]
 public class LeaderboardManager : MonoBehaviour
 {
     private const string GuestIdentifierKey = "Microbit.LootLocker.GuestIdentifier";
     private const string PlayerNameKey = "Microbit.PlayerName";
+    private const string PlayerNameNormalizedKey = "Microbit.PlayerNameNormalized";
     private const string MemberIdKey = "Microbit.LootLocker.MemberId";
     private const string PendingScoreKey = "Microbit.LootLocker.PendingScore";
 
     public static LeaderboardManager Instance { get; private set; }
+    public event Action<string> PlayerNameChanged;
+
+    public string CurrentPlayerName => GetDisplayName();
 
     [Header("LootLocker")]
     [Tooltip("LootLocker leaderboard key. The current Global_Leaderboard uses global_leaderboard.")]
     [SerializeField] private string leaderboardKey = "global_leaderboard";
     [SerializeField, Min(1)] private int leaderboardEntryCount = 10;
+    [SerializeField, Min(10)] private int usernameValidationEntryCount = 200;
     [SerializeField, Min(1f)] private float requestTimeoutSeconds = 12f;
 
-    [Header("Overlay Styling")]
+    [Header("Name Prompt Styling")]
+    [Tooltip("Optional. Leave empty to reuse the first TMP font in the active scene, normally BoldPixels.")]
+    [SerializeField] private TMP_FontAsset boldPixelsFont;
     [SerializeField] private Color dimColor = new(0.015f, 0.035f, 0.07f, 0.82f);
     [SerializeField] private Color panelColor = new(0.035f, 0.11f, 0.20f, 0.98f);
+    [SerializeField] private Color inputColor = new(0.08f, 0.19f, 0.30f, 1f);
     [SerializeField] private Color accentColor = new(1f, 0.66f, 0.22f, 1f);
     [SerializeField] private Color bodyColor = new(0.94f, 0.98f, 1f, 1f);
+    [SerializeField] private Color warningColor = new(1f, 0.48f, 0.35f, 1f);
+    [SerializeField] private Color placeholderColor = new(0.94f, 0.98f, 1f, 0.46f);
+    [SerializeField] private Color caretColor = new(0.94f, 0.98f, 1f, 1f);
+    [SerializeField, Min(1f)] private float usernameCaretWidth = 3f;
+
+    [Header("Name Prompt Layout")]
+    [SerializeField] private Vector2 usernamePromptSize = new(720f, 320f);
+    [SerializeField] private Vector2 usernameInputSize = new(548f, 76f);
+    [SerializeField, Min(1f)] private float usernameTitleFontSize = 42f;
+    [SerializeField, Min(1f)] private float usernameInputFontSize = 31f;
+    [SerializeField, Min(1f)] private float usernamePlaceholderFontSize = 24f;
+    [SerializeField, Range(0.1f, 4f)] private float usernameCaretBlinkRate = 0.85f;
 
     private readonly List<Action<bool>> waitingForSession = new();
     private bool sessionReady;
     private bool sessionStarting;
+    private bool usernameRequestInFlight;
     private string memberId;
     private string lastSessionError;
     private TMP_InputField usernameInput;
+    private TMP_Text usernameMessageText;
+    private Button usernameConfirmButton;
     private GameObject activeOverlay;
+    private RectTransform usernameVisualCaret;
+    private TMP_Text usernameInputText;
 
     public static LeaderboardManager EnsureInstance()
     {
@@ -49,7 +76,7 @@ public class LeaderboardManager : MonoBehaviour
             return Instance;
         }
 
-        LeaderboardManager existing = FindObjectOfType<LeaderboardManager>();
+        LeaderboardManager existing = FindFirstObjectByType<LeaderboardManager>();
         if (existing != null)
         {
             return existing;
@@ -73,25 +100,38 @@ public class LeaderboardManager : MonoBehaviour
         RetryPendingScore();
     }
 
+    private void Update()
+    {
+        UpdateUsernameCaret();
+    }
+
     public void PromptForPlayerName(UnityAction onConfirmed)
+    {
+        PromptForPlayerName(onConfirmed, false);
+    }
+
+    /// <summary>Opens the same profile-name screen for starting or editing a run.</summary>
+    public void PromptForPlayerName(UnityAction onConfirmed, bool editing)
     {
         CloseOverlay();
 
-        GameObject panel = CreateOverlay("Player Name", new Vector2(680f, 390f));
-        AddText(panel.transform, "PLAYER NAME", 42f, accentColor, new Vector2(0f, 106f), new Vector2(560f, 58f));
-        AddText(panel.transform, "Choose the name shown on the global leaderboard.", 23f, bodyColor, new Vector2(0f, 52f), new Vector2(560f, 44f));
+        GameObject panel = CreateOverlay(editing ? "Edit Username" : "Username", usernamePromptSize);
+        AddText(panel.transform, editing ? "Edit Username" : "Username", usernameTitleFontSize, accentColor, new Vector2(0f, 88f), new Vector2(620f, 54f));
 
-        usernameInput = AddInput(panel.transform, new Vector2(0f, -12f), new Vector2(520f, 76f));
+        usernameInput = AddInput(panel.transform, new Vector2(0f, 7f), usernameInputSize);
         usernameInput.text = PlayerPrefs.GetString(PlayerNameKey, string.Empty);
         usernameInput.characterLimit = 16;
         usernameInput.onValidateInput += ValidatePlayerName;
+        usernameInput.caretBlinkRate = usernameCaretBlinkRate;
+        usernameInput.customCaretColor = true;
+        usernameInput.caretColor = caretColor;
 
-        Button startButton = AddButton(panel.transform, "START CLEANUP", new Vector2(0f, -116f), new Vector2(310f, 64f));
-        startButton.onClick.AddListener(() => ConfirmPlayerName(onConfirmed));
+        usernameMessageText = AddText(panel.transform, string.Empty, 18f, warningColor, new Vector2(0f, -53f), new Vector2(590f, 30f));
+        usernameConfirmButton = AddButton(panel.transform, "Save", new Vector2(0f, -107f), new Vector2(260f, 58f));
+        usernameConfirmButton.onClick.AddListener(() => ConfirmPlayerName(onConfirmed));
         usernameInput.onSubmit.AddListener(_ => ConfirmPlayerName(onConfirmed));
 
-        usernameInput.Select();
-        usernameInput.ActivateInputField();
+        StartCoroutine(FocusUsernameInputNextFrame(usernameInput));
     }
 
     public void ShowGlobalLeaderboard()
@@ -100,11 +140,7 @@ public class LeaderboardManager : MonoBehaviour
         SceneManager.LoadScene("LeaderboardScene");
     }
 
-    /// <summary>
-    /// Reads the configured LootLocker leaderboard for the dedicated
-    /// LeaderboardScene. The callback is guaranteed to finish, even when a
-    /// network request never returns.
-    /// </summary>
+    /// <summary>Reads the configured LootLocker leaderboard for LeaderboardScene.</summary>
     public void RequestLeaderboard(Action<bool, LootLockerLeaderboardMember[], string> onComplete)
     {
         RetryPendingScore();
@@ -118,9 +154,8 @@ public class LeaderboardManager : MonoBehaviour
             return;
         }
 
-        // Keep the score until LootLocker explicitly confirms it. This lets a
-        // run survive a scene transition, a slow guest session, or a brief
-        // connection failure without silently disappearing from the board.
+        // Keep the score until LootLocker explicitly confirms it. A scene
+        // transition or brief connection failure cannot silently lose a run.
         PlayerPrefs.SetInt(PendingScoreKey, score);
         PlayerPrefs.Save();
         SubmitPendingScore();
@@ -150,10 +185,7 @@ public class LeaderboardManager : MonoBehaviour
                 return;
             }
 
-            string displayName = GetDisplayName();
-            // This is a Player leaderboard. LootLocker uses the active guest
-            // session automatically, so member_id must remain blank.
-            LootLockerSDKManager.SubmitScore(string.Empty, score, leaderboardKey, displayName, response =>
+            LootLockerSDKManager.SubmitScore(string.Empty, score, leaderboardKey, GetDisplayName(), response =>
             {
                 if (!response.success)
                 {
@@ -170,23 +202,118 @@ public class LeaderboardManager : MonoBehaviour
 
     private void ConfirmPlayerName(UnityAction onConfirmed)
     {
-        string name = SanitizeName(usernameInput != null ? usernameInput.text : string.Empty);
-        if (string.IsNullOrWhiteSpace(name))
+        if (usernameRequestInFlight)
         {
             return;
         }
 
-        PlayerPrefs.SetString(PlayerNameKey, name);
-        PlayerPrefs.Save();
-        CloseOverlay();
+        string candidate = SanitizeName(usernameInput != null ? usernameInput.text : string.Empty);
+        if (candidate.Length < 3)
+        {
+            SetNameMessage("USE AT LEAST 3 CHARACTERS.");
+            return;
+        }
 
-        // Starting the game must not depend on the network responding. The
-        // session can finish in the background before the final score is sent.
-        EnsureSession(null);
+        if (candidate.IndexOf("player", StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+            SetNameMessage("CHOOSE A NAME WITHOUT 'PLAYER'.");
+            return;
+        }
+
+        if (!HasLootLockerApiKey())
+        {
+            SetNameMessage("LOOTLOCKER API KEY IS MISSING.");
+            return;
+        }
+
+        usernameRequestInFlight = true;
+        SetNamePromptBusy(true);
+        SetNameMessage("CHECKING NAME...");
+        EnsureSession(ready =>
+        {
+            if (!ready)
+            {
+                FailNameRequest("COULD NOT CONNECT. TRY AGAIN.");
+                return;
+            }
+
+            StartCoroutine(ValidateAndSavePlayerName(candidate, onConfirmed));
+        });
+    }
+
+    private IEnumerator ValidateAndSavePlayerName(string candidate, UnityAction onConfirmed)
+    {
+        string normalizedCandidate = NormalizeName(candidate);
+        string savedNormalizedName = PlayerPrefs.GetString(PlayerNameNormalizedKey, NormalizeName(PlayerPrefs.GetString(PlayerNameKey, string.Empty)));
+
+        bool lookupFinished = false;
+        PlayerNameLookupResponse lookupResponse = null;
+        LootLockerSDKManager.LookupPlayerNamesByPlayerNames(new[] { candidate }, response =>
+        {
+            lookupResponse = response;
+            lookupFinished = true;
+        });
+
+        yield return WaitForRequest(() => lookupFinished);
+        if (!lookupFinished || lookupResponse == null || !lookupResponse.success)
+        {
+            FailNameRequest("NAME CHECK FAILED. TRY AGAIN.");
+            yield break;
+        }
+
+        if (ContainsClaimedName(lookupResponse.players, normalizedCandidate, savedNormalizedName))
+        {
+            FailNameRequest("THAT NAME IS ALREADY TAKEN.");
+            yield break;
+        }
+
+        // LootLocker name lookups protect exact matches. The score-list pass
+        // also catches different capitalisation already visible on the board.
+        bool scoreListFinished = false;
+        LootLockerGetScoreListResponse scoreListResponse = null;
+        LootLockerSDKManager.GetScoreList(leaderboardKey, usernameValidationEntryCount, response =>
+        {
+            scoreListResponse = response;
+            scoreListFinished = true;
+        });
+
+        yield return WaitForRequest(() => scoreListFinished);
+        if (!scoreListFinished || scoreListResponse == null || !scoreListResponse.success)
+        {
+            FailNameRequest("COULD NOT VERIFY NAME. TRY AGAIN.");
+            yield break;
+        }
+
+        if (LeaderboardContainsName(scoreListResponse.items, normalizedCandidate, savedNormalizedName))
+        {
+            FailNameRequest("THAT NAME IS ALREADY TAKEN.");
+            yield break;
+        }
+
+        bool setNameFinished = false;
+        PlayerNameResponse setNameResponse = null;
+        LootLockerSDKManager.SetPlayerName(candidate, response =>
+        {
+            setNameResponse = response;
+            setNameFinished = true;
+        });
+
+        yield return WaitForRequest(() => setNameFinished);
+        if (!setNameFinished || setNameResponse == null || !setNameResponse.success)
+        {
+            FailNameRequest("COULD NOT SAVE NAME. TRY AGAIN.");
+            yield break;
+        }
+
+        PlayerPrefs.SetString(PlayerNameKey, candidate);
+        PlayerPrefs.SetString(PlayerNameNormalizedKey, normalizedCandidate);
+        PlayerPrefs.Save();
+        PlayerNameChanged?.Invoke(candidate);
+        CloseOverlay();
         onConfirmed?.Invoke();
     }
 
-    private System.Collections.IEnumerator RequestLeaderboardRoutine(Action<bool, LootLockerLeaderboardMember[], string> onComplete)
+    private IEnumerator RequestLeaderboardRoutine(Action<bool, LootLockerLeaderboardMember[], string> onComplete)
     {
         if (!HasLootLockerApiKey())
         {
@@ -202,12 +329,7 @@ public class LeaderboardManager : MonoBehaviour
             sessionFinished = true;
         });
 
-        float timeoutAt = Time.realtimeSinceStartup + requestTimeoutSeconds;
-        while (!sessionFinished && Time.realtimeSinceStartup < timeoutAt)
-        {
-            yield return null;
-        }
-
+        yield return WaitForRequest(() => sessionFinished);
         if (!sessionFinished)
         {
             onComplete?.Invoke(false, null, "Could not reach LootLocker. Check your connection and LootLocker API key.");
@@ -231,12 +353,7 @@ public class LeaderboardManager : MonoBehaviour
             scoresFinished = true;
         });
 
-        timeoutAt = Time.realtimeSinceStartup + requestTimeoutSeconds;
-        while (!scoresFinished && Time.realtimeSinceStartup < timeoutAt)
-        {
-            yield return null;
-        }
-
+        yield return WaitForRequest(() => scoresFinished);
         if (!scoresFinished)
         {
             onComplete?.Invoke(false, null, "The leaderboard request timed out. Check your connection and leaderboard key.");
@@ -251,6 +368,15 @@ public class LeaderboardManager : MonoBehaviour
         }
 
         onComplete?.Invoke(true, scoreResponse.items ?? Array.Empty<LootLockerLeaderboardMember>(), string.Empty);
+    }
+
+    private IEnumerator WaitForRequest(Func<bool> hasFinished)
+    {
+        float timeoutAt = Time.realtimeSinceStartup + requestTimeoutSeconds;
+        while (!hasFinished() && Time.realtimeSinceStartup < timeoutAt)
+        {
+            yield return null;
+        }
     }
 
     private void EnsureSession(Action<bool> onComplete)
@@ -280,8 +406,7 @@ public class LeaderboardManager : MonoBehaviour
                 PlayerPrefs.SetString(MemberIdKey, memberId);
                 PlayerPrefs.Save();
             }
-
-            if (!sessionReady)
+            else
             {
                 Debug.LogWarning($"LootLocker guest session failed: {GetError(response)}");
             }
@@ -317,17 +442,20 @@ public class LeaderboardManager : MonoBehaviour
 
     private GameObject CreateOverlay(string name, Vector2 panelSize)
     {
-        Canvas canvas = FindObjectOfType<Canvas>();
+        Canvas canvas = FindOverlayCanvas();
         if (canvas == null)
         {
             GameObject canvasObject = new("Runtime UI Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             canvas = canvasObject.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvasObject.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            canvasObject.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1920f, 1080f);
+            CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
+            scaler.matchWidthOrHeight = 0.5f;
         }
 
-        GameObject overlay = CreateUiObject(name, canvas.transform);
+        GameObject overlay = CreateUiObject(name, FixedAspectRatioCanvas.GetContentRoot(canvas));
+        overlay.transform.SetAsLastSibling();
         RectTransform overlayRect = overlay.GetComponent<RectTransform>();
         Stretch(overlayRect);
         Image dimmer = overlay.AddComponent<Image>();
@@ -339,17 +467,44 @@ public class LeaderboardManager : MonoBehaviour
         panelRect.pivot = new Vector2(0.5f, 0.5f);
         panelRect.anchoredPosition = Vector2.zero;
         panelRect.sizeDelta = panelSize;
-        Image panelImage = panel.AddComponent<Image>();
-        panelImage.color = panelColor;
+        panel.AddComponent<Image>().color = panelColor;
+
+        GameObject accent = CreateUiObject("Panel Accent", panel.transform);
+        RectTransform accentRect = accent.GetComponent<RectTransform>();
+        accentRect.anchorMin = new Vector2(0f, 1f);
+        accentRect.anchorMax = new Vector2(1f, 1f);
+        accentRect.pivot = new Vector2(0.5f, 1f);
+        accentRect.offsetMin = new Vector2(0f, -10f);
+        accentRect.offsetMax = Vector2.zero;
+        accent.AddComponent<Image>().color = accentColor;
 
         activeOverlay = overlay;
         return panel;
+    }
+
+    private Canvas FindOverlayCanvas()
+    {
+        foreach (Canvas canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            if (canvas.isRootCanvas && canvas.renderMode != RenderMode.WorldSpace)
+            {
+                return canvas;
+            }
+        }
+
+        return null;
     }
 
     private TMP_Text AddText(Transform parent, string value, float fontSize, Color color, Vector2 position, Vector2 size)
     {
         GameObject textObject = CreateUiObject("Text", parent);
         TMP_Text text = textObject.AddComponent<TextMeshProUGUI>();
+        TMP_FontAsset font = ResolveOverlayFont();
+        if (font != null)
+        {
+            text.font = font;
+        }
+
         text.text = value;
         text.fontSize = fontSize;
         text.color = color;
@@ -364,6 +519,25 @@ public class LeaderboardManager : MonoBehaviour
         return text;
     }
 
+    private TMP_FontAsset ResolveOverlayFont()
+    {
+        if (boldPixelsFont != null)
+        {
+            return boldPixelsFont;
+        }
+
+        TMP_Text[] texts = FindObjectsByType<TMP_Text>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (TMP_Text text in texts)
+        {
+            if (text != null && text.font != null)
+            {
+                return text.font;
+            }
+        }
+
+        return null;
+    }
+
     private TMP_InputField AddInput(Transform parent, Vector2 position, Vector2 size)
     {
         GameObject inputObject = CreateUiObject("Username Input", parent);
@@ -372,18 +546,89 @@ public class LeaderboardManager : MonoBehaviour
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.anchoredPosition = position;
         rect.sizeDelta = size;
-        inputObject.AddComponent<Image>().color = new Color(0.08f, 0.19f, 0.30f, 1f);
+        inputObject.AddComponent<Image>().color = inputColor;
 
         TMP_InputField input = inputObject.AddComponent<TMP_InputField>();
-        TMP_Text text = AddText(inputObject.transform, string.Empty, 31f, bodyColor, Vector2.zero, size - new Vector2(28f, 0f));
+        TMP_Text text = AddText(inputObject.transform, string.Empty, usernameInputFontSize, bodyColor, Vector2.zero, size - new Vector2(28f, 0f));
         text.alignment = TextAlignmentOptions.MidlineLeft;
-        TMP_Text placeholder = AddText(inputObject.transform, "ENTER YOUR NAME", 26f, new Color(bodyColor.r, bodyColor.g, bodyColor.b, 0.46f), Vector2.zero, size - new Vector2(28f, 0f));
+        TMP_Text placeholder = AddText(inputObject.transform, "Enter Your Name", usernamePlaceholderFontSize, placeholderColor, Vector2.zero, size - new Vector2(28f, 0f));
         placeholder.alignment = TextAlignmentOptions.MidlineLeft;
         input.textComponent = text;
         input.placeholder = placeholder;
         input.lineType = TMP_InputField.LineType.SingleLine;
         input.contentType = TMP_InputField.ContentType.Alphanumeric;
+        input.caretBlinkRate = usernameCaretBlinkRate;
+        input.customCaretColor = true;
+        input.caretColor = caretColor;
+
+        GameObject caretObject = CreateUiObject("Visible Caret", inputObject.transform);
+        Image caretImage = caretObject.AddComponent<Image>();
+        caretImage.color = caretColor;
+        caretImage.raycastTarget = false;
+
+        RectTransform caretRect = caretObject.GetComponent<RectTransform>();
+        caretRect.anchorMin = caretRect.anchorMax = new Vector2(0.5f, 0.5f);
+        caretRect.pivot = new Vector2(0.5f, 0.5f);
+        caretRect.sizeDelta = new Vector2(usernameCaretWidth, Mathf.Max(12f, text.rectTransform.rect.height * 0.62f));
+        caretObject.SetActive(false);
+
+        usernameInputText = text;
+        usernameVisualCaret = caretRect;
         return input;
+    }
+
+    private void UpdateUsernameCaret()
+    {
+        if (usernameVisualCaret == null || usernameInput == null || usernameInputText == null)
+        {
+            return;
+        }
+
+        bool isActive = usernameInput.isFocused && usernameInput.interactable;
+        if (!isActive)
+        {
+            if (usernameVisualCaret.gameObject.activeSelf)
+            {
+                usernameVisualCaret.gameObject.SetActive(false);
+            }
+
+            return;
+        }
+
+        float blinkRate = Mathf.Max(0.1f, usernameCaretBlinkRate);
+        bool isVisible = Mathf.Repeat(Time.unscaledTime * blinkRate, 1f) < 0.5f;
+        if (usernameVisualCaret.gameObject.activeSelf != isVisible)
+        {
+            usernameVisualCaret.gameObject.SetActive(isVisible);
+        }
+
+        if (!isVisible)
+        {
+            return;
+        }
+
+        RectTransform textRect = usernameInputText.rectTransform;
+        float horizontalPadding = 6f;
+        float textWidth = usernameInputText.GetPreferredValues(usernameInput.text).x;
+        float maximumWidth = Mathf.Max(0f, textRect.rect.width - horizontalPadding * 2f);
+        float caretX = -textRect.rect.width * 0.5f + horizontalPadding + Mathf.Min(textWidth, maximumWidth);
+        usernameVisualCaret.anchoredPosition = new Vector2(caretX, 0f);
+    }
+
+    private IEnumerator FocusUsernameInputNextFrame(TMP_InputField input)
+    {
+        // The panel is created during a button event. Waiting one frame stops Unity's
+        // event system from replacing the new input field's selection immediately.
+        yield return null;
+
+        if (input == null || input != usernameInput || !input.gameObject.activeInHierarchy)
+        {
+            yield break;
+        }
+
+        Canvas.ForceUpdateCanvases();
+        input.Select();
+        input.ActivateInputField();
     }
 
     private Button AddButton(Transform parent, string label, Vector2 position, Vector2 size)
@@ -424,14 +669,87 @@ public class LeaderboardManager : MonoBehaviour
         rect.offsetMax = Vector2.zero;
     }
 
+    private void SetNamePromptBusy(bool busy)
+    {
+        if (usernameInput != null)
+        {
+            usernameInput.interactable = !busy;
+        }
+
+        if (usernameConfirmButton != null)
+        {
+            usernameConfirmButton.interactable = !busy;
+        }
+    }
+
+    private void SetNameMessage(string message)
+    {
+        if (usernameMessageText != null)
+        {
+            usernameMessageText.text = message;
+        }
+    }
+
+    private void FailNameRequest(string message)
+    {
+        usernameRequestInFlight = false;
+        SetNamePromptBusy(false);
+        SetNameMessage(message);
+    }
+
     private void CloseOverlay()
     {
         if (activeOverlay != null)
         {
             Destroy(activeOverlay);
-            activeOverlay = null;
-            usernameInput = null;
         }
+
+        activeOverlay = null;
+        usernameInput = null;
+        usernameInputText = null;
+        usernameVisualCaret = null;
+        usernameMessageText = null;
+        usernameConfirmButton = null;
+        usernameRequestInFlight = false;
+    }
+
+    private static bool ContainsClaimedName(PlayerNameWithIDs[] players, string candidate, string savedName)
+    {
+        if (players == null || candidate == savedName)
+        {
+            return false;
+        }
+
+        foreach (PlayerNameWithIDs player in players)
+        {
+            if (player != null && NormalizeName(player.name) == candidate)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool LeaderboardContainsName(LootLockerLeaderboardMember[] entries, string candidate, string savedName)
+    {
+        if (entries == null || candidate == savedName)
+        {
+            return false;
+        }
+
+        foreach (LootLockerLeaderboardMember entry in entries)
+        {
+            string name = entry?.player != null && !string.IsNullOrWhiteSpace(entry.player.name)
+                ? entry.player.name
+                : entry?.metadata;
+            if (NormalizeName(name) == candidate)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static char ValidatePlayerName(string text, int charIndex, char addedChar)
@@ -444,6 +762,11 @@ public class LeaderboardManager : MonoBehaviour
         return string.IsNullOrWhiteSpace(rawName) ? string.Empty : rawName.Trim();
     }
 
+    private static string NormalizeName(string rawName)
+    {
+        return SanitizeName(rawName).ToLowerInvariant();
+    }
+
     private static string GetError(LootLockerResponse response)
     {
         return response?.errorData?.message ?? "Unknown error";
@@ -452,6 +775,6 @@ public class LeaderboardManager : MonoBehaviour
     private static string GetDisplayName()
     {
         string savedName = PlayerPrefs.GetString(PlayerNameKey, string.Empty);
-        return string.IsNullOrWhiteSpace(savedName) ? "OCEAN CLEANER" : savedName;
+        return string.IsNullOrWhiteSpace(savedName) ? "Username" : savedName;
     }
 }

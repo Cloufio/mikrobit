@@ -89,11 +89,16 @@ public class FinalScoreController : MonoBehaviour
         TMP_Text funFact = FindText("FunFactText");
         Image trashImage = FindImage("TrashImage");
 
-        ConfigureText(congrats, "CONGRATS", 48f, bodyColor, TextAlignmentOptions.Center);
-        ConfigureText(currentScore, runScore.ToString(), 96f, titleColor, TextAlignmentOptions.Center);
-        ConfigureText(bestScore, "BEST SCORE : " + bestScoreValue, 32f, bodyColor, TextAlignmentOptions.Center);
+        ConfigureText(congrats, "CONGRATS", 64f, bodyColor, TextAlignmentOptions.Center);
+        ConfigureText(currentScore, runScore.ToString(), 128f, titleColor, TextAlignmentOptions.Center);
+        ConfigureText(bestScore, "BEST SCORE : " + bestScoreValue, 48f, bodyColor, TextAlignmentOptions.Center);
         ConfigureText(mostPicked, "MOST PICKED TRASH\n" + trashName + " - " + tiresCleaned + " PIECES", 32f, titleColor, TextAlignmentOptions.Center);
-        ConfigureText(funFact, "FUN FACT\n" + tireFunFact + "\n\nTIRE CLEANUP +" + tiresCleaned, 24f, bodyColor, TextAlignmentOptions.TopLeft);
+        ConfigureText(
+            funFact,
+            "<size=64>FUN FACT</size>\n" + tireFunFact + "\n\nTIRE CLEANUP +" + tiresCleaned,
+            48f,
+            bodyColor,
+            TextAlignmentOptions.TopLeft);
 
         if (funFact != null)
             funFact.enableWordWrapping = true;
@@ -127,6 +132,7 @@ public class FinalScoreController : MonoBehaviour
         if (label == null)
             return;
 
+        label.richText = true;
         label.text = value;
         label.fontSize = fontSize;
         label.enableAutoSizing = false;
