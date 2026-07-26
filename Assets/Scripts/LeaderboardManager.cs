@@ -27,11 +27,12 @@ public class LeaderboardManager : MonoBehaviour
     public event Action<string> PlayerNameChanged;
 
     public string CurrentPlayerName => GetDisplayName();
+    public bool HasSavedPlayerName => SanitizeName(PlayerPrefs.GetString(PlayerNameKey, string.Empty)).Length >= 3;
 
     [Header("LootLocker")]
     [Tooltip("LootLocker leaderboard key. The current Global_Leaderboard uses global_leaderboard.")]
     [SerializeField] private string leaderboardKey = "global_leaderboard";
-    [SerializeField, Min(1)] private int leaderboardEntryCount = 10;
+    [SerializeField, Min(1)] private int leaderboardEntryCount = 100;
     [SerializeField, Min(10)] private int usernameValidationEntryCount = 200;
     [SerializeField, Min(1f)] private float requestTimeoutSeconds = 12f;
 
@@ -145,6 +146,16 @@ public class LeaderboardManager : MonoBehaviour
     {
         RetryPendingScore();
         StartCoroutine(RequestLeaderboardRoutine(onComplete));
+    }
+
+    /// <summary>
+    /// Reads the active user's rank directly from LootLocker. This remains
+    /// accurate even when their entry is outside the leaderboard page loaded
+    /// by the UI.
+    /// </summary>
+    public void RequestCurrentPlayerRank(Action<bool, int, int, string> onComplete)
+    {
+        StartCoroutine(RequestCurrentPlayerRankRoutine(onComplete));
     }
 
     public void SubmitCompletedScore(int score)
@@ -368,6 +379,48 @@ public class LeaderboardManager : MonoBehaviour
         }
 
         onComplete?.Invoke(true, scoreResponse.items ?? Array.Empty<LootLockerLeaderboardMember>(), string.Empty);
+    }
+
+    private IEnumerator RequestCurrentPlayerRankRoutine(Action<bool, int, int, string> onComplete)
+    {
+        if (!HasLootLockerApiKey())
+        {
+            onComplete?.Invoke(false, 0, 0, "LootLocker API key is missing.");
+            yield break;
+        }
+
+        bool sessionFinished = false;
+        bool sessionSucceeded = false;
+        EnsureSession(ready =>
+        {
+            sessionSucceeded = ready;
+            sessionFinished = true;
+        });
+
+        yield return WaitForRequest(() => sessionFinished);
+        if (!sessionFinished || !sessionSucceeded || string.IsNullOrWhiteSpace(memberId))
+        {
+            onComplete?.Invoke(false, 0, 0, "Could not identify the current player.");
+            yield break;
+        }
+
+        bool requestFinished = false;
+        LootLockerGetMemberRankResponse rankResponse = null;
+        LootLockerSDKManager.GetMemberRank(leaderboardKey, memberId, response =>
+        {
+            rankResponse = response;
+            requestFinished = true;
+        });
+
+        yield return WaitForRequest(() => requestFinished);
+        if (!requestFinished || rankResponse == null || !rankResponse.success)
+        {
+            string error = rankResponse == null ? "No response from LootLocker." : GetError(rankResponse);
+            onComplete?.Invoke(false, 0, 0, error);
+            yield break;
+        }
+
+        onComplete?.Invoke(rankResponse.rank > 0, rankResponse.rank, rankResponse.score, string.Empty);
     }
 
     private IEnumerator WaitForRequest(Func<bool> hasFinished)

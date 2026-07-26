@@ -284,7 +284,7 @@ public sealed class AchievementUnlockPresentation : MonoBehaviour
         funFactText = CreateText("Fun Fact Text", rightPanel.transform, string.Empty, 48, Color.white);
         ApplyWhitePixelStyle(funFactText, boldPixelsFont);
         funFactText.fontStyle = FontStyles.Normal;
-        funFactText.alignment = TextAlignmentOptions.Center;
+        funFactText.alignment = TextAlignmentOptions.Top;
         funFactText.enableWordWrapping = true;
         // Indonesian facts vary greatly in length. Start at 48, then shrink only
         // as much as needed to keep every line inside the panel.

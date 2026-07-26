@@ -19,8 +19,17 @@ public class BadEndingSceneController : MonoBehaviour
     [Tooltip("Scene loaded after this ending finishes.")]
     public string nextSceneName = "FinalScoreScene";
 
+    [Header("Cinematic Lock")]
+    [Tooltip("Disables player movement and tool input while this ending plays.")]
+    public bool lockPlayerControls = true;
+
     void Start()
     {
+        if (lockPlayerControls)
+        {
+            LockPlayerControls();
+        }
+
         if (fadePanel == null)
         {
             Debug.LogError("BadEndingSceneController: Fade Panel is not assigned in the Inspector!");
@@ -39,6 +48,38 @@ public class BadEndingSceneController : MonoBehaviour
 
         // Start the sequence
         StartCoroutine(SceneSequenceCoroutine());
+    }
+
+    private static void LockPlayerControls()
+    {
+        foreach (NewMonoBehaviourScript playerController in
+                 FindObjectsByType<NewMonoBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            if (playerController == null)
+            {
+                continue;
+            }
+
+            Rigidbody2D body = playerController.rb != null
+                ? playerController.rb
+                : playerController.GetComponent<Rigidbody2D>();
+            if (body != null)
+            {
+                body.linearVelocity = Vector2.zero;
+                body.angularVelocity = 0f;
+            }
+
+            playerController.enabled = false;
+        }
+
+        foreach (ToolController toolController in
+                 FindObjectsByType<ToolController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            if (toolController != null)
+            {
+                toolController.enabled = false;
+            }
+        }
     }
 
     IEnumerator SceneSequenceCoroutine()

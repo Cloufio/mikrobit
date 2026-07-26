@@ -7,6 +7,7 @@ public class SceneOpeningCamera : MonoBehaviour
     [Header("Focus Targets")]
     [SerializeField] private Transform boatFocus;
     [SerializeField] private Transform playerFocus;
+    [SerializeField] private PlayerMovementTutorialPrompt movementTutorialPrompt;
 
     [Header("Timing")]
     [SerializeField, Min(0f)] private float fadeInDelay = 1.5f;
@@ -69,6 +70,8 @@ public class SceneOpeningCamera : MonoBehaviour
         {
             cinemachineBrain.enabled = true;
         }
+
+        movementTutorialPrompt?.Show();
     }
 
     private Vector3 GetFocusPosition(Transform focusTarget)

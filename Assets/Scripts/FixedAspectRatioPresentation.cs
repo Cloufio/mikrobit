@@ -59,7 +59,8 @@ public sealed class FixedAspectRatioPresentation : MonoBehaviour
     {
         foreach (Camera camera in Camera.allCameras)
         {
-            if (camera != null && camera.cameraType == CameraType.Game && camera.targetTexture == null &&
+            if (camera != null && camera.GetComponent<LetterboxBackgroundCamera>() == null &&
+                camera.cameraType == CameraType.Game && camera.targetTexture == null &&
                 camera.GetComponent<FixedAspectRatioCamera>() == null)
             {
                 camera.gameObject.AddComponent<FixedAspectRatioCamera>();
@@ -80,6 +81,7 @@ public sealed class FixedAspectRatioPresentation : MonoBehaviour
 public sealed class FixedAspectRatioCanvas : MonoBehaviour
 {
     private const string LegacyViewportName = "16:9 Viewport";
+    private static readonly Vector2 ReferenceResolution = new(1920f, 1080f);
 
     public static Transform GetContentRoot(Canvas canvas)
     {
@@ -114,14 +116,31 @@ public sealed class FixedAspectRatioCanvas : MonoBehaviour
 
         RestoreLegacyViewportIfNeeded();
 
+        CanvasScaler scaler = GetComponent<CanvasScaler>();
+        if (scaler != null)
+        {
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = ReferenceResolution;
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            scaler.matchWidthOrHeight = 0.5f;
+        }
+
+        // Ending captions, black cinematic bars, and the fade panel must be
+        // drawn above the whole display. All other UI stays camera-bound so it
+        // remains inside the fixed 16:9 gameplay frame.
+        if (GetComponent<EndingCinematicOverlayCanvas>() != null)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.worldCamera = null;
+            return;
+        }
+
         Camera uiCamera = FindGameCamera();
         if (uiCamera == null)
         {
             return;
         }
 
-        // Screen Space - Camera uses the camera's letterboxed pixel rect. This
-        // keeps the existing Canvas hierarchy and anchored layout intact.
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = uiCamera;
         canvas.planeDistance = Mathf.Max(uiCamera.nearClipPlane + 1f, 10f);
@@ -161,7 +180,8 @@ public sealed class FixedAspectRatioCanvas : MonoBehaviour
 
         foreach (Camera candidate in Camera.allCameras)
         {
-            if (candidate != null && candidate.cameraType == CameraType.Game && candidate.targetTexture == null)
+            if (candidate != null && candidate.GetComponent<LetterboxBackgroundCamera>() == null &&
+                candidate.cameraType == CameraType.Game && candidate.targetTexture == null)
             {
                 return candidate;
             }
@@ -177,12 +197,14 @@ public sealed class FixedAspectRatioCamera : MonoBehaviour
     [SerializeField] private float targetAspectRatio = FixedAspectRatioPresentation.TargetAspectRatio;
 
     private Camera cachedCamera;
+    private Camera letterboxCamera;
     private int lastWidth;
     private int lastHeight;
 
     private void Awake()
     {
         cachedCamera = GetComponent<Camera>();
+        EnsureLetterboxCamera();
         ApplyViewport();
     }
 
@@ -203,6 +225,7 @@ public sealed class FixedAspectRatioCamera : MonoBehaviour
 
         lastWidth = Screen.width;
         lastHeight = Screen.height;
+        EnsureLetterboxCamera();
 
         float screenAspect = Screen.width / (float)Screen.height;
         Rect viewport = new(0f, 0f, 1f, 1f);
@@ -220,4 +243,53 @@ public sealed class FixedAspectRatioCamera : MonoBehaviour
 
         cachedCamera.rect = viewport;
     }
+
+    private void EnsureLetterboxCamera()
+    {
+        if (cachedCamera == null)
+        {
+            return;
+        }
+
+        if (letterboxCamera == null)
+        {
+            Transform existing = transform.Find("16:9 Letterbox Background");
+            if (existing != null)
+            {
+                letterboxCamera = existing.GetComponent<Camera>();
+                if (existing.GetComponent<LetterboxBackgroundCamera>() == null)
+                {
+                    existing.gameObject.AddComponent<LetterboxBackgroundCamera>();
+                }
+            }
+
+            if (letterboxCamera == null)
+            {
+                GameObject backgroundObject = new("16:9 Letterbox Background", typeof(Camera), typeof(LetterboxBackgroundCamera));
+                backgroundObject.transform.SetParent(transform, false);
+                letterboxCamera = backgroundObject.GetComponent<Camera>();
+            }
+        }
+
+        letterboxCamera.clearFlags = CameraClearFlags.SolidColor;
+        letterboxCamera.backgroundColor = Color.black;
+        letterboxCamera.cullingMask = 0;
+        letterboxCamera.depth = cachedCamera.depth - 1f;
+        letterboxCamera.rect = new Rect(0f, 0f, 1f, 1f);
+        letterboxCamera.orthographic = cachedCamera.orthographic;
+        letterboxCamera.enabled = cachedCamera.enabled;
+    }
+
+    private void OnDestroy()
+    {
+        if (letterboxCamera != null)
+        {
+            Destroy(letterboxCamera.gameObject);
+        }
+    }
+}
+
+[DisallowMultipleComponent]
+public sealed class LetterboxBackgroundCamera : MonoBehaviour
+{
 }

@@ -53,7 +53,14 @@ public class MainMenu : MonoBehaviour
 
     public void playGame()
     {
-        LeaderboardManager.EnsureInstance().PromptForPlayerName(() => SceneManager.LoadScene("IntroScene"));
+        LeaderboardManager manager = LeaderboardManager.EnsureInstance();
+        if (manager.HasSavedPlayerName)
+        {
+            SceneManager.LoadScene("IntroScene");
+            return;
+        }
+
+        manager.PromptForPlayerName(() => SceneManager.LoadScene("IntroScene"));
     }
 
     public void EditPlayerName()
