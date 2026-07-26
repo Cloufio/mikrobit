@@ -12,12 +12,12 @@ public class BadEndingSceneController : MonoBehaviour
     public float fadeInDuration = 1.5f;
     [Tooltip("How long the fade-out effect should take in seconds.")]
     public float fadeOutDuration = 1.5f;
-    [Tooltip("How long to wait (in seconds) after fade-in before starting fade-out.")]
-    public float waitDuration = 2.0f;
+    [Tooltip("How long to show the ending after fade-in before starting fade-out.")]
+    public float waitDuration = 4.0f;
 
     [Header("Scene Transition")]
-    [Tooltip("The build index of the scene to load after fade-out (e.g., 0 for Main Menu).")]
-    public int sceneIndexToLoad = 0;
+    [Tooltip("Scene loaded after this ending finishes.")]
+    public string nextSceneName = "FinalScoreScene";
 
     void Start()
     {
@@ -57,8 +57,8 @@ public class BadEndingSceneController : MonoBehaviour
         yield return StartCoroutine(Fade(0f, 1f, fadeOutDuration)); // Fade Out
 
         // 4. Load the next scene
-        Debug.Log($"BadEndingSceneController: Fade-out complete. Loading scene with build index {sceneIndexToLoad}.");
-        SceneManager.LoadScene(sceneIndexToLoad);
+        Debug.Log($"BadEndingSceneController: Fade-out complete. Loading '{nextSceneName}'.");
+        SceneManager.LoadScene(nextSceneName);
     }
 
     IEnumerator Fade(float startAlpha, float endAlpha, float duration)

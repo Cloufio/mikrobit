@@ -5008,6 +5008,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   finalScoreSceneName: FinalScoreScene
+  goodEndingMinimumScore: 100
+  goodEndingSceneName: GoodEnding
+  badEndingSceneName: BadEnding
   fadePanel: {fileID: 274176636}
   fadeInDuration: 1.5
   fadeOutDuration: 2
@@ -9573,7 +9576,7 @@ MonoBehaviour:
   boatFocus: {fileID: 1993068423}
   playerFocus: {fileID: 927823229}
   fadeInDelay: 1.5
-  boatFocusDuration: 4
+  boatFocusDuration: 2
   panDuration: 2
   panCurve:
     serializedVersion: 2

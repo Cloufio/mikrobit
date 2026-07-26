@@ -9,6 +9,12 @@ public class GameEndManager : MonoBehaviour
     [Tooltip("Scene shown when the timer expires.")]
     public string finalScoreSceneName = "FinalScoreScene";
 
+    [Header("Score Endings")]
+    [Tooltip("Scores at or above this value show the good ending before the final score.")]
+    public int goodEndingMinimumScore = 100;
+    public string goodEndingSceneName = "GoodEnding";
+    public string badEndingSceneName = "BadEnding";
+
     [Header("Fade Settings")]
     [Tooltip("The UI Image to use for fading in the Inspector.")]
     public Image fadePanel;
@@ -80,12 +86,23 @@ public class GameEndManager : MonoBehaviour
             conditionsHaveBeenMet = true;
             SaveRunScore(currentScore);
             LeaderboardManager.EnsureInstance().SubmitCompletedScore(currentScore);
-            Debug.Log($"Time has run out. Loading '{finalScoreSceneName}' with score {currentScore}.");
+            string targetSceneName = GetEndingSceneName(currentScore);
+            Debug.Log($"Time has run out. Loading '{targetSceneName}' with score {currentScore}.");
 
             // Re-activate the panel before starting the fade-out.
             fadePanel.gameObject.SetActive(true);
-            StartCoroutine(PerformFadeAndLoadScene(finalScoreSceneName));
+            StartCoroutine(PerformFadeAndLoadScene(targetSceneName));
         }
+    }
+
+    private string GetEndingSceneName(int currentScore)
+    {
+        if (currentScore >= goodEndingMinimumScore)
+        {
+            return goodEndingSceneName;
+        }
+
+        return badEndingSceneName;
     }
 
     private static void SaveRunScore(int currentScore)

@@ -13,7 +13,9 @@ public class AchievementCardUnlockFX : MonoBehaviour
     [SerializeField] private RectTransform[] cardLayers;
 
     [Header("Unlock Motion")]
-    [SerializeField] private bool unlocked = true;
+    // Real unlock state is supplied by AchievementPageController for each card slot.
+    // Defaulting to locked prevents a template card from showing celebration effects.
+    [SerializeField] private bool unlocked;
     [SerializeField] private float floatHeight = 12f;
     [SerializeField] private float floatSpeed = 1.25f;
     [SerializeField] private float wobbleAngle = 1.6f;
@@ -44,8 +46,6 @@ public class AchievementCardUnlockFX : MonoBehaviour
     private Vector2 cardCenter;
     private Vector2 cardSize;
     private RectTransform detailPanel;
-    private TextMeshProUGUI detailTitleLabel;
-    private TextMeshProUGUI detailRequirementLabel;
     private TextMeshProUGUI detailFactLabel;
     private float flipAngle;
     private float targetFlipAngle;
@@ -136,7 +136,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
 
     private void OnEnable()
     {
-        SetSparkleVisibility(true);
+        SetSparkleVisibility(unlocked);
     }
 
     private void OnDisable()
@@ -211,7 +211,7 @@ public class AchievementCardUnlockFX : MonoBehaviour
         }
 
         if (canOpenDetails && unlocked && !Mathf.Approximately(GetFaceScale(), 0f) && Input.GetMouseButtonDown(0)
-            && RectTransformUtility.RectangleContainsScreenPoint(cardLayers[0], Input.mousePosition, null))
+            && IsPointerOverCard())
         {
             ToggleDetails();
         }
@@ -238,14 +238,16 @@ public class AchievementCardUnlockFX : MonoBehaviour
         unlocked = isUnlocked;
         cardTitle = title;
         unlockText = $"COMBO\n{requirement}";
-        symbolismText = $"FUN FACT\n{funFact}";
+        symbolismText = funFact;
 
-        if (detailTitleLabel != null)
+        if (detailFactLabel != null)
         {
-            detailTitleLabel.text = cardTitle;
-            detailRequirementLabel.text = unlockText;
             detailFactLabel.text = symbolismText;
         }
+
+        // The effect component can exist on a locked slot while that slot is
+        // reused for another page, so do not let its template sparkle state leak.
+        SetSparkleVisibility(unlocked && isActiveAndEnabled);
     }
 
     private void CreateSparkles()
@@ -299,15 +301,20 @@ public class AchievementCardUnlockFX : MonoBehaviour
         border.raycastTarget = false;
 
         RectTransform inner = CreatePanelLayer("Detail Background", detailPanel, detailBackground, new Vector2(12f, 12f));
-        TMP_FontAsset font = ResolveDetailFont();
-        detailTitleLabel = CreateDetailLabel("Title", inner, cardTitle, new Vector2(0.5f, 0.74f), 48f, FontStyles.Bold, detailText);
-        detailRequirementLabel = CreateDetailLabel("Unlock Requirement", inner, unlockText, new Vector2(0.5f, 0.51f), 28f, FontStyles.Normal, detailText);
-        detailFactLabel = CreateDetailLabel("Meaning", inner, symbolismText, new Vector2(0.5f, 0.28f), 28f, FontStyles.Normal, detailText);
+        detailFactLabel = CreateDetailLabel("Fun Fact Description", inner, symbolismText, new Vector2(0.5f, 0.5f), 36f, FontStyles.Normal, Color.white);
+        RectTransform factRect = detailFactLabel.rectTransform;
+        factRect.anchorMin = Vector2.zero;
+        factRect.anchorMax = Vector2.one;
+        factRect.offsetMin = new Vector2(38f, 52f);
+        factRect.offsetMax = new Vector2(-38f, -52f);
 
-        foreach (TextMeshProUGUI label in inner.GetComponentsInChildren<TextMeshProUGUI>())
-        {
-            label.font = font;
-        }
+        detailFactLabel.enableAutoSizing = true;
+        detailFactLabel.fontSizeMin = 16f;
+        detailFactLabel.fontSizeMax = 36f;
+        detailFactLabel.overflowMode = TextOverflowModes.Ellipsis;
+        detailFactLabel.alignment = TextAlignmentOptions.Center;
+        ApplyWhitePixelStyle(detailFactLabel, ResolveDetailFont());
+        AddBlackShadow(detailFactLabel);
 
         detailPanel.gameObject.SetActive(false);
     }
@@ -360,6 +367,35 @@ public class AchievementCardUnlockFX : MonoBehaviour
         return sceneLabel != null ? sceneLabel.font : TMP_Settings.defaultFontAsset;
     }
 
+    private static void ApplyWhitePixelStyle(TextMeshProUGUI text, TMP_FontAsset font)
+    {
+        if (font == null)
+        {
+            return;
+        }
+
+        text.font = font;
+        text.color = Color.white;
+
+        Material material = new(font.material);
+        material.SetColor("_FaceColor", Color.white);
+        material.SetFloat("_OutlineWidth", 0f);
+        material.DisableKeyword("UNDERLAY_ON");
+        text.fontMaterial = material;
+    }
+
+    private static void AddBlackShadow(TextMeshProUGUI text)
+    {
+        Shadow shadow = text.GetComponent<Shadow>();
+        if (shadow == null)
+        {
+            shadow = text.gameObject.AddComponent<Shadow>();
+        }
+
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.9f);
+        shadow.effectDistance = new Vector2(3f, -3f);
+    }
+
     private void UpdateCardFlip()
     {
         flipAngle = Mathf.MoveTowards(flipAngle, targetFlipAngle, 180f / Mathf.Max(flipDuration, 0.01f) * Time.unscaledDeltaTime);
@@ -389,13 +425,31 @@ public class AchievementCardUnlockFX : MonoBehaviour
         return Mathf.Abs(Mathf.Cos(flipAngle * Mathf.Deg2Rad));
     }
 
+    private bool IsPointerOverCard()
+    {
+        if (cardLayers == null || cardLayers.Length == 0 || cardLayers[0] == null)
+        {
+            return false;
+        }
+
+        // The fixed-aspect presentation changes UI from Screen Space Overlay to
+        // Screen Space Camera at runtime. The hit test must use that canvas camera
+        // or screen coordinates will not line up with the visible card.
+        Canvas canvas = GetComponentInParent<Canvas>();
+        Camera eventCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay
+            ? canvas.worldCamera
+            : null;
+
+        return RectTransformUtility.RectangleContainsScreenPoint(cardLayers[0], Input.mousePosition, eventCamera);
+    }
+
     private void SetSparkleVisibility(bool visible)
     {
         foreach (Image sparkle in sparkles)
         {
             if (sparkle != null)
             {
-                sparkle.gameObject.SetActive(visible);
+                sparkle.gameObject.SetActive(visible && unlocked);
             }
         }
     }

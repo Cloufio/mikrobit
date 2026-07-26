@@ -3501,7 +3501,7 @@ MonoBehaviour:
   cardLayers:
   - {fileID: 1695241961}
   - {fileID: 1329099736}
-  unlocked: 1
+  unlocked: 0
   floatHeight: 12
   floatSpeed: 1.25
   wobbleAngle: 1.6

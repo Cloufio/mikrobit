@@ -10906,8 +10906,8 @@ MonoBehaviour:
   fadePanel: {fileID: 922386399}
   fadeInDuration: 1.5
   fadeOutDuration: 1.5
-  waitDuration: 2
-  sceneIndexToLoad: 0
+  waitDuration: 4
+  nextSceneName: FinalScoreScene
 --- !u!1 &623575363
 GameObject:
   m_ObjectHideFlags: 0
