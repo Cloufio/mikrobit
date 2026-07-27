@@ -66,6 +66,18 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreDisplay();
     }
 
+    /// <summary>Adds bonus time to the current round and refreshes the timer UI.</summary>
+    public void AddTime(float secondsToAdd)
+    {
+        if (secondsToAdd <= 0f)
+        {
+            return;
+        }
+
+        timeRemaining += secondsToAdd;
+        DisplayTime(timeRemaining);
+    }
+
     /// <summary>
     /// Removes time from an active round. The timer stops immediately at zero.
     /// </summary>

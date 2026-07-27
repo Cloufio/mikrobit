@@ -18,6 +18,7 @@ public class TrashPollutionPatch : MonoBehaviour
 
     private SpriteRenderer patchRenderer;
     private Transform trashOwner;
+    private Tool ownerTool;
     private Vector3 baseScale;
     private Vector3 centerPosition;
     private float animationPhase;
@@ -40,6 +41,12 @@ public class TrashPollutionPatch : MonoBehaviour
         return patch;
     }
 
+    /// <summary>
+    /// Lets the murky water act as a forgiving click target for its trash.
+    /// The patch is only spawned for water trash, so land objects are not affected.
+    /// </summary>
+    public Tool OwnerTool => !isCleaning ? ownerTool : null;
+
     public void Clean()
     {
         if (isCleaning)
@@ -55,6 +62,7 @@ public class TrashPollutionPatch : MonoBehaviour
     private void Initialize(Transform owner)
     {
         trashOwner = owner;
+        ownerTool = owner.GetComponent<Tool>();
         centerPosition = owner.position;
         animationPhase = Random.Range(0f, Mathf.PI * 2f);
         animationSpeed = Random.Range(0.8f, 1.2f);
@@ -63,6 +71,13 @@ public class TrashPollutionPatch : MonoBehaviour
         patchRenderer.sprite = GetPollutionSprite();
         patchRenderer.sortingOrder = 1;
         patchRenderer.color = MurkyColor;
+
+        // Match the clickable area to the visible murky patch. This means a
+        // player can clean trash by clicking its polluted water, not only the
+        // small trash sprite in the middle.
+        BoxCollider2D clickArea = gameObject.AddComponent<BoxCollider2D>();
+        clickArea.isTrigger = true;
+        clickArea.size = new Vector2(TextureWidth / PixelsPerUnit, TextureHeight / PixelsPerUnit);
 
         SpriteRenderer trashRenderer = owner.GetComponent<SpriteRenderer>();
         if (trashRenderer != null)

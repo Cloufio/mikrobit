@@ -47,11 +47,17 @@ public class ToolController : MonoBehaviour
         int topSortingOrder = int.MinValue;
         float closestColliderDistance = float.MaxValue;
 
-        // Direct hits win. Otherwise, click assist picks the closest reachable
-        // trash collider inside the small cursor radius.
+        // Direct hits win. The murky-water patch below a trash item is also a
+        // valid hit target, making cleanup easier without extending its range.
         foreach (Collider2D collider in colliders)
         {
             Tool candidate = collider.GetComponentInParent<Tool>();
+            if (candidate == null)
+            {
+                TrashPollutionPatch pollutionPatch = collider.GetComponentInParent<TrashPollutionPatch>();
+                candidate = pollutionPatch != null ? pollutionPatch.OwnerTool : null;
+            }
+
             if (candidate == null)
             {
                 continue;

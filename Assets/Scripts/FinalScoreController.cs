@@ -28,7 +28,7 @@ public class FinalScoreController : MonoBehaviour
 
     [Header("Navigation")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
-    [SerializeField] private string replaySceneName = "IntroScene";
+    [SerializeField] private string replaySceneName = "MainScene";
 
     private readonly List<Material> runtimeMaterials = new List<Material>();
 
@@ -100,7 +100,20 @@ public class FinalScoreController : MonoBehaviour
 
     private void Replay()
     {
+        SceneManager.sceneLoaded += RefreshReplayWaterSurface;
         SceneManager.LoadScene(replaySceneName);
+    }
+
+    private void RefreshReplayWaterSurface(Scene loadedScene, LoadSceneMode loadMode)
+    {
+        SceneManager.sceneLoaded -= RefreshReplayWaterSurface;
+        if (loadedScene.name != "MainScene")
+            return;
+
+        foreach (SeaWaterSurface waterSurface in FindObjectsByType<SeaWaterSurface>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            waterSurface.ReapplyWaterMaterial();
+        }
     }
 
     private static Button FindSceneButton(string objectName)

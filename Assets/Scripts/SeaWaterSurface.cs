@@ -58,6 +58,13 @@ public class SeaWaterSurface : MonoBehaviour
         ApplyWaterMaterial();
     }
 
+    /// <summary>Reapplies the runtime water material after a scene transition.</summary>
+    public void ReapplyWaterMaterial()
+    {
+        ApplyWaterMaterial();
+        UpdateMaterialProperties();
+    }
+
     private void Update()
     {
         UpdateMaterialProperties();

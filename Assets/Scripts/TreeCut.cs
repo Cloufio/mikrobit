@@ -9,6 +9,7 @@ public class TreeCut : Tool
 
     [Header("Scoring")]
     [SerializeField] int pointsForCutting = 2;
+    [SerializeField, Min(0f)] private float timeRewardOnCleanup = 0.5f;
 
     [Header("Cleanup Feedback")]
     [SerializeField] private bool useWaterCleanupFeedback = true;
@@ -70,6 +71,13 @@ public class TreeCut : Tool
             if (ScoreManager.Instance != null)
             {
                 ScoreManager.Instance.AddScore(pointsForCutting);
+
+                // Only water-trash objects grant time. Trees share this script
+                // for their hit behaviour, but are not part of the cleanup goal.
+                if (ShouldUsePollutionPatch())
+                {
+                    ScoreManager.Instance.AddTime(timeRewardOnCleanup);
+                }
             }
 
             if (useWaterCleanupFeedback)

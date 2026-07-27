@@ -28,10 +28,10 @@ public class IntroController : MonoBehaviour
     // The four paragraphs for your intro
     private string[] introParagraphs = new string[]
     {
-        "In the midst of a bustling megacity that never sleeps, you—the child of a traditional fisherman—receive your father's last will and testament. In the letter, he asks you to continue the family legacy passed down through generations: to protect and care for the ocean wisely.",
-        "So you set sail for the remote open sea where your father used to make his living. However, when you arrive, you are faced with a harsh reality: the once-beautiful blue ocean is now choked with floating plastic and marine debris, ready to destroy the ecosystem and endanger all sea life.",
-        "You only have 1 minute to sail and collect as much waste as possible. Every piece of trash you scoop up or leave behind will shape the fate of this ocean. Will you act fast to save it, or let these waters perish from pollution?",
-        "This ocean is on the brink of its fate. Only you can decide: total destruction... or a new lease on life."
+        "Kamu adalah anak seorang nelayan. Setelah ayahmu pergi, kamu menemukan pesan terakhirnya. Ia minta kamu menjaga laut yang sudah menjadi bagian dari hidup keluarga kalian.",
+        "Kamu pun berlayar ke laut yang dulu sering ia datangi. Tapi sesampainya di sana, kamu kaget. Airnya dipenuhi sampah plastik dan sisa kotoran yang mengancam ikan serta kehidupan di laut.",
+        "Waktumu cuma satu menit. Arahkan perahu dan ambil sebanyak mungkin sampah. Setiap sampah yang kamu bersihkan benar-benar berarti untuk laut ini.",
+        "Laut ini butuh bantuanmu. Yuk, mulai bersihkan dan bikin tempat ini jadi lebih hidup lagi."
     };
 
     private bool advanceRequested;

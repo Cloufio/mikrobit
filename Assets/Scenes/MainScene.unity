@@ -5566,7 +5566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   finalScoreSceneName: FinalScoreScene
-  goodEndingMinimumScore: 50
+  goodEndingMinimumScore: 30
   goodEndingSceneName: GoodEnding
   badEndingSceneName: BadEnding
   fadePanel: {fileID: 274176636}

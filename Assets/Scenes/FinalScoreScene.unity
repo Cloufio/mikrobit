@@ -984,7 +984,7 @@ MonoBehaviour:
   outlineColor: {r: 0.24, g: 0.12, b: 0.13, a: 1}
   shadowColor: {r: 0.72, g: 0.29, b: 0.18, a: 1}
   mainMenuSceneName: MainMenu
-  replaySceneName: IntroScene
+  replaySceneName: MainScene
 --- !u!1 &852513953
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ public class GameEndManager : MonoBehaviour
 
     [Header("Score Endings")]
     [Tooltip("Scores at or above this value show the good ending before the final score.")]
-    public int goodEndingMinimumScore = 50;
+    public int goodEndingMinimumScore = 30;
     public string goodEndingSceneName = "GoodEnding";
     public string badEndingSceneName = "BadEnding";
 
