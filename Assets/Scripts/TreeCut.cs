@@ -9,7 +9,7 @@ public class TreeCut : Tool
 
     [Header("Scoring")]
     [SerializeField] int pointsForCutting = 2;
-    [SerializeField, Min(0f)] private float timeRewardOnCleanup = 0.5f;
+    [SerializeField, Min(0f)] private float timeRewardOnCleanup = 0.3f;
 
     [Header("Cleanup Feedback")]
     [SerializeField] private bool useWaterCleanupFeedback = true;
@@ -19,11 +19,21 @@ public class TreeCut : Tool
     private TrashPollutionPatch pollutionPatch;
     private Slider healthBarSlider;
     private int maxHealth;
+    private bool isWaterTrash;
 
     private void Awake()
     {
+        // An inactive copy is kept only as a safe respawn template. It must not
+        // create collision, pollution, or another respawn request of its own.
+        if (WaterTrashRespawnManager.IsCreatingTemplate)
+        {
+            return;
+        }
+
+        isWaterTrash = ShouldUsePollutionPatch();
+
         // Every water-trash prefab uses the same three-click cleanup rule.
-        if (ShouldUsePollutionPatch())
+        if (isWaterTrash)
         {
             treeHealth = 30;
             damagePerHit = 10;
@@ -44,7 +54,7 @@ public class TreeCut : Tool
             healthBarSlider.gameObject.SetActive(false);
         }
 
-        if (ShouldUsePollutionPatch())
+        if (isWaterTrash)
         {
             pollutionPatch = TrashPollutionPatch.Spawn(transform);
         }
@@ -74,10 +84,18 @@ public class TreeCut : Tool
 
                 // Only water-trash objects grant time. Trees share this script
                 // for their hit behaviour, but are not part of the cleanup goal.
-                if (ShouldUsePollutionPatch())
+                if (isWaterTrash)
                 {
                     ScoreManager.Instance.AddTime(timeRewardOnCleanup);
                 }
+            }
+
+            if (isWaterTrash)
+            {
+                WaterTrashRespawnManager.EnsureInstance().QueueRespawn(
+                    gameObject,
+                    transform.position,
+                    transform.rotation);
             }
 
             if (useWaterCleanupFeedback)
